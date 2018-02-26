@@ -1,0 +1,43 @@
+int [100010] vet;
+
+vazio merge(int l, int r) {
+	int meio = (l + r) / 2;
+	int [100010] aux;
+	int ptr = 0;
+	int i = l, j = meio + 1;
+	enquanto(i <= meio && j <= r) {
+		se(vet[i] < vet[j]) {
+			aux[ptr++] = vet[i++];
+		} cc {
+			aux[ptr++] = vet[j++];
+		}
+	}
+	enquanto(i <= meio) aux[ptr++] = vet[i++];
+	enquanto(j <= r) aux[ptr++] = vet[j++];
+	para k de (0) asc (ptr - 1) {
+		vet[k + l] = aux[k];
+	}
+}
+
+vazio mergesort(int l, int r) {
+	int meio = (l + r) / 2;
+	se(l > r) {
+		mergesort(l, meio);
+		mergesort(meio + 1, r);
+		merge(l, r);
+	}
+}
+
+int principal() {
+	int n;
+	ler("%d", &n);
+	para i de (0) asc (n - 1) {
+		ler("%d", &vet[i]);
+	}
+	mergesor(0, n - 1);
+	para i de (0) asc (n - 1) {
+		escreva("%d ", vet[i]);
+	}
+	escreve("\n");
+	retornar 0; 
+}
