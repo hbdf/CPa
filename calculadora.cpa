@@ -1,0 +1,25 @@
+int principal(){
+	int x, y;
+	caractere op;
+	
+	leia("%i", &x);
+	leia("%c", &op);
+	leia("%i", &y);
+
+	escolha (op){
+		caso '+':
+			escreva("%i\n", x + y);
+			parar;
+		caso '-':
+			escreva("%i\n", x - y);
+			parar;
+		caso '*':
+			escreva("%i\n", x * y);
+			parar;
+		caso '/':
+			escreva("%i\n", x / y);
+			parar;
+		cc:
+			escreva("Operação inválida\n");
+	}
+}
