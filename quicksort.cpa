@@ -21,7 +21,7 @@ void quicksort(int l, int r) {
 }
 
 int principal() {
-		int n;
+	int n, i;
 	ler("%d", &n);
 	para i de (0) asc (n - 1) {
 		ler("%d", &vet[i]);
