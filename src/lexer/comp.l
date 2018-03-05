@@ -4,10 +4,8 @@
  */
 %}
 
-DIGIT			[0-9]
-LETTER			[a-zA-Z]
 /* Caracteres especiais OK */
-STAR			[*]
+STAR			[\*]
 PLUS2 			[++]
 PLUS 			[+]
 MINUS2 			[−−]
@@ -69,13 +67,12 @@ DESC 			desc
 FAZER 			fazer
 /* Outros */
 BLOCKCOMMENT	\/ \∗ ([^∗] | \∗ + [^∗/ ])* \∗ + \/		/*Ignore block comments*/;
-ID				{LETTER}({LETTER}|{DIGIT}|_)*
+ID				(_*{LETTER}|{LETTER})({LETTER}|{DIGIT}|_)*
+DIGIT			[0-9]
+LETTER			[a-zA-Z]
 %%
 
 [\t \n ]+			/* Ignorar caracteres de espaçamento */
-{DIGIT}+ {
-	printf("NUM(%d) ", atoi(yytext));
-}
 {STAR} {
 	printf("STAR ");
 }
@@ -252,6 +249,9 @@ ID				{LETTER}({LETTER}|{DIGIT}|_)*
 }
 {ID} {
 	printf("ID(%s) ", yytext);
+}
+{DIGIT}+ {
+	printf("NUM(%d) ", atoi(yytext));
 }
 %%
 
