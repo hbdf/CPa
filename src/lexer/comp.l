@@ -7,14 +7,19 @@
 DIGIT			[0-9]
 LETTER			[a-zA-Z]
 ID				LETTER+(LETTER|DIGIT|\_ )*
-
-WHITESPACE 		[\t ]+									/*Ignore whitespaces*/;
-LINECOMMENT		\/([^\n ])*\n							/*Ignore line comments*/;
+									/*Ignore whitespaces*/;
+LINECOMMENT		\// ([^\n ])*\n						/*Ignore line comments*/;
 BLOCKCOMMENT	\/ \∗ ([^∗] | \∗ + [^∗/ ])* \∗ + \/		/*Ignore block comments*/;
 %%
 
+[\t \n ]+	
+
 {DIGIT}+	{
-				printf("%s (%d)", yytext, atoi(yytext));
+				printf("DIGIT(%d)", atoi(yytext));
 			}
 
 %%
+
+int main() {
+	yylex();
+}
