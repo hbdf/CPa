@@ -68,11 +68,34 @@ FAZER 			fazer
 /* Outros */
 BLOCKCOMMENT	\/ \∗ ([^∗] | \∗ + [^∗/ ])* \∗ + \/		/*Ignore block comments*/;
 ID				(_*{LETTER}|{LETTER})({LETTER}|{DIGIT}|_)*
-DIGIT			[0-9]
 LETTER			[a-zA-Z]
+HEX				-?0x({DIGIT}|[A-Fa-f])+
+DIGIT			[0-9]
+INTEIRO			-?{DIGIT}+|{HEX}
+FRAC			-?({DIGIT}*{DOT}{DIGIT}+|{DIGIT}+{DOT}{DIGIT}*)
+SCINOT			e-?{DIGIT}+
+REAL			({FRAC}|-?{DIGIT}+|-?{DIGIT}+{SCINOT})f
+REALD			{FRAC}|{FRAC}{SCINOT}|-?{DIGIT}+{SCINOT}
+CHAR			\'([^'\\]|(\\).)\'
+STRING			\"([^"\\]|(\\).)*\"
 %%
 
 [\t \n ]+			/* Ignorar caracteres de espaçamento */
+{STRING} {
+	printf("STRING(%s) ", yytext);
+}
+{CHAR} {
+	printf("CHAR(%s) ", yytext);
+}
+{INTEIRO} {
+	printf("INTEIRO(%s) ", yytext);
+}
+{REAL} {
+	printf("REAL(%s) ", yytext);
+}
+{REALD} {
+	printf("REALD(%s) ", yytext);
+}
 {STAR} {
 	printf("STAR ");
 }
@@ -249,9 +272,6 @@ LETTER			[a-zA-Z]
 }
 {ID} {
 	printf("ID(%s) ", yytext);
-}
-{DIGIT}+ {
-	printf("NUM(%d) ", atoi(yytext));
 }
 %%
 
