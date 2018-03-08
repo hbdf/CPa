@@ -2339,4 +2339,5 @@ void yyfree (void * ptr )
 
 int main() {
 	yylex();
+	printf("\n");
 }

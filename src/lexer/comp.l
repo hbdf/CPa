@@ -277,4 +277,5 @@ STRING			\"([^"\\]|(\\).)*\"
 
 int main() {
 	yylex();
+	printf("\n");
 }
