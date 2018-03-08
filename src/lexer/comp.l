@@ -5,53 +5,53 @@
 %}
 
 /* Caracteres especiais OK */
-STAR			[\*]
-PLUS2 			[++]
-PLUS 			[+]
-MINUS2 			[−−]
-MINUS 			[−]
-AMPERSEND 		[&]
-AMPERSEND2 		[&&]
-BITOR 			[|]
-OR 				[||]
-DIV 			[/]
-ATTR 			[=]
-ATTRADD 		[+=]
-ATTRSUB 		[−=]
-ATTRMUL 		[∗=]
-ATTRDIV 		[/=]
-ATTRSHIFTL 		[>>=]
-ATTRSHIFTR 		[<<=]
-ATTRBITOR 		[|=]
-ATTROR 			[||=]
-ATTRAMPERSEND 	[&=]
-ATTRAMPERSEND2 	[&&=]
-EQQ 			[==]
-NEQ 			[!=]
-LEQ 			[<=]
-GEQ 			[<=]
-NEG 			[!]
-LT 				[<]
-GT 				[>]
-SHIFTL 			[<<]
-SHIFTR 			[>>]
+STAR			"*"
+PLUS2 			"++"
+PLUS 			"+"
+MINUS2 			"--"
+MINUS 			"-"
+AMPERSEND 		"&"
+AND 			"&&"
+BITOR 			"|"
+OR 				"||"
+DIV 			"/"
+ATTRADD 		"+="
+ATTRSUB 		"-="
+ATTRMUL 		"*="
+ATTRDIV 		"/="
+ATTRSHIFTL 		">>="
+ATTRSHIFTR 		"<<="
+ATTRBITOR 		"|="
+ATTROR 			"||="
+ATTRAMPERSEND 	"&="
+ATTRAND 		"&&="
+EQQ 			"=="
+NEQ 			"!="
+LEQ 			"<="
+GEQ 			">="
+ATTR 			"="
+NEG 			"!"
+LT 				"<"
+GT 				">"
+SHIFTL 			"<<"
+SHIFTR 			">>"
 /* Pontuação OK */
-SEMI 			[;]
-COLON 			[:]
-DOT 			[.]
-COMMA 			[,]
-LPAREN 			[(]
-RPAREN 			[)]
-LBRACKET 		[[]
-RBRACKET 		[]]
-LBRACE 			[{]
-RBRACE 			[}]
-QUESTION 		[?]
+SEMI 			";"
+COLON 			":"
+DOT 			"."
+COMMA 			","
+LPAREN 			"("
+RPAREN 			")"
+LBRACKET 		"["
+RBRACKET 		"]"
+LBRACE 			"{"
+RBRACE 			"}"
+QUESTION 		"?"
 /* Tipos Primitivos OK */
 TIPO_PRIMITIVO  int|real|duplo|caractere
 /* Palavras Reservadas OK */
 IMPORTAR 		importar
-CONSTANTE 		constante
+CONSTANTE 		const
 PARAR 			parar
 CONTINUAR 		continuar
 RETORNAR 		retornar
@@ -66,7 +66,8 @@ ASC 			asc
 DESC 			desc
 FAZER 			fazer
 /* Outros */
-BLOCKCOMMENT	\/ \∗ ([^∗] | \∗ + [^∗/ ])* \∗ + \/		/*Ignore block comments*/;
+BLOCKCOMMENT	"/*"([^*]|"*"+[^*/])*"*"+"/"
+LINECOMMENT		"//"[^"\n"]*"\n"
 ID				(_*{LETTER}|{LETTER})({LETTER}|{DIGIT}|_)*
 LETTER			[a-zA-Z]
 HEX				-?0x({DIGIT}|[A-Fa-f])+
@@ -81,6 +82,8 @@ STRING			\"([^"\\]|(\\).)*\"
 %%
 
 [\t \n ]+			/* Ignorar caracteres de espaçamento */
+{BLOCKCOMMENT} {}
+{LINECOMMENT} {}
 {STRING} {
 	printf("STRING(%s) ", yytext);
 }
@@ -180,9 +183,6 @@ STRING			\"([^"\\]|(\\).)*\"
 {QUESTION} {
 	printf("QUESTION ");
 }
-{STAR} {
-	printf("STAR ");
-}
 {PLUS2} {
 	printf("PLUS2 ");
 }
@@ -198,8 +198,8 @@ STRING			\"([^"\\]|(\\).)*\"
 {AMPERSEND} {
 	printf("AMPERSEND ");
 }
-{AMPERSEND2} {
-	printf("AMPERSEND2 ");
+{AND} {
+	printf("AND ");
 }
 {BITOR} {
 	printf("BITOR ");
@@ -240,8 +240,8 @@ STRING			\"([^"\\]|(\\).)*\"
 {ATTRAMPERSEND} {
 	printf("ATTRAMPERSEND ");
 }
-{ATTRAMPERSEND2} {
-	printf("ATTRAMPERSEND2 ");
+{ATTRAND} {
+	printf("ATTRAND ");
 }
 {EQQ} {
 	printf("EQQ ");
