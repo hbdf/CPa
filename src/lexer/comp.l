@@ -4,6 +4,11 @@
  */
 %}
 
+%{
+	int line = 1;
+	int columm = 1;
+%}
+
 /* Caracteres especiais OK */
 STAR			"*"
 PLUS2 			"++"
@@ -81,11 +86,18 @@ CHAR			\'([^'\\]|(\\).)\'
 STRING			\"([^"\\]|(\\).)*\"
 %%
 
-[\t \n ]+			/* Ignorar caracteres de espaçamento */
+[\t ]+ {
+	columm += yyleng;
+}
+[\n ]	{
+	columm = 1;
+	line++;
+}
 {BLOCKCOMMENT} {}
 {LINECOMMENT} {}
 {STRING} {
-	printf("STRING(%s) ", yytext);
+	printf("STRING(%s) [%d][%d]", yytext, line, columm);
+	columm += yyleng;
 }
 {CHAR} {
 	printf("CHAR(%s) ", yytext);
