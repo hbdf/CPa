@@ -7,6 +7,21 @@
 %{
 	int line = 1;
 	int columm = 1;
+
+	void printToken(const char* tokenName){
+		printf("(%s, %d, %d) ", tokenName, line, columm);
+	}
+
+	void printTokenLexem(const char* tokenName, const char* lexem){
+		printf("(%s, %s, %d, %d) ", tokenName, lexem, line, columm);
+		columm += yyleng;
+	}
+
+	void error(){
+		printf("[ERRO] - linha: %d, coluna: %d ", line, columm);
+		columm += yyleng;
+
+	}
 %}
 
 /* Caracteres especiais OK */
@@ -53,7 +68,7 @@ LBRACE 			"{"
 RBRACE 			"}"
 QUESTION 		"?"
 /* Tipos Primitivos OK */
-TIPO_PRIMITIVO  int|real|duplo|caractere
+TIPO_PRIMITIVO  int|real|duplo|caractere|vazio
 /* Palavras Reservadas OK */
 IMPORTAR 		importar
 CONSTANTE 		const
@@ -70,6 +85,8 @@ DE 				de
 ASC 			asc
 DESC 			desc
 FAZER 			fazer
+ESTRUTURA		estrutura
+ENUM			enum
 /* Outros */
 BLOCKCOMMENT	"/*"([^*]|"*"+[^*/])*"*"+"/"
 LINECOMMENT		"//"[^"\n"]*"\n"
@@ -96,194 +113,202 @@ STRING			\"([^"\\]|(\\).)*\"
 {BLOCKCOMMENT} {}
 {LINECOMMENT} {}
 {STRING} {
-	printf("STRING(%s) [%d][%d]", yytext, line, columm);
-	columm += yyleng;
+	printTokenLexem("STRING", yytext);
 }
 {CHAR} {
-	printf("CHAR(%s) ", yytext);
+	printTokenLexem("CHAR", yytext);
 }
 {INTEIRO} {
-	printf("INTEIRO(%s) ", yytext);
+	printTokenLexem("INTEIRO", yytext);
 }
 {REAL} {
-	printf("REAL(%s) ", yytext);
+	printTokenLexem("REAL", yytext);
 }
 {REALD} {
-	printf("REALD(%s) ", yytext);
+	printTokenLexem("REALD", yytext);
 }
 {STAR} {
-	printf("STAR ");
+	printToken("STAR");
 }
 {TIPO_PRIMITIVO} {
-	printf("TIPO(%s) ", yytext);
+	printTokenLexem("TIPO", yytext);
 }
 {IMPORTAR} {
-	printf("IMPORTAR ");
+	printToken("IMPORTAR");
 }
 {CONSTANTE} {
-	printf("CONSTANTE ");
+	printToken("CONSTANTE");
 }
 {PARAR} {
-	printf("PARAR ");
+	printToken("PARAR");
 }
 {CONTINUAR} {
-	printf("CONTINUAR ");
+	printToken("CONTINUAR");
 }
 {RETORNAR} {
-	printf("RETORNAR ");
+	printToken("RETORNAR");
 }
 {IRPARA} {
-	printf("IRPARA ");
+	printToken("IRPARA");
 }
 {SE} {
-	printf("SE ");
+	printToken("SE");
 }
 {CC} {
-	printf("CC ");
+	printToken("CC");
 }
 {ESCOLHA} {
-	printf("ESCOLHA ");
+	printToken("ESCOLHA");
 }
 {CASO} {
-	printf("CASO ");
+	printToken("CASO");
 }
 {PARA} {
-	printf("PARA ");
+	printToken("PARA");
 }
 {DE} {
-	printf("DE ");
+	printToken("DE");
 }
 {ASC} {
-	printf("ASC ");
+	printToken("ASC");
 }
 {DESC} {
-	printf("DESC ");
+	printToken("DESC");
 }
 {FAZER} {
-	printf("FAZER ");
+	printToken("FAZER");
 }
 {SEMI} {
-	printf("SEMI ");
+	printToken("SEMI");
 }
 {COLON} {
-	printf("COLON ");
+	printToken("COLON");
 }
 {DOT} {
-	printf("DOT ");
+	printToken("DOT");
 }
 {COMMA} {
-	printf("COMMA ");
+	printToken("COMMA");
 }
 {LPAREN} {
-	printf("LPAREN ");
+	printToken("LPAREN");
 }
 {RPAREN} {
-	printf("RPAREN ");
+	printToken("RPAREN");
 }
 {LBRACKET} {
-	printf("LBRACKET ");
+	printToken("LBRACKET");
 }
 {RBRACKET} {
-	printf("RBRACKET ");
+	printToken("RBRACKET");
 }
 {LBRACE} {
-	printf("LBRACE ");
+	printToken("LBRACE");
 }
 {RBRACE} {
-	printf("RBRACE ");
+	printToken("RBRACE");
 }
 {QUESTION} {
-	printf("QUESTION ");
+	printToken("QUESTION");
 }
 {PLUS2} {
-	printf("PLUS2 ");
+	printToken("PLUS2");
 }
 {PLUS} {
-	printf("PLUS ");
+	printToken("PLUS");
 }
 {MINUS2} {
-	printf("MINUS2 ");
+	printToken("MINUS2");
 }
 {MINUS} {
-	printf("MINUS ");
+	printToken("MINUS");
 }
 {AMPERSEND} {
-	printf("AMPERSEND ");
+	printToken("AMPERSEND");
 }
 {AND} {
-	printf("AND ");
+	printToken("AND");
 }
 {BITOR} {
-	printf("BITOR ");
+	printToken("BITOR");
 }
 {OR} {
-	printf("OR ");
+	printToken("OR");
 }
 {DIV} {
-	printf("DIV ");
+	printToken("DIV");
 }
 {ATTR} {
-	printf("ATTR ");
+	printToken("ATTR");
 }
 {ATTRADD} {
-	printf("ATTRADD ");
+	printToken("ATTRADD");
 }
 {ATTRSUB} {
-	printf("ATTRSUB ");
+	printToken("ATTRSUB");
 }
 {ATTRMUL} {
-	printf("ATTRMUL ");
+	printToken("ATTRMUL");
 }
 {ATTRDIV} {
-	printf("ATTRDIV ");
+	printToken("ATTRDIV");
 }
 {ATTRSHIFTL} {
-	printf("ATTRSHIFTL ");
+	printToken("ATTRSHIFTL");
 }
 {ATTRSHIFTR} {
-	printf("ATTRSHIFTR ");
+	printToken("ATTRSHIFTR");
 }
 {ATTRBITOR} {
-	printf("ATTRBITOR ");
+	printToken("ATTRBITOR");
 }
 {ATTROR} {
-	printf("ATTROR ");
+	printToken("ATTROR");
 }
 {ATTRAMPERSEND} {
-	printf("ATTRAMPERSEND ");
+	printToken("ATTRAMPERSEND");
 }
 {ATTRAND} {
-	printf("ATTRAND ");
+	printToken("ATTRAND");
 }
 {EQQ} {
-	printf("EQQ ");
+	printToken("EQQ");
 }
 {NEQ} {
-	printf("NEQ ");
+	printToken("NEQ");
 }
 {LEQ} {
-	printf("LEQ ");
+	printToken("LEQ");
 }
 {GEQ} {
-	printf("GEQ ");
+	printToken("GEQ");
 }
 {NEG} {
-	printf("NEG ");
+	printToken("NEG");
 }
 {LT} {
-	printf("LT ");
+	printToken("LT");
 }
 {GT} {
-	printf("GT ");
+	printToken("GT");
 }
 {SHIFTL} {
-	printf("SHIFTL ");
+	printToken("SHIFTL");
 }
 {SHIFTR} {
-	printf("SHIFTR ");
+	printToken("SHIFTR");
+}
+{ESTRUTURA} {
+	printToken("ESTRUTURA");
+}
+{ENUM} {
+	printToken("ENUM");
 }
 {ID} {
-	printf("ID(%s) ", yytext);
+	printTokenLexem("ID", yytext);
+}
+. {
+	error();
 }
 %%
 
