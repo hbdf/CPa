@@ -11,7 +11,7 @@ Esse projeto está sendo desenvolvido como uma atividade da disciplina de
 Compiladores, ofertada para o curso de Ciência da Computação pela Universidade
 Federal do Rio Grande do Norte.
 
-## Como tesar
+## Como testar
 
 1) Instale o LEX: http://dinosaur.compilertools.net/;
 2) Instale o git;
