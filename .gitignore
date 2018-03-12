@@ -1,2 +1,4 @@
-*/exe
-*/lex.yy.c
+
+# Arquivos gerados após compilaçao
+src/lexer/exe
+src/lexer/lex.yy.c
