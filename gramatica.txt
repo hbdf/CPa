@@ -8,9 +8,9 @@
 
 <const-dec> -> `const' <type> ID <expr> `;'
 
-<var-dec> -> <type> <id-dec1> `;'
 <var-dec1> -> <var-dec> <var-dec0>
 <var-dec0> -> <var-dec1> | LAMBDA
+<var-dec> -> <type> <id-dec1> `;'
 
 <id-dec1> -> ID <id-init> <id-dec0>
 <id-dec0> -> `,' <id-dec1> | LAMBDA
@@ -19,7 +19,6 @@
 <struct-dec> -> `estrutura' ID `{' <var-dec1> `}'
 
 <enum-dec> -> `enum' ID `{' <ids1> `}'
-
 <ids1> -> ID <ids0>
 <ids0> -> `,' <ids1> | LAMBDA
 
@@ -27,9 +26,9 @@
 <func-end> -> `;' | <block>
 <func-sign> -> <type> ID `(' <params> `)'
 
-<params> -> <params1> | LAMBDA
-<params1> -> <type> <id-dec> <params0>
-<params0> -> `,' <params1> | LAMBDA
+<params> -> <param1> | LAMBDA
+<param1> -> <type> ID <param0>
+<param0> -> `,' <param1> | LAMBDA
 
 <type> -> <basic-type> <array-type> | `(' <type> `)'
 <basic-type> -> ID | `int' | `caractere' | `string' | `real' | `reald' | `vazio' | `*' <type>
@@ -56,4 +55,17 @@
 <case0> -> <case1> | LAMBDA
 <case> -> `caso' <expr> `:' <stmts> | `cc' `:' <stmts>
 
+<expr> -> <expr-leaf> 
+<expr-leaf> -> <func-call> | <expr-lit> | `(' <expr> `)'
 
+<func-call> -> <expr-var> <call> 
+<call> -> `(' <args> `)' | LAMBDA
+<args1> -> <expr> <args0>
+<args0> -> `,' <args> | LAMBDA
+<args> -> <args1> | LAMBDA
+
+<expr-lit> -> INTEIRO | REAL | STRING | CARACTERE | <array-lit>
+<array-lit> -> `{' <args1> `}'
+
+<expr-var> -> ID <var-mods>
+<var-mods> -> `.' ID <var-mods> | `[' <expr> `]' <var-mods> | LAMBDA
