@@ -1,0 +1,59 @@
+<start> -> <inc> <dec1>
+
+<inc> -> `importar' STRING `;' <inc> | LAMBDA
+
+<dec1> -> <dec> <dec0>
+<dec0> -> <dec1> | LAMBDA
+<dec> -> <const-dec> | <var-dec> | <func-dec> | <struct-dec> | <enum-dec>
+
+<const-dec> -> `const' <type> ID <expr> `;'
+
+<var-dec> -> <type> <id-dec1> `;'
+<var-dec1> -> <var-dec> <var-dec0>
+<var-dec0> -> <var-dec1> | LAMBDA
+
+<id-dec1> -> ID <id-init> <id-dec0>
+<id-dec0> -> `,' <id-dec1> | LAMBDA
+<id-init> -> `=' <expr> | LAMBDA
+
+<struct-dec> -> `estrutura' ID `{' <var-dec1> `}'
+
+<enum-dec> -> `enum' ID `{' <ids1> `}'
+
+<ids1> -> ID <ids0>
+<ids0> -> `,' <ids1> | LAMBDA
+
+<func-dec> -> <func-sign> <func-end>
+<func-end> -> `;' | <block>
+<func-sign> -> <type> ID `(' <params> `)'
+
+<params> -> <params1> | LAMBDA
+<params1> -> <type> <id-dec> <params0>
+<params0> -> `,' <params1> | LAMBDA
+
+<type> -> <basic-type> <array-type> | `(' <type> `)'
+<basic-type> -> ID | `int' | `caractere' | `string' | `real' | `reald' | `vazio' | `*' <type>
+<array-type> -> `[' <expr> `]' <array-type> | LAMBDA
+
+<block> -> `{' <stmts> `}'
+<stmts> -> <stmt> <stmts> | LAMBDA
+
+<stmt> -> <dec> | <if> | <switch-case> | <for> | <while> | <do-while> | <block> | <expr> `;' | `retornar' `;' | `retornar' <expr> `;' | `parar' `;' | `continuar' `;' | `irpara' ID `;' | ID `:'
+
+<if> -> `se' `(' <expr> `)' <stmt> <else>
+<else> -> `senao' <stmt> | LAMBDA
+
+<while> -> `enquanto' `(' <expr> `)' <stmt>
+<do-while> -> `faz' <stmt> `enquanto' `(' <expr> `)' `;'
+
+<for> -> `para' ID `de' `(' <expr> `)' <for-expr>
+<for-expr> -> <for-asc> | <for-desc>
+<for-asc> -> `asc' `(' <expr> `)' <stmt>
+<for-desc> -> `desc' `(' <expr> `)' <stmt>
+
+<switch-case> -> `escolha' `(' <expr> `)' `{' <case1> `}' 
+<case1> -> <case> <case0>
+<case0> -> <case1> | LAMBDA
+<case> -> `caso' <expr> `:' <stmts> | `cc' `:' <stmts>
+
+
