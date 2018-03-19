@@ -85,6 +85,8 @@
 <mul-chain> -> <un-chain> <mul-tail>
 <mul-tail> -> <mul-op> <un-chain> <mul-chain> | LAMBDA
 
+<un-chain> -> <un-op> <un-chain> | <expr-leaf>
+
 <func-call> -> <expr-var> <call> 
 <call> -> `(' <args> `)' | LAMBDA
 <args1> -> <expr> <args0>
@@ -103,11 +105,8 @@
 <shift-op> -> `<<' | `>>'
 <rel-op> -> `>' | `<' | `>=' | `<='
 <eq-op> -> `==' | `!='
-<bitand> -> `&'
-<bitor> -> `|'
-<logand> -> `&&'
-<logor> -> `||'
-<ternary> -> `?'`:'
-
-<un-chain> -> <expr-leaf> <un-tail>
-<un-tail> -> <un-op> <un-chain> | LAMBDA
+<bitand-op> -> `&'
+<bitor-op> -> `pipe'
+<logand-op> -> `&&'
+<logor-op> -> `or'
+<ternary-op> -> `?'`:'
