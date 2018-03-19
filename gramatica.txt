@@ -69,3 +69,18 @@
 
 <expr-var> -> ID <var-mods>
 <var-mods> -> `.' ID <var-mods> | `[' <expr> `]' <var-mods> | LAMBDA
+
+<mul-op> -> `*' | `/' | `%'
+<un-op> -> `!' | `-' | `+' | `*'
+<add-op> -> `+' | `-'
+<shift-op> -> `<<' | `>>'
+<rel-op> -> `>' | `<' | `>=' | `<='
+<eq-op> -> `==' | `!='
+<bitand> -> `&'
+<bitor> -> `|'
+<logand> -> `&&'
+<logor> -> `||'
+<ternary> -> `?'`:'
+
+<un-chain> -> <expr-leaf> <un-tail>
+<un-tail> -> <un-op> <un-chain> | LAMBDA
