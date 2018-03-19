@@ -55,8 +55,35 @@
 <case0> -> <case1> | LAMBDA
 <case> -> `caso' <expr> `:' <stmts> | `cc' `:' <stmts>
 
-<expr> -> <expr-leaf> 
+<expr> -> <logor-chain>
 <expr-leaf> -> <func-call> | <expr-lit> | `(' <expr> `)'
+
+<logor-chain> -> <logand-chain> <logor-tail>
+<logor-tail> -> <logor-op> <logand-chain> <logor-tail> | LAMBDA
+
+<logand-chain> -> <bitor-chain> <logand-tail>
+<logand-tail> -> <logand-op> <bitor-chain> <logand-chain> | LAMBDA
+
+<bitor-chain> -> <bitand-chain> <bitor-tail>
+<bitor-tail> -> <bitor-op> <bitand-chain> <bitor-chain> | LAMBDA
+
+<bitand-chain> -> <eq-chain> <bitand-tail>
+<bitand-tail> -> <bitand-op> <eq-chain> <bitand-chain> | LAMBDA
+
+<eq-chain> -> <rel-chain> <eq-tail>
+<eq-tail> -> <eq-op> <rel-chain> <eq-chain> | LAMBDA
+
+<rel-chain> -> <shift-chain> <rel-tail>
+<rel-tail> -> <rel-op> <shift-chain> | LAMBDA
+
+<shift-chain> -> <add-chain> <shift-tail>
+<shift-tail> -> <shift-op> <add-chain> <shift-chain> | LAMBDA
+
+<add-chain> -> <mul-chain> <add-tail>
+<add-tail> -> <add-op> <mul-chain> <add-chain> | LAMBDA
+
+<mul-chain> -> <un-chain> <mul-tail>
+<mul-tail> -> <mul-op> <un-chain> <mul-chain> | LAMBDA
 
 <func-call> -> <expr-var> <call> 
 <call> -> `(' <args> `)' | LAMBDA
