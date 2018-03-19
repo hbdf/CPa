@@ -1,4 +1,4 @@
-<start> -> <inc> <dec1>
+start> -> <inc> <dec1>
 
 <inc> -> `importar' STRING `;' <inc> | LAMBDA
 
@@ -56,7 +56,6 @@
 <case> -> `caso' <expr> `:' <stmts> | `cc' `:' <stmts>
 
 <expr> -> <logor-chain>
-<expr-leaf> -> <func-call> | <expr-lit> | `(' <expr> `)'
 
 <logor-chain> -> <logand-chain> <logor-tail>
 <logor-tail> -> <logor-op> <logand-chain> <logor-tail> | LAMBDA
@@ -87,11 +86,15 @@
 
 <un-chain> -> <un-op> <un-chain> | <expr-leaf>
 
+<expr-leaf> -> <pre-op> <expr-var> | <func-call> | <expr-lit> | `(' <expr> `)'
+
 <func-call> -> <expr-var> <call> 
-<call> -> `(' <args> `)' | LAMBDA
+<call> -> `(' <args> `)'  | <pos-op> | <attr> | LAMBDA
 <args1> -> <expr> <args0>
 <args0> -> `,' <args> | LAMBDA
 <args> -> <args1> | LAMBDA
+
+<attr> -> <attr-op> <expr>
 
 <expr-lit> -> INTEIRO | REAL | STRING | CARACTERE | <array-lit>
 <array-lit> -> `{' <args1> `}'
@@ -99,6 +102,9 @@
 <expr-var> -> ID <var-mods>
 <var-mods> -> `.' ID <var-mods> | `[' <expr> `]' <var-mods> | LAMBDA
 
+<attr-op> -> `=' | `+=' | `−=' | `*='| `/=' | `=' | `or=' | `&=' | `&&=' | `>>=' | `<<='
+<pre-op> -> `&' | `++' | `--'
+<pos-op> -> `++' | `--'
 <mul-op> -> `*' | `/' | `%'
 <un-op> -> `!' | `-' | `+' | `*'
 <add-op> -> `+' | `-'
@@ -109,4 +115,3 @@
 <bitor-op> -> `pipe'
 <logand-op> -> `&&'
 <logor-op> -> `or'
-<ternary-op> -> `?'`:'
