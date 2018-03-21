@@ -1,4 +1,4 @@
-start> -> <inc> <dec1>
+<start> -> <inc> <dec1>
 
 <inc> -> `importar' STRING `;' <inc> | LAMBDA
 
@@ -55,7 +55,10 @@ start> -> <inc> <dec1>
 <case0> -> <case1> | LAMBDA
 <case> -> `caso' <expr> `:' <stmts> | `cc' `:' <stmts>
 
-<expr> -> <logor-chain>
+<expr> -> <attr-chain>
+
+<attr-chain> -> <logor-chain> <attr-tail>
+<attr-tail> -> <attr-op> <logor-chain> | LAMBDA
 
 <logor-chain> -> <logand-chain> <logor-tail>
 <logor-tail> -> <logor-op> <logand-chain> <logor-tail> | LAMBDA
@@ -82,19 +85,17 @@ start> -> <inc> <dec1>
 <add-tail> -> <add-op> <mul-chain> <add-chain> | LAMBDA
 
 <mul-chain> -> <un-chain> <mul-tail>
-<mul-tail> -> <mul-op> <un-chain> <mul-chain> | LAMBDA
+<mul-tail> -> <mul-op> <un-chain> <mul-tail> | LAMBDA
 
 <un-chain> -> <un-op> <un-chain> | <expr-leaf>
 
 <expr-leaf> -> <pre-op> <expr-var> | <func-call> | <expr-lit> | `(' <expr> `)'
 
 <func-call> -> <expr-var> <call> 
-<call> -> `(' <args> `)'  | <pos-op> | <attr> | LAMBDA
+<call> -> `(' <args> `)'  | <pos-op> | LAMBDA
 <args1> -> <expr> <args0>
 <args0> -> `,' <args> | LAMBDA
 <args> -> <args1> | LAMBDA
-
-<attr> -> <attr-op> <expr>
 
 <expr-lit> -> INTEIRO | REAL | STRING | CARACTERE | <array-lit>
 <array-lit> -> `{' <args1> `}'
