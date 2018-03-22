@@ -55,43 +55,42 @@
 <case0> -> <case1> | LAMBDA
 <case> -> `caso' <expr> `:' <stmts> | `cc' `:' <stmts>
 
-<expr> -> <attr-chain>
+<expr> -> <attr> <ternary>
 
-<attr-chain> -> <logor-chain> <attr-tail>
+<ternary> -> `?' <expr> `:' <expr> | LAMBDA
+
+<attr> -> <logor-chain> <attr-tail>
 <attr-tail> -> <attr-op> <logor-chain> | LAMBDA
 
 <logor-chain> -> <logand-chain> <logor-tail>
-<logor-tail> -> <logor-op> <logand-chain> <logor-tail> | LAMBDA
+<logor-tail> -> <logor-op> <logor-chain> | LAMBDA
 
 <logand-chain> -> <bitor-chain> <logand-tail>
-<logand-tail> -> <logand-op> <bitor-chain> <logand-chain> | LAMBDA
+<logand-tail> -> <logand-op> <logand-chain> | LAMBDA
 
 <bitor-chain> -> <bitand-chain> <bitor-tail>
-<bitor-tail> -> <bitor-op> <bitand-chain> <bitor-chain> | LAMBDA
+<bitor-tail> -> <bitor-op> <bitor-chain> | LAMBDA
 
-<bitand-chain> -> <eq-chain> <bitand-tail>
-<bitand-tail> -> <bitand-op> <eq-chain> <bitand-chain> | LAMBDA
+<bitand-chain> -> <rel> <bitand-tail>
+<bitand-tail> -> <bitand-op> <bitand-chain> | LAMBDA
 
-<eq-chain> -> <rel-chain> <eq-tail>
-<eq-tail> -> <eq-op> <rel-chain> <eq-chain> | LAMBDA
-
-<rel-chain> -> <shift-chain> <rel-tail>
+<rel> -> <shift-chain> <rel-tail>
 <rel-tail> -> <rel-op> <shift-chain> | LAMBDA
 
 <shift-chain> -> <add-chain> <shift-tail>
-<shift-tail> -> <shift-op> <add-chain> <shift-chain> | LAMBDA
+<shift-tail> -> <shift-op> <shift-chain> | LAMBDA
 
 <add-chain> -> <mul-chain> <add-tail>
-<add-tail> -> <add-op> <mul-chain> <add-chain> | LAMBDA
+<add-tail> -> <add-op> <add-chain> | LAMBDA
 
 <mul-chain> -> <un-chain> <mul-tail>
-<mul-tail> -> <mul-op> <un-chain> <mul-tail> | LAMBDA
+<mul-tail> -> <mul-op> <mul-chain> | LAMBDA
 
 <un-chain> -> <un-op> <un-chain> | <expr-leaf>
 
-<expr-leaf> -> <pre-op> <expr-var> | <func-call> | <expr-lit> | `(' <expr> `)'
+<expr-leaf> -> <pre-op> <expr-leaf> | <var-call> | <expr-lit> | `(' <expr> `)'
 
-<func-call> -> <expr-var> <call> 
+<var-call> -> <var> <call> 
 <call> -> `(' <args> `)'  | <pos-op> | LAMBDA
 <args1> -> <expr> <args0>
 <args0> -> `,' <args> | LAMBDA
@@ -100,18 +99,17 @@
 <expr-lit> -> INTEIRO | REAL | STRING | CARACTERE | <array-lit>
 <array-lit> -> `{' <args1> `}'
 
-<expr-var> -> ID <var-mods>
+<var> -> ID <var-mods>
 <var-mods> -> `.' ID <var-mods> | `[' <expr> `]' <var-mods> | LAMBDA
 
-<attr-op> -> `=' | `+=' | `−=' | `*='| `/=' | `=' | `or=' | `&=' | `&&=' | `>>=' | `<<='
-<pre-op> -> `&' | `++' | `--'
+<attr-op> -> `=' | `+=' | `−=' | `*='| `/=' | `pipe=' | `or=' | `&=' | `&&=' | `>>=' | `<<='
+<pre-op> -> `*' | `&' | `++' | `--'
 <pos-op> -> `++' | `--'
 <mul-op> -> `*' | `/' | `%'
-<un-op> -> `!' | `-' | `+' | `*'
+<un-op> -> `!' | `-' | `+'
 <add-op> -> `+' | `-'
 <shift-op> -> `<<' | `>>'
-<rel-op> -> `>' | `<' | `>=' | `<='
-<eq-op> -> `==' | `!='
+<rel-op> -> `==' | `!=' | `>' | `<' | `>=' | `<='
 <bitand-op> -> `&'
 <bitor-op> -> `pipe'
 <logand-op> -> `&&'
