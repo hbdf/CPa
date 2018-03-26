@@ -6,22 +6,12 @@
 
 #include "parser.tab.h"
 #include <math.h>
+#define YYSTYPE char*
 extern int line;
 extern int column;
-extern double yyNum;
-extern char* yyString;
+extern char* lexem;
 
-void stringToken(const char* lexem) {
-	yyString = lexem;
-	column += yyleng;
-}
-
-void numToken(const char* lexem) {
-	yyNum = atoi(lexem);
-	column += yyleng;
-}
-
-void error(){
+void error() {
 	printf("[ERRO] - linha: %d, coluna: %d ", line, column);
 	column += yyleng;
 }
@@ -36,18 +26,20 @@ MINUS2 			"--"
 MINUS 			"-"
 AMPERSEND 		"&"
 AND 			"&&"
-BITOR 			"|"
+PIPE 			"|"
 OR 				"||"
 DIV 			"/"
+MOD				"%"
 ATTRADD 		"+="
 ATTRSUB 		"-="
 ATTRMUL 		"*="
 ATTRDIV 		"/="
+ATTRMOD 		"%="
 ATTRSHIFTL 		">>="
 ATTRSHIFTR 		"<<="
 ATTRBITOR 		"|="
 ATTROR 			"||="
-ATTRAMPERSEND 	"&="
+ATTRBITAND	 	"&="
 ATTRAND 		"&&="
 EQQ 			"=="
 NEQ 			"!="
@@ -90,6 +82,7 @@ DE 				de
 ASC 			asc
 DESC 			desc
 FAZER 			fazer
+ENQUANTO		enquanto
 ESTRUTURA		estrutura
 ENUM			enum
 /* Outros */
@@ -110,6 +103,7 @@ STRING			\"([^"\\]|(\\).)*\"
 
 [\t ]+ {
 	column += yyleng;
+	lexem = yytext;
 }
 [\n ]	{
 	column = 1;
@@ -118,25 +112,25 @@ STRING			\"([^"\\]|(\\).)*\"
 {BLOCKCOMMENT} {}
 {LINECOMMENT} {}
 {STRING} {
-	stringToken(yytext); return STRING;
+	return STRING;
 }
 {CHAR} {
-	stringToken(yytext); return CHAR;
+	return CHAR;
 }
 {INTEIRO} {
-	numToken(yytext); return INTEIRO;
+	return INTEIRO;
 }
 {REAL} {
-	numToken(yytext); return REAL;
+	return REAL;
 }
 {REALD} {
-	numToken(yytext); return REALD;
+	return REALD;
 }
 {STAR} {
 	return STAR;
 }
 {TIPO_PRIMITIVO} {
-	stringToken(yytext); return TIPO_PRIMITIVO;
+	return TIPO_PRIMITIVO;
 }
 {IMPORTAR} {
 	return IMPORTAR;
@@ -182,6 +176,9 @@ STRING			\"([^"\\]|(\\).)*\"
 }
 {DESC} {
 	return DESC;
+}
+{ENQUANTO} {
+	return ENQUANTO;
 }
 {FAZER} {
 	return FAZER;
@@ -237,14 +234,17 @@ STRING			\"([^"\\]|(\\).)*\"
 {AND} {
 	return AND;
 }
-{BITOR} {
-	return BITOR;
+{PIPE} {
+	return PIPE;
 }
 {OR} {
 	return OR;
 }
 {DIV} {
 	return DIV;
+}
+{MOD} {
+	return MOD;
 }
 {ATTR} {
 	return ATTR;
@@ -261,6 +261,9 @@ STRING			\"([^"\\]|(\\).)*\"
 {ATTRDIV} {
 	return ATTRDIV;
 }
+{ATTRMOD} {
+	return ATTRMOD;
+}
 {ATTRSHIFTL} {
 	return ATTRSHIFTL;
 }
@@ -273,8 +276,8 @@ STRING			\"([^"\\]|(\\).)*\"
 {ATTROR} {
 	return ATTROR;
 }
-{ATTRAMPERSEND} {
-	return ATTRAMPERSEND;
+{ATTRBITAND} {
+	return ATTRBITAND;
 }
 {ATTRAND} {
 	return ATTRAND;
@@ -313,7 +316,7 @@ STRING			\"([^"\\]|(\\).)*\"
 	return ENUM;
 }
 {ID} {
-	stringToken(yytext); return ID;
+	return ID;
 }
 . {
 	error();
