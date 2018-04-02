@@ -1,15 +1,20 @@
+YFLAGS        = -d
+ 
 PROGRAM       = cpa
  
-OBJS          = parser.o
+OBJS          = parser.tab.o lex.yy.o
  
-SRCS          = parser.c
+SRCS          = parser.tab.c lex.yy.c
  
 CC            = gcc 
  
-all:            lex.yy.c $(PROGRAM)
+all:            $(PROGRAM)
  
 .c.o:			$(SRCS)
 				$(CC) -c $*.c -o $@ -O
+ 
+parser.tab.c:	parser.y
+				bison $(YFLAGS) parser.y
  
 lex.yy.c:		lex.l
 				flex lex.l

@@ -4,20 +4,16 @@
  * CPa lexer
  */
 
-#include "token.h"
+#include "parser.tab.h"
 #include <math.h>
 #define YYSTYPE char*
-int line;
-int column;
-char* lexem;
+extern int line;
+extern int column;
+extern char* lexem;
 
 void error() {
 	printf("[ERRO] - linha: %d, coluna: %d ", line, column);
 	column += yyleng;
-}
-
-enum token getToken(void) {
-	return yylex();
 }
 
 %}
