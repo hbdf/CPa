@@ -7,8 +7,8 @@
 #include "token.h"
 #include <math.h>
 #define YYSTYPE char*
-int line;
-int column;
+int line = 1;
+int column = 1;
 char* lexem;
 
 void error() {
