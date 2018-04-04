@@ -1,4 +1,8 @@
+#ifndef __TOKEN__
+#define __TOKEN__
+
 enum token {
+	END,
 	STRING,
 	CHAR,
 	INTEIRO,
@@ -6,6 +10,7 @@ enum token {
 	REALD,
 	TIPO_PRIMITIVO,
 	ID,
+	LABEL,
 	ENUM,
 	ESTRUTURA,
 	IMPORTAR,
@@ -13,6 +18,7 @@ enum token {
 	PARAR,
 	CONTINUAR,
 	RETORNAR,
+	ROTULO,
 	IRPARA,
 	SE,
 	CC,
@@ -69,3 +75,5 @@ enum token {
 	ATTRBITAND,
 	ATTRAND
 };
+
+#endif
