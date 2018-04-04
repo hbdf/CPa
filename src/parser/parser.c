@@ -10,12 +10,17 @@ void advance() {
 void eat(enum token t) {
 	if (tok == t)
 		advance();
-	else 
-		syntax_error();
+	else {
+		printf("[ERRO SINTÁTICO] linha: %d, coluna: %d\n", line, column);
+		printf("Não espera-se token %d, espera-se token %d", tok, t);
+		exit(-1);
+	}
 }
 
-void syntax_error() {
-	printf("[ERRO SINTÁTICO] linha: %d, coluna: %d, token %d", line, column, tok);
+void syntax_error(char* err) {
+	printf("[ERRO SINTÁTICO] linha: %d, coluna: %d\n", line, column);
+	if (err)
+		printf("%s", err);
 	exit(-1);
 }
 

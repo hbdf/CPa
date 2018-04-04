@@ -39,7 +39,7 @@ void dec(void) {
 			id_dec();
 			break;
 		default:
-			syntax_error();
+			syntax_error("Espera-se nova declaração ou fim do arquivo.");
 	}
 }
 
@@ -57,7 +57,7 @@ void dec0(void) {
 			dec1();
 			break;
 		default:
-			syntax_error();
+			syntax_error("Espera-se nova declaração ou fim do arquivo.");
 	}
 }
 
@@ -113,7 +113,7 @@ void id_suffix(void){
 			var_dec();
 			break;
 		default:
-			syntax_error();
+			syntax_error("Espera-se ';', parâmetros de função, valor inicial ou novo ID.");
 			break;
 	}
 }
@@ -134,7 +134,7 @@ void func_end(void) {
 			block();
 			break;
 		default:
-			syntax_error();
+			syntax_error("Espera-se ';' ou definição de função (bloco).");
 	}
 }
 
@@ -178,7 +178,7 @@ void var_dec1(void){
 			var_dec();
 			break;
 		default:
-			syntax_error();
+			syntax_error("Espera-se ';' ou novo ID.");
 	}
 }
 
@@ -205,7 +205,7 @@ void type(void) {
 			array_type();
 			break;
 		default:
-			syntax_error();
+			syntax_error("Espera-se tipo ou tipo entre parênteses.");
 	}
 }
 
@@ -222,7 +222,7 @@ void basic_type(void) {
 			type();
 			break;
 		default:
-			syntax_error();
+			syntax_error("Espera-se tipo.");
 	}
 }
 

@@ -58,7 +58,7 @@ void return_stmt(void);
 
 void advance();
 void eat(enum token t);
-void syntax_error();
+void syntax_error(char* err);
 void start(void);
 
 #endif

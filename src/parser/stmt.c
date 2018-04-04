@@ -18,6 +18,7 @@ void stmts(void) {
 		case RETORNAR:
 		case PARAR:
 		case CONTINUAR:
+		case LABEL:
 		case IRPARA:
 			stmt();
 			stmts();
@@ -121,7 +122,7 @@ void for_expr(void) {
 	else if (tok == DESC)
 		eat(DESC);
 	else
-		syntax_error();
+		syntax_error("Espera-se 'asc' ou 'desc'.");
 	eat(LPAREN);
 	expr();
 	eat(RPAREN);
@@ -163,7 +164,7 @@ void case_stmt(void) {
 			eat(COLON);
 			stmts();
 		default:
-			syntax_error();
+			syntax_error("Espera-se 'caso' ou 'cc'.");
 	}
 }
 
