@@ -14,6 +14,7 @@ extern enum token getToken(void);
 extern enum token tok;
 
 // Dec
+void start(void);
 void inc(void);
 void dec(void);
 void dec0(void);
@@ -31,6 +32,7 @@ void params0(void);
 void params1(void);
 void var_dec(void);
 void var_dec1(void);
+void var_decs(void);
 void type(void);
 void array_type(void);
 void basic_type(void);
@@ -75,6 +77,19 @@ void add_op(void);
 
 // Stmt
 void block(void);
+void stmts(void);
+void stmt(void);
+void if_stmt(void);
+void else_stmt(void);
+void while_stmt(void);
+void do_while(void);
+void for_stmt(void);
+void for_expr(void);
+void switch_case(void);
+void case1(void);
+void case0(void);
+void case_stmt(void);
+void return_stmt(void);
 
 void advance();
 void eat(enum token t);

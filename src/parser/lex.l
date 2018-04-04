@@ -105,6 +105,7 @@ REAL			({FRAC}|-?{DIGIT}+|-?{DIGIT}+{SCINOT})f
 REALD			{FRAC}|{FRAC}{SCINOT}|-?{DIGIT}+{SCINOT}
 CHAR			\'([^'\\]|(\\).)\'
 STRING			\"([^"\\]|(\\).)*\"
+LABEL			{ID}:
 %%
 
 [\t ]+ {
@@ -320,6 +321,9 @@ STRING			\"([^"\\]|(\\).)*\"
 }
 {ENUM} {
 	return ENUM;
+}
+{LABEL} {
+	return LABEL;
 }
 {ID} {
 	return ID;

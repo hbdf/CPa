@@ -15,16 +15,12 @@ void eat(enum token t) {
 }
 
 void syntax_error() {
-	printf("[ERRO SINTÁTICO] linha: %d, coluna: %d", line, column);
+	printf("[ERRO SINTÁTICO] linha: %d, coluna: %d, token %d", line, column, tok);
 	exit(-1);
 }
 
-void start(void) {
-	advance();
-	inc();
-	dec1();
-}
-
 int main() {
+	advance();
 	start();
+	eat(END);
 }

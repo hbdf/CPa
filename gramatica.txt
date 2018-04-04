@@ -18,7 +18,9 @@
 <var-dec1> -> `;' | `,' ID <var-dec>
 <id-init> -> `=' <expr> | LAMBDA
 
-<struct-dec> -> `estrutura' ID `{' <var-dec1> `}'
+<struct-dec> -> `estrutura' ID `{' <var-decs> `}'
+
+<var-decs> -> <id-dec> <var-decs> | LAMBDA
 
 <enum-dec> -> `enum' ID `{' <ids1> `}'
 <ids1> -> ID <ids0>
@@ -35,7 +37,10 @@
 <block> -> `{' <stmts> `}'
 <stmts> -> <stmt> <stmts> | LAMBDA
 
-<stmt> -> <dec> | <if> | <switch-case> | <for> | <while> | <do-while> | <block> | <expr> `;' | `retornar' `;' | `retornar' <expr> `;' | `parar' `;' | `continuar' `;' | `irpara' ID `;' | ID `:'
+<stmt> -> <dec> | <if> | <switch-case> | <for> | <while> | <do-while> | <block> | <expr> `;' | <return> | `parar' `;' | `continuar' `;' | `irpara' ID `;' | LABEL
+
+<return> -> `retornar' <return-expr> `;'
+<return-expr> -> <expr> | LAMBDA
 
 <if> -> `se' `(' <expr> `)' <stmt> <else>
 <else> -> `senao' <stmt> | LAMBDA

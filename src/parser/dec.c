@@ -1,5 +1,10 @@
 #include "parser.h"
 
+void start(void) {
+	inc();
+	dec1();
+}
+
 void inc(void) {
 	switch(tok) {
 		case IMPORTAR:
@@ -7,8 +12,6 @@ void inc(void) {
 			eat(STRING);
 			eat(SEMI);
 			inc();
-			break;
-		default:
 			break;
 	}
 }
@@ -36,12 +39,14 @@ void dec(void) {
 			id_dec();
 			break;
 		default:
-			syntax_error("");
+			syntax_error();
 	}
 }
 
 void dec0(void) {
 	switch(tok){
+		case END:
+			break;
 		case CONSTANTE:
 		case ENUM:
 		case ESTRUTURA:
@@ -52,7 +57,7 @@ void dec0(void) {
 			dec1();
 			break;
 		default:
-			break;
+			syntax_error();
 	}
 }
 
@@ -76,8 +81,19 @@ void struct_dec(void){
 	eat(ESTRUTURA);
 	eat(ID);
 	eat(LBRACE);
-	//var_dec1();
+	var_decs();
 	eat(RBRACE);	
+}
+
+void var_decs(void) {
+	switch(tok) {
+		case LPAREN:
+		case ID:
+		case TIPO_PRIMITIVO:
+		case STAR:
+			id_dec();
+			var_decs();
+	}
 }
 
 void id_dec(void){
