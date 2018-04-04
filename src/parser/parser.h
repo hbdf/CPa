@@ -31,6 +31,7 @@ void params0(void);
 void params1(void);
 void var_dec(void);
 void var_dec1(void);
+void var_decs(void);
 void type(void);
 void array_type(void);
 void basic_type(void);

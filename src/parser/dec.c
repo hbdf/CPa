@@ -76,8 +76,19 @@ void struct_dec(void){
 	eat(ESTRUTURA);
 	eat(ID);
 	eat(LBRACE);
-	//var_dec1();
+	var_decs();
 	eat(RBRACE);	
+}
+
+void var_decs(void) {
+	switch(tok) {
+		case LPAREN:
+		case ID:
+		case TIPO_PRIMITIVO:
+		case STAR:
+			id_dec();
+			var_decs();
+	}
 }
 
 void id_dec(void){
