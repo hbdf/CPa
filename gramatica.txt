@@ -4,16 +4,18 @@
 
 <dec1> -> <dec> <dec0>
 <dec0> -> <dec1> | LAMBDA
-<dec> -> <const-dec> | <var-dec> | <func-dec> | <struct-dec> | <enum-dec>
+<dec> -> <const-dec> | <id-dec> | <struct-dec> | <enum-dec>
 
 <const-dec> -> `const' <type> ID <expr> `;'
 
-<var-dec1> -> <var-dec> <var-dec0>
-<var-dec0> -> <var-dec1> | LAMBDA
-<var-dec> -> <type> <id-dec1> `;'
+<id-dec> -> <type> ID <id-suffix>
+<id-suffix> -> <func-dec> | <var-dec>
 
-<id-dec1> -> ID <id-init> <id-dec0>
-<id-dec0> -> `,' <id-dec1> | LAMBDA
+<func-dec> -> `(' <params> `)' <func-end>
+<func-end> -> `;' | <block>
+
+<var-dec> -> <id-init> <var-dec1>
+<var-dec1> -> `;' | `,' ID <var-dec>
 <id-init> -> `=' <expr> | LAMBDA
 
 <struct-dec> -> `estrutura' ID `{' <var-dec1> `}'
@@ -21,10 +23,6 @@
 <enum-dec> -> `enum' ID `{' <ids1> `}'
 <ids1> -> ID <ids0>
 <ids0> -> `,' <ids1> | LAMBDA
-
-<func-dec> -> <func-sign> <func-end>
-<func-end> -> `;' | <block>
-<func-sign> -> <type> ID `(' <params> `)'
 
 <params> -> <param1> | LAMBDA
 <param1> -> <type> ID <param0>
