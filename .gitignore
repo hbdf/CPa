@@ -2,3 +2,7 @@
 # Arquivos gerados após compilaçao
 src/lexer/exe
 src/lexer/lex.yy.c
+src/parser/cpa
+src/parser/*.o
+src/parser/*.tab.*
+src/parser/*.yy.*

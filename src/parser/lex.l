@@ -11,8 +11,10 @@ int line = 1;
 int column = 1;
 char* lexem;
 
+int yylex(void);
+
 void error() {
-	printf("[ERRO] - linha: %d, coluna: %d ", line, column);
+	printf("[ERRO LEXICO] linha: %d, coluna: %d.", line, column);
 	column += yyleng;
 }
 

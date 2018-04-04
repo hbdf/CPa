@@ -1,9 +1,9 @@
 PROGRAM       = cpa
  
-OBJS          = parser.o
+OBJS          = expr.o dec.o parser.o stmt.o lex.yy.o
  
-SRCS          = parser.c
- 
+SRCS          = expr.c dec.c parser.c stmt.c lex.yy.c
+
 CC            = gcc 
  
 all:            lex.yy.c $(PROGRAM)
