@@ -20,6 +20,20 @@ void stmts(void) {
 		case CONTINUAR:
 		case LABEL:
 		case IRPARA:
+		// Expr
+ 		case NEG:
+ 		case MINUS:
+ 		case PLUS:
+ 		case LPAREN:
+ 		case STAR:
+ 		case AMPERSEND:
+ 		case PLUS2:
+ 		case MINUS2:
+ 		case ID:
+ 		case INTEIRO:
+ 		case REAL:
+ 		case STRING:
+ 		case CHAR:
 			stmt();
 			stmts();
 	}

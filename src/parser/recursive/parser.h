@@ -41,6 +41,7 @@ void basic_type(void);
 void expr(void);
 void attr(void);
 void ternary(void);
+
 void logor_chain(void);
 void attr_tail(void);
 void logand_chain(void);
@@ -59,7 +60,7 @@ void mul_chain(void);
 void add_tail(void);
 void un_chain(void);
 void mul_tail(void);
-void un_op(void);
+
 void expr_leaf(void);
 void pre_op(void);
 void var_call(void);
@@ -72,8 +73,13 @@ void pos_op(void);
 void args1(void);
 void args0(void);
 void array_lit(void);
-void mul_op(void);
+
+void attr_op(void);
+void shift_op(void);
+void rel_op(void);
 void add_op(void);
+void mul_op(void);
+void un_op(void);
 
 // Stmt
 void block(void);
