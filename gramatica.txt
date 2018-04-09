@@ -58,11 +58,11 @@
 <case0> -> <case1> | LAMBDA
 <case> -> `caso' <expr> `:' <stmts> | `cc' `:' <stmts>
 
-<expr> -> <attr> <ternary>
+<expr> -> <attr-rule> <ternary>
 
 <ternary> -> `?' <expr> `:' <expr> | LAMBDA
 
-<attr> -> <logor-chain> <attr-tail>
+<attr-rule> -> <logor-chain> <attr-tail>
 <attr-tail> -> <attr-op> <logor-chain> | LAMBDA
 
 <logor-chain> -> <logand-chain> <logor-tail>
