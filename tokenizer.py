@@ -79,10 +79,10 @@ case0 -> case1\n\
 case0 -> \'\'\n\
 case -> \'caso\' expr \':\' stmts \n\
 case -> \'cc\' \':\' stmts\n\
-expr -> attr ternary\n\
+expr -> attr-rule ternary\n\
 ternary -> \'?\' expr \':\' expr\n\
 ternary -> \'\'\n\
-attr -> logor-chain attr-tail\n\
+attr-rule -> logor-chain attr-tail\n\
 attr-tail -> attr-op logor-chain\n\
 attr-tail -> \'\'\n\
 logor-chain -> logand-chain logor-tail\n\
@@ -171,7 +171,7 @@ rel-op -> \'<=\'\n\
 bitand-op -> \'&\'\n\
 bitor-op -> \'pipe\'\n\
 logand-op -> \'&&\'\n\
-logor-op -> \'or\'\n'
+logor-op -> \'or\''
 
 
 tokens = {
@@ -182,7 +182,9 @@ tokens = {
 	'\'-\'' : 'MINUS',
 	'\'&\'' : 'AMPERSEND',
 	'\'&&\'' : 'AND',
+	'\'pipe\'' : 'PIPE',
 	'\'|\'' : 'PIPE',
+	'\'or\'' : 'OR',
 	'\'||\'' : 'OR',
 	'\'/\'' : 'DIV',
 	'\'%\'' : 'MOD',
@@ -225,7 +227,7 @@ tokens = {
 	'\'duplo\'' : 'REALD',
 	'\'string\'' : 'STRING',
 	'\'reald\'' : 'REALD',
-	'\'caractere\'' : 'CARACTERE',
+	'\'caractere\'' : 'CHAR',
 	'\'vazio\'' : 'VAZIO',
 	'\'importar\'' : 'IMPORTAR',
 	'\'const\'' : 'CONSTANTE',
@@ -243,6 +245,7 @@ tokens = {
 	'\'asc\'' : 'ASC',
 	'\'desc\'' : 'DESC',
 	'\'fazer\'' : 'FAZER',
+	'\'faz\'' : 'FAZER',
 	'\'enquanto\'' : 'ENQUANTO',
 	'\'estrutura\'' : 'ESTRUTURA',
 	'\'enum\'' : 'ENUM',
@@ -254,10 +257,9 @@ tokens = {
 
 
 def tokenize(gram, toks):
-	grammar_lines = grammar.split('\n')
+	grammar_lines = gram.split('\n')
 	grammar_words = [line.split(' ') for line in grammar_lines]
-	grammar_size = len(grammar_words)
-	for i in range(grammar_size):
+	for i in range(len(grammar_words)):
 		for j in range(len(grammar_words[i])):
 			if grammar_words[i][j] in tokens.keys():
 				grammar_words[i][j] = tokens[grammar_words[i][j]]
@@ -275,7 +277,30 @@ def tokenize(gram, toks):
 	for words in tmp:
 		rs += ''.join(words)
 		rs += '\n'
-	print rs
+	return rs
 
 
-tokenize(grammar, tokens)
+def to_array(gram, toks):
+	gram = tokenize(gram, toks)
+	grammar_lines = gram.split('\n')
+	for i in range(len(grammar_lines) - 1):
+		parts = grammar_lines[i].split('->')
+		print parts
+		rule = parts[1].replace('LAMBDA', '').split()
+		grammar_lines[i] = '{'
+		for j in range(len(rule)):
+			symbol = rule[j].strip()
+			if symbol != '':
+				grammar_lines[i] += symbol.upper().replace('-', '_') + ', '
+		grammar_lines[i] += '-1}'
+
+	rs = ''
+	for line in grammar_lines:
+		rs += line
+		rs += '\n'
+	return rs
+
+
+#rs = tokenize(grammar, tokens)
+rs = to_array(grammar, tokens)
+print(rs)
