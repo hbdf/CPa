@@ -7,7 +7,7 @@ enum tokenNterminais {
 	ARGS1,
 	ARRAY_LIT,
 	ARRAY_TYPE,
-	ATTR,
+	ATTR_RULE,
 	ATTR_OP,
 	ATTR_TAIL,
 	BASIC_TYPE,
