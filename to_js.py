@@ -87,11 +87,10 @@ def transform_grammar():
 	lines = []
 	for line in grammar_lines:
 		parts = line.split('->')
-		print parts
 		if len(parts) == 2:	
-			p0 = parts[0].replace('<', '').replace('>', '')
-			p1 = parts[1].replace('<', '').replace('>', '')
-			rules = p1.replace('`', '\'').split('|')
+			p0 = parts[0]
+			p1 = parts[1]
+			rules = p1.split('|')
 			for rule in rules:
 				r = rule.replace('LAMBDA', '\'\'')
 				lines.append(p0.strip() + " -> " + r.strip())
@@ -101,23 +100,28 @@ def transform_grammar():
 		rs += '\n'
 	return rs[:-1]
 
+def to_token(w):
+	if w[0] == '<':
+		w = w.upper().replace('-', '_').replace('<', '').replace('>', '')
+	elif w in tokens.keys():
+		w = tokens[w]
+	return w.strip()
+
 def tokenize():
 	lines = grammar.split('\n')
 	for i in range(len(lines)):
 		parts = lines[i].split('->')
-		lines[i] = parts[0].upper().replace('-', '_').strip() + ' -> '
-		for word in parts[1].split():
-			w = word
-			if word in tokens.keys():
-				w = tokens[w]
-			lines[i] += w.upper().replace('-', '_').strip() + ' '
+		if len(parts) == 2:	
+			lines[i] = to_token(parts[0]) + ' -> '
+			for word in parts[1].split():
+				lines[i] += to_token(word.replace('`', '\'')) + ' '
 	rs = ''
 	for line in lines:
 		rs += line
 		rs += '\n'
 	return rs[:-1]
 
-grammar = transform_grammar()
 grammar = tokenize()
+grammar = transform_grammar()
 with open('gramatica_token.txt', 'w') as file:
     file.write(grammar)
