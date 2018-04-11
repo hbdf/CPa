@@ -52,6 +52,7 @@ tokens = {
 	'\'?\'' : 'QUESTION',
 	'\'int\'' : 'TIPO_PRIMITIVO',
 	'\'real\'' : 'TIPO_PRIMITIVO',
+	'\'reald\'' : 'TIPO_PRIMITIVO',
 	'\'duplo\'' : 'TIPO_PRIMITIVO',
 	'\'string\'' : 'TIPO_PRIMITIVO',
 	'\'reald\'' : 'TIPO_PRIMITIVO',

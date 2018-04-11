@@ -99,13 +99,13 @@
 <args0> -> `,' <args> | LAMBDA
 <args> -> <args1> | LAMBDA
 
-<expr-lit> -> INTEIRO | REAL | STRING | CARACTERE | <array-lit>
+<expr-lit> -> INTEIRO | REAL | REALD | STRING | CHAR | <array-lit>
 <array-lit> -> `{' <args1> `}'
 
 <var> -> ID <var-mods>
 <var-mods> -> `.' ID <var-mods> | `[' <expr> `]' <var-mods> | LAMBDA
 
-<attr-op> -> `=' | `+=' | `-=' | `*=' | `/=' | `pipe=' | `or=' | `&=' | `&&=' | `>>=' | `<<='
+<attr-op> -> `=' | `+=' | `-=' | `*=' | `/=' | `%=' | `pipe=' | `or=' | `&=' | `&&=' | `>>=' | `<<='
 <pre-op> -> `*' | `&' | `++' | `--'
 <pos-op> -> `++' | `--'
 <mul-op> -> `*' | `/' | `%'
