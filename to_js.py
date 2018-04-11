@@ -1,4 +1,4 @@
-grammar = 'gramatica_table_parser.txt'
+grammar = 'gramatica.txt'
 with open(grammar, 'r') as file:
     grammar = file.read()
 
@@ -79,45 +79,45 @@ tokens = {
 	'\'enum\'' : 'ENUM',
 	'\'label\'' : 'LABEL',
 	'\'id\'' : 'ID',
-	'\'ID\'' : 'ID',
-	'\'\'' : 'LAMBDA'
+	'\'ID\'' : 'ID'
 }
 
+def transform_grammar():
+	grammar_lines = grammar.split('\n')
+	lines = []
+	for line in grammar_lines:
+		parts = line.split('->')
+		print parts
+		if len(parts) == 2:	
+			p0 = parts[0].replace('<', '').replace('>', '')
+			p1 = parts[1].replace('<', '').replace('>', '')
+			rules = p1.replace('`', '\'').split('|')
+			for rule in rules:
+				r = rule.replace('LAMBDA', '\'\'')
+				lines.append(p0.strip() + " -> " + r.strip())
+	rs = ''
+	for line in lines:
+		rs += line
+		rs += '\n'
+	return rs[:-1]
 
 def tokenize():
-	grammar_lines = grammar.split('\n')
-	grammar_words = [line.split(' ') for line in grammar_lines]
-	for i in range(len(grammar_words)):
-		for j in range(len(grammar_words[i])):
-			if grammar_words[i][j] in tokens.keys():
-				grammar_words[i][j] = tokens[grammar_words[i][j]]
-
+	lines = grammar.split('\n')
+	for i in range(len(lines)):
+		parts = lines[i].split('->')
+		lines[i] = parts[0].upper().replace('-', '_').strip() + ' -> '
+		for word in parts[1].split():
+			w = word
+			if word in tokens.keys():
+				w = tokens[w]
+			lines[i] += w.upper().replace('-', '_').strip() + ' '
 	rs = ''
-	for words in grammar_words:
-		for word in words:
-			rs += word + ' '
-		rs += '\n'
-	return rs
-
-def to_array():
-	grammar_lines = tokenize().split('\n')
-	for i in range(len(grammar_lines) - 1):
-		parts = grammar_lines[i].split('->')
-		rule = parts[1].replace('LAMBDA', '').split()
-		grammar_lines[i] = '{'
-		for symbol in reversed(rule):
-			symbol = symbol.strip()
-			if symbol != '':
-				grammar_lines[i] += symbol.upper().replace('-', '_') + ', '
-		grammar_lines[i] += '-1}'
-
-	rs = '{'
-	for line in grammar_lines:
+	for line in lines:
 		rs += line
-		rs += ',\n'
-	rs = rs[:-4] + '}'
-	return rs
+		rs += '\n'
+	return rs[:-1]
 
-#rs = tokenize()
-rs = to_array()
-print(rs)
+grammar = transform_grammar()
+grammar = tokenize()
+with open('gramatica_token.txt', 'w') as file:
+    file.write(grammar)

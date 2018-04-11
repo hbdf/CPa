@@ -6,3 +6,5 @@ src/parser/cpa
 src/parser/*.o
 src/parser/*.tab.*
 src/parser/*.yy.*
+src/parser/recursive/*.o
+src/parser/recursive/cpa
