@@ -207,9 +207,10 @@ void syntax_error(char* err) {
 	exit(-1);
 }
 
-void apply (int p) {
-	int* prod = productions[p];
+void apply (int* p) {
 	pop(&stack);
+
+	// checar -2
 
 	int i = 0;
 	while (prod[i] >= 0)
@@ -231,12 +232,7 @@ void LLparser() {
 			pop(&stack);
 		}
 		else {
-			int p = LLtable[top(stack)][tok];
-			if (p == 0) {
-				syntax_error("Nenhuma produção encontrada.");
-			} else {
-				apply(p);
-			}
+			apply(LLtable[top(stack)][tok]);
 		}
 	}
 }

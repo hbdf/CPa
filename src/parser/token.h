@@ -18,7 +18,6 @@ enum token {
 	PARAR,
 	CONTINUAR,
 	RETORNAR,
-	ROTULO,
 	IRPARA,
 	SE,
 	CC,
