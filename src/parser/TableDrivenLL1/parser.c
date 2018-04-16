@@ -5,10 +5,6 @@
 #include "lltable.c"
 #include "prod.c"
 
-#define NONTERMINAL 84 // 84 nonterminal symbols in enumFinal
-#define LOOKAHEAD 72
-#define RULES 173
-
 StackNode *stack = 0;
 enum token tok;
 
@@ -33,32 +29,43 @@ void syntax_error(char* err) {
 	exit(-1);
 }
 
-void apply (int* p) {
+void apply (int p) {
 	pop(&stack);
-
-	// checar -2
-
-	int i = 0;
-	while (prod[i] >= 0)
-		push(&stack, prod[i++]);
+	if (p == -2) {
+		syntax_error(0);
+	}
+	if (p >= 0) {
+		int* prod = productions[p];
+		int i = 0;
+		while (prod[i] >= 0) {
+			printf("push %d %d\n", prod[i], BASIC_TYPE);
+			push(&stack, prod[i]);
+			i++;
+		}
+	}
 }
 
 void LLparser() {
 	push(&stack, START);
-	tok = getToken();
+	advance();
 	int accepted = 0;
-
-	while (accepted == 0) {
+	while (accepted == 0 && !isEmpty(stack)) {
 		// if the TOP is a terminal symbol
-		if (top(stack) <= 71) {
+		//printf("%d\n", top(stack));
+		if (top(stack) < TERMINAL) {
+			printf("TERMINAL");
 			eat(top(stack));
+			printf("TERMINAL2");
 			if (isEmpty(stack)){
 				accepted = 1;
 			}
 			pop(&stack);
 		}
 		else {
-			apply(LLtable[top(stack)][tok]);
+			int nonterminal = top(stack) - 71;
+			int terminal = (tok - 1) % TERMINAL;
+			printf("%d %d %d\n", nonterminal, terminal, LLtable[nonterminal][terminal]);
+			apply(LLtable[nonterminal][terminal]);
 		}
 	}
 }

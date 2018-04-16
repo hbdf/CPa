@@ -1,8 +1,4 @@
-#ifndef __TOKEN__
-#define __TOKEN__
-
-enum token {
-	END,
+enum token { 
 	IMPORTAR,
 	STRING,
 	SEMI,
@@ -72,7 +68,6 @@ enum token {
 	LEQ,
 	PIPE,
 	AND,
-	OR
-};
-
-#endif
+	OR,
+	END
+}

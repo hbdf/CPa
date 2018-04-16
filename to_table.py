@@ -40,14 +40,25 @@ def to_array(rule):
 def to_table():
 	table_parts = table.split('</thead>')
 	table_head = table_parts[0].replace("<tr id=\"llTableHead\">", '').replace("<thead>", '').replace("<th>", "").replace("</tr>", "").split('</th>')
-	table_lines = table_parts[1].replace("<tbody id=\"llTableRows\">", '').replace("<tr></tr>", '').replace("<tr>", '').replace("</tbody>", '').split('</tr>')
+	table_lines = table_parts[1].replace("<tbody id=\"llTableRows\">", '').replace("<tr></tr>", '').replace("<tr>", '').replace("</tbody>", '').replace("<br>", ", ").split('</tr>')
+
+	table_head = table_head[3:]
+	tokens = "enum token { \n"
+	for i in range(len(table_head)):
+		tokens += '\t' + table_head[i].replace("\n", '').strip() + ',\n'
+	tokens = tokens[:-5].replace("$", "END") + '\n}'
 
 	lines = []
 	for tline in table_lines:
 		line = tline.replace("<td nowrap=\"nowrap\">", "").split("</td>")
-		line = [to_array(w.replace("\n", '').strip().replace("-&gt;", "->")) for w in line[3:]]
-		linestr = print_array(line)
+		#nonterminal = line[2].strip().replace("\n", '')
+		#print(nonterminal + ',')
+		line = [to_array(w.replace("\n", '').strip().replace("-&gt;", "->")) for w in line[3:-1]]
+		linestr = print_array(line[1:])
 		lines.append(linestr)
+
+	with open('token.h', 'w') as file:
+	    file.write(tokens)
 
 	return print_array(lines)
 
@@ -59,3 +70,5 @@ with open('lltable.c', 'w') as file:
 
 with open('prod.c', 'w') as file:
 	file.write(print_array(prod))
+
+print(len(prod))
