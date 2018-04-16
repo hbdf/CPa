@@ -973,7 +973,7 @@ case 6:
 YY_RULE_SETUP
 #line 125 "../lex.l"
 {
-	return CHAR;
+	return CARACTERE;
 }
 	YY_BREAK
 case 7:

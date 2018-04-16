@@ -104,7 +104,7 @@ FRAC			-?({DIGIT}*{DOT}{DIGIT}+|{DIGIT}+{DOT}{DIGIT}*)
 SCINOT			e-?{DIGIT}+
 REAL			({FRAC}|-?{DIGIT}+|-?{DIGIT}+{SCINOT})f
 REALD			{FRAC}|{FRAC}{SCINOT}|-?{DIGIT}+{SCINOT}
-CHAR			\'([^'\\]|(\\).)\'
+CARACTERE		\'([^'\\]|(\\).)\'
 STRING			\"([^"\\]|(\\).)*\"
 LABEL			{ID}:
 %%
@@ -122,8 +122,8 @@ LABEL			{ID}:
 {STRING} {
 	return STRING;
 }
-{CHAR} {
-	return CHAR;
+{CARACTERE} {
+	return CARACTERE;
 }
 {INTEIRO} {
 	return INTEIRO;

@@ -6,7 +6,7 @@
 #include "prod.c"
 
 StackNode *stack = 0;
-enum token tok;
+enum token tok = -1;
 
 void advance() {
 	tok = getToken();
@@ -30,40 +30,36 @@ void syntax_error(char* err) {
 }
 
 void apply (int p) {
-	pop(&stack);
 	if (p == -2) {
+		while (!isEmpty(stack))
+			printf("%d ", pop(&stack));
 		syntax_error(0);
 	}
 	if (p >= 0) {
-		printf("prod %d \n", p);
+		//printf("prod %d: ", p);
 		int* prod = productions[p];
 		int i = 0;
 		while (prod[i] >= 0) {
+			//printf("%d ", prod[i]);
 			push(&stack, prod[i]);
 			i++;
 		}
+		//printf("\n");
 	}
 }
 
 void LLparser() {
+	push(&stack, END);
 	push(&stack, START);
 	advance();
-	int accepted = 0;
-	while (accepted == 0 && !isEmpty(stack)) {
-		// if the TOP is a terminal symbol
-		//printf("%d\n", top(stack));
-		if (top(stack) < TERMINAL) {
-			eat(top(stack));
-			if (isEmpty(stack)){
-				accepted = 1;
-			}
-			pop(&stack);
-		}
-		else {
-			printf("top %d\n", top(stack));
-			int nonterminal = top(stack) - 71;
-			int terminal = (tok - 1) % TERMINAL;
-			printf("%d %d %d\n", nonterminal, terminal, LLtable[nonterminal][terminal]);
+	while (!isEmpty(stack)) {
+		int symbol = pop(&stack);
+		if (symbol < TERMINAL) {
+			eat(symbol);
+		} else {
+			int nonterminal = symbol - TERMINAL;
+			int terminal = tok == 0 ? TERMINAL - 1 : tok - 1;
+			//printf("%d %d %d\n", nonterminal, terminal, LLtable[nonterminal][terminal]);
 			apply(LLtable[nonterminal][terminal]);
 		}
 	}

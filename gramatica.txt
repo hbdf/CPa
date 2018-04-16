@@ -99,7 +99,7 @@
 <args0> -> `,' <args> | LAMBDA
 <args> -> <args1> | LAMBDA
 
-<expr-lit> -> INTEIRO | REAL | REALD | STRING | CHAR | <array-lit>
+<expr-lit> -> INTEIRO | REAL | REALD | STRING | CARACTERE | <array-lit>
 <array-lit> -> `{' <args1> `}'
 
 <var-leaf> -> ID <var-mods>
