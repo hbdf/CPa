@@ -80,7 +80,8 @@ tokens = {
 	'\'enum\'' : 'ENUM',
 	'\'label\'' : 'LABEL',
 	'\'id\'' : 'ID',
-	'\'ID\'' : 'ID'
+	'\'ID\'' : 'ID',
+	'\'var\'' : 'VAR'
 }
 
 def transform_grammar():

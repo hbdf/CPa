@@ -1,6 +1,6 @@
 int principal(){
-	int x, y;
-	caractere op;
+	var int x, y;
+	var caractere op;
 	
 	leia("%i", &x);
 	leia("%c", &op);

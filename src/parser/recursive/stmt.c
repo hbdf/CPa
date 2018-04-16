@@ -20,6 +20,7 @@ void stmts(void) {
 		case CONTINUAR:
 		case LABEL:
 		case IRPARA:
+		case VAR:
 		// Expr
  		case NEG:
  		case MINUS:
@@ -78,6 +79,11 @@ void stmt(void) {
 			eat(ID);
 			eat(SEMI);
 			break;
+		case VAR:
+			eat(VAR);
+			id_dec();
+			break; 
+		// Expr
 		default:
 			expr();
 			eat(SEMI);
@@ -172,11 +178,13 @@ void case_stmt(void) {
 			expr();
 			eat(COLON);
 			stmts();
+			break;
 		case CC:
 			eat(CC);
 			expr();
 			eat(COLON);
 			stmts();
+			break;
 		default:
 			syntax_error("Espera-se 'caso' ou 'cc'.");
 	}

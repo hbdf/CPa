@@ -91,6 +91,7 @@ FAZER 			fazer
 ENQUANTO		enquanto
 ESTRUTURA		estrutura
 ENUM			enum
+VAR				var
 /* Outros */
 BLOCKCOMMENT	"/*"([^*]|"*"+[^*/])*"*"+"/"
 LINECOMMENT		"//"[^"\n"]*"\n"
@@ -141,6 +142,9 @@ LABEL			{ID}:
 }
 {IMPORTAR} {
 	return IMPORTAR;
+}
+{VAR} {
+	return VAR;
 }
 {CONSTANTE} {
 	return CONSTANTE;

@@ -37,7 +37,7 @@
 <block> -> `{' <stmts> `}'
 <stmts> -> <stmt> <stmts> | LAMBDA
 
-<stmt> -> <dec> | <if> | <switch-case> | <for> | <while> | <do-while> | <block> | <expr> `;' | <return> | `parar' `;' | `continuar' `;' | `irpara' ID `;' | LABEL
+<stmt> -> `var' <id-dec> | <if> | <switch-case> | <for> | <while> | <do-while> | <block> | <expr> `;' | <return> | `parar' `;' | `continuar' `;' | `irpara' ID `;' | LABEL
 
 <return> -> `retornar' <return-expr> `;'
 <return-expr> -> <expr> | LAMBDA
@@ -93,7 +93,7 @@
 
 <expr-leaf> -> <pre-op> <expr-leaf> | <var-call> | <expr-lit> | `(' <expr> `)'
 
-<var-call> -> <var> <call> 
+<var-call> -> <var-leaf> <call> 
 <call> -> `(' <args> `)'  | <pos-op> | LAMBDA
 <args1> -> <expr> <args0>
 <args0> -> `,' <args> | LAMBDA
@@ -102,7 +102,7 @@
 <expr-lit> -> INTEIRO | REAL | REALD | STRING | CHAR | <array-lit>
 <array-lit> -> `{' <args1> `}'
 
-<var> -> ID <var-mods>
+<var-leaf> -> ID <var-mods>
 <var-mods> -> `.' ID <var-mods> | `[' <expr> `]' <var-mods> | LAMBDA
 
 <attr-op> -> `=' | `+=' | `-=' | `*=' | `/=' | `%=' | `pipe=' | `or=' | `&=' | `&&=' | `>>=' | `<<='

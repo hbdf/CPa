@@ -44,22 +44,28 @@ def to_table():
 	table_lines = table_parts[1].replace("<tbody id=\"llTableRows\">", '').replace("<tr></tr>", '').replace("<tr>", '').replace("</tbody>", '').split('</tr>')
 
 	table_head = table_head[3:]
-	tokens = "enum token { \n"
+	terminals = "{ \n"
 	for i in range(len(table_head)):
-		tokens += '\t' + table_head[i].replace("\n", '').strip() + ',\n'
-	tokens = tokens[:-5].replace("$", "END") + '\n}'
+		terminals += '\t' + table_head[i].replace("\n", '').strip() + ',\n'
+	terminals = terminals[:-5].replace("$", "END") + '\n}'
 
+	nonterminals = "{ \n"
 	lines = []
 	for tline in table_lines:
 		line = tline.replace("<td nowrap=\"nowrap\">", "").split("</td>")
-		#nonterminal = line[2].strip().replace("\n", '')
-		#print(nonterminal + ',')
+		if len(line) > 2:
+			nonterminals += "\t" + line[2].strip().replace("\n", '') + ",\n"
 		line = [to_array(w.replace("\n", '').strip().replace("-&gt;", "->")) for w in line[3:-1]]
 		linestr = print_array(line)
 		lines.append(linestr)
 
-	with open('token.h', 'w') as file:
-	    file.write(tokens)
+	nonterminals += '\n}'
+
+	with open('terminals.c', 'w') as file:
+	    file.write(terminals)
+
+	with open('nonterminals.c', 'w') as file:
+	    file.write(nonterminals)
 
 	return print_array(lines)
 

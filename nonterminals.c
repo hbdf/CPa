@@ -1,5 +1,5 @@
-enum tokenNterminais { 
-	START = 72,
+{ 
+	START,
 	INC,
 	DEC1,
 	DEC0,
@@ -82,5 +82,6 @@ enum tokenNterminais {
 	BITAND_OP,
 	BITOR_OP,
 	LOGAND_OP,
-	LOGOR_OP
-};
+	LOGOR_OP,
+
+}
