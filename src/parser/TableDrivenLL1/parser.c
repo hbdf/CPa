@@ -35,10 +35,10 @@ void apply (int p) {
 		syntax_error(0);
 	}
 	if (p >= 0) {
+		printf("prod %d \n", p);
 		int* prod = productions[p];
 		int i = 0;
 		while (prod[i] >= 0) {
-			printf("push %d %d\n", prod[i], BASIC_TYPE);
 			push(&stack, prod[i]);
 			i++;
 		}
@@ -53,15 +53,14 @@ void LLparser() {
 		// if the TOP is a terminal symbol
 		//printf("%d\n", top(stack));
 		if (top(stack) < TERMINAL) {
-			printf("TERMINAL");
 			eat(top(stack));
-			printf("TERMINAL2");
 			if (isEmpty(stack)){
 				accepted = 1;
 			}
 			pop(&stack);
 		}
 		else {
+			printf("top %d\n", top(stack));
 			int nonterminal = top(stack) - 71;
 			int terminal = (tok - 1) % TERMINAL;
 			printf("%d %d %d\n", nonterminal, terminal, LLtable[nonterminal][terminal]);

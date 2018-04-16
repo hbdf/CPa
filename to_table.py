@@ -16,7 +16,8 @@ def print_array(arr):
 	return rs
 
 def to_array(rule):
-	rule = rule.replace("\n", '').strip()
+	rule = rule.split("<br>")
+	rule = rule[0].strip()
 	parts = rule.split('->')
 	if len(parts) < 2:
 		return -2
@@ -40,7 +41,7 @@ def to_array(rule):
 def to_table():
 	table_parts = table.split('</thead>')
 	table_head = table_parts[0].replace("<tr id=\"llTableHead\">", '').replace("<thead>", '').replace("<th>", "").replace("</tr>", "").split('</th>')
-	table_lines = table_parts[1].replace("<tbody id=\"llTableRows\">", '').replace("<tr></tr>", '').replace("<tr>", '').replace("</tbody>", '').replace("<br>", ", ").split('</tr>')
+	table_lines = table_parts[1].replace("<tbody id=\"llTableRows\">", '').replace("<tr></tr>", '').replace("<tr>", '').replace("</tbody>", '').split('</tr>')
 
 	table_head = table_head[3:]
 	tokens = "enum token { \n"
@@ -54,7 +55,7 @@ def to_table():
 		#nonterminal = line[2].strip().replace("\n", '')
 		#print(nonterminal + ',')
 		line = [to_array(w.replace("\n", '').strip().replace("-&gt;", "->")) for w in line[3:-1]]
-		linestr = print_array(line[1:])
+		linestr = print_array(line)
 		lines.append(linestr)
 
 	with open('token.h', 'w') as file:

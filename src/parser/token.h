@@ -2,7 +2,7 @@
 #define __TOKEN__
 
 enum token {
-	END,
+	END = 0,
 	IMPORTAR,
 	STRING,
 	SEMI,
