@@ -19,12 +19,22 @@ Federal do Rio Grande do Norte.
 ```
 git clone https://github.com/hbdf/CPa.git
 ```
-4) Por fim, use o comando:
+4) Use um desses dois comandos para testar cada parser:
 ```
-cd CPa/src/lexer
-make comp file=arquivo.cpa
+cd CPa/src/parser/TableDrivenLL1
+cd CPa/src/parser/recursive
 ```
-onde "arquivo.cpa" é o nome de um dos arquivos de exemplo dentro da pasta "samples". Isso deverá imprimir os tokens dentro do arquivo dado.
+5) Para testar o parser em um arquivo, use o comando:
+```
+make
+./cpa < ../../../samples/calculadora.cpa
+```
+6) Para testar interativamente, apenas digite:
+```
+make
+./cpa
+```
+e insira a string de entrada pelo terminal.
 
 ## Referências
 
@@ -33,3 +43,4 @@ onde "arquivo.cpa" é o nome de um dos arquivos de exemplo dentro da pasta "samp
 complete-comments-regex-for-lex
 * Regex de strings e caracters retiradas de: https://stackoverflow.com/questions/2039795/regular-
 expression-for-a-literal-in-flex-lex
+* Código da stack retirado de: https://www.geeksforgeeks.org/stack-data-structure-introduction-program/
