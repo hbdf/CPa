@@ -1,4 +1,4 @@
-YFLAGS        = -d
+YFLAGS        = -d -v
  
 PROGRAM       = cpa
  
@@ -8,16 +8,16 @@ SRCS          = parser.tab.c lex.yy.c
  
 CC            = gcc 
  
-all:            $(PROGRAM)
+all:            parser lex $(PROGRAM)
  
-.c.o:			$(SRCS)
-				$(CC) -c $*.c -o $@ -O
- 
-parser.tab.c:	parser.y
+*.c.o:			$(SRCS)
+				$(CC) -c $*.c -o $@ -O -lfl
+
+lex:			lex.l
+				flex --outfile=lex.yy.c lex.l
+
+parser:			parser.y
 				bison $(YFLAGS) parser.y
- 
-lex.yy.c:		lex.l
-				flex lex.l
  
 cpa:			$(OBJS)
 				$(CC) $(OBJS)  -o $@ -lfl -lm

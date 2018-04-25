@@ -7,12 +7,14 @@
 #include "parser.tab.h"
 #include <math.h>
 #define YYSTYPE char*
-extern int line;
-extern int column;
-extern char* lexem;
+int line = 1;
+int column = 1;
+char* lexem;
+
+int yylex(void);
 
 void error() {
-	printf("[ERRO] - linha: %d, coluna: %d ", line, column);
+	printf("[ERRO LEXICO] linha: %d, coluna: %d.", line, column);
 	column += yyleng;
 }
 
@@ -85,6 +87,7 @@ FAZER 			fazer
 ENQUANTO		enquanto
 ESTRUTURA		estrutura
 ENUM			enum
+VAR				var
 /* Outros */
 BLOCKCOMMENT	"/*"([^*]|"*"+[^*/])*"*"+"/"
 LINECOMMENT		"//"[^"\n"]*"\n"
@@ -97,8 +100,9 @@ FRAC			-?({DIGIT}*{DOT}{DIGIT}+|{DIGIT}+{DOT}{DIGIT}*)
 SCINOT			e-?{DIGIT}+
 REAL			({FRAC}|-?{DIGIT}+|-?{DIGIT}+{SCINOT})f
 REALD			{FRAC}|{FRAC}{SCINOT}|-?{DIGIT}+{SCINOT}
-CHAR			\'([^'\\]|(\\).)\'
+CARACTERE		\'([^'\\]|(\\).)\'
 STRING			\"([^"\\]|(\\).)*\"
+LABEL			{ID}:
 %%
 
 [\t ]+ {
@@ -114,8 +118,8 @@ STRING			\"([^"\\]|(\\).)*\"
 {STRING} {
 	return STRING;
 }
-{CHAR} {
-	return CHAR;
+{CARACTERE} {
+	return CARACTERE;
 }
 {INTEIRO} {
 	return INTEIRO;
@@ -134,6 +138,9 @@ STRING			\"([^"\\]|(\\).)*\"
 }
 {IMPORTAR} {
 	return IMPORTAR;
+}
+{VAR} {
+	return VAR;
 }
 {CONSTANTE} {
 	return CONSTANTE;
@@ -314,6 +321,9 @@ STRING			\"([^"\\]|(\\).)*\"
 }
 {ENUM} {
 	return ENUM;
+}
+{LABEL} {
+	return LABEL;
 }
 {ID} {
 	return ID;

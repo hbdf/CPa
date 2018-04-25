@@ -1,4 +1,4 @@
-grammar = 'gramatica.txt'
+grammar = 'gramatica_lalr.txt'
 with open(grammar, 'r') as file:
     grammar = file.read()
 
