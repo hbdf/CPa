@@ -205,7 +205,7 @@ int warning(char* s, char *t) {
 
 int yyerror(char* s) {
   warning(s, ( char * )0 );
-  yyparse();
+  //yyparse();
 }
 
 int yywrap() {
