@@ -1,16 +1,16 @@
 int [100010] vet;
 
-void quicksort(int l, int r) {
-	if(l >= r) retornar;
-	int pivo = l, fim = r;
+vazio quicksort(int l, int r) {
+	se(l >= r) retornar;
+	var int pivo = l, fim = r;
 	enquanto(pivo < fim) {
 		se(vet[pivo] > vet[pivo + 1]) {
-			int aux = vet[pivo];
+			var int aux = vet[pivo];
 			vet[pivo] = vet[pivo + 1];
 			vet[pivo + 1] = aux;
 			pivo++;
-		} cc {
-			int aux = vet[pivo + 1];
+		} senao {
+			var int aux = vet[pivo + 1];
 			vet[pivo + 1] = vet[fim];
 			vet[fim] = aux;
 			fim--;
@@ -21,7 +21,7 @@ void quicksort(int l, int r) {
 }
 
 int principal() {
-	int n, i;
+	var int n, i;
 	ler("%d", &n);
 	para i de (0) asc (n - 1) {
 		ler("%d", &vet[i]);

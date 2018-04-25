@@ -1,14 +1,14 @@
 int [100010] vet;
 
 vazio merge(int l, int r) {
-	int meio = (l + r) / 2;
-	int [100010] aux;
-	int ptr = 0;
-	int i = l, j = meio + 1;
+	var int meio = (l + r) / 2;
+	var int [100010] aux;
+	var int ptr = 0;
+	var int i = l, j = meio + 1;
 	enquanto(i <= meio && j <= r) {
 		se(vet[i] < vet[j]) {
 			aux[ptr++] = vet[i++];
-		} cc {
+		} senao {
 			aux[ptr++] = vet[j++];
 		}
 	}
@@ -20,7 +20,7 @@ vazio merge(int l, int r) {
 }
 
 vazio mergesort(int l, int r) {
-	int meio = (l + r) / 2;
+	var int meio = (l + r) / 2;
 	se(l > r) {
 		mergesort(l, meio);
 		mergesort(meio + 1, r);
@@ -29,7 +29,7 @@ vazio mergesort(int l, int r) {
 }
 
 int principal() {
-	int n, i;
+	var int n, i;
 	ler("%d", &n);
 	para i de (0) asc (n - 1) {
 		ler("%d", &vet[i]);

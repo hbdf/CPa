@@ -1,0 +1,89 @@
+importar "teste";
+importar "teste_novamente";
+
+estrutura pessoa { *char nome; int teste; }
+enum enumeracao {E_1, E_2, E_3}
+const int vari_global 30;
+int var_global;
+int var_global2 = 10, var_global3;
+
+//int func();
+
+//cbrhyegfbhjr
+
+int principal() {
+	var int t = 10;
+	var int b;
+	var real b = 5f;
+	var reald r1 = 10f;
+
+	se (x == 10) {
+		var int a = 1;
+		enquanto(c < 20)
+			x += 2;
+		fazer {
+
+		} enquanto(k > 10);
+	} senao se (teste == "Funciona?"){
+		para cont de (10) asc (20) {
+			escreva("teste");
+		}
+		para cont de (10) asc (20) {
+			escreva("teste");
+			para cont de (20) desc (0)
+				escreva("teste");
+		}
+	} senao ("Ternario eh bom" == "ginga" ? "Massa" : "peixe"); {
+		retornar 42;
+	}
+
+	escolha(x) {
+		caso 1:
+			parar;
+		caso 3:
+			leia(x);
+		caso 4:
+		caso 5:
+		cc:
+			escreva("eh nois");
+	}
+
+	var *caractere texto = "Texto" == "texto" ? "Sim" : "Nao";
+	var int i = a == '1' ? 1 : a == '2' ? 2 : 3;
+	var int j = a != '1' ? a == '2' ? 2 : 3 : 1;
+
+	var int a = 30 * a == 1 || (35 == 3 && 10 < 15 && (15 >= 20 || 10 == 10));
+}
+
+int fun() {
+	var int x = 10;
+	var int [4] arr = { 1, 2, 3, 4};
+	enquanto(fhjkr) {
+		continuar;
+	}
+	var *int bla = &x + *b + k++;
+	var *int bla = &x + ++*b + --k--;
+	y %= 3;
+	a += 1;
+	b -= 1;
+	c = 1 % 0;
+	d /= 0;
+	f *= 3;
+	e &= 19;
+	e &&= bool || boolean;
+	e |= bool || boolean;
+	e ||= bool || boolean;
+	1 << 30 << (x++) >> 10;
+	var int c = !(a > 40 && 1 * 3 <= 10 / 0);
+	x <<= 10;
+	x >>= 10;
+	x + 1;
+	pessoa.nome += 2 + arr[10].k[10][a++ + k - l && &f];
+}
+
+pessoa func_2(real x, int z, bool __R33, *caractere s) {
+	amolador:
+		faca = afiar + 2;
+	irpara amolador;
+	retornar;
+}

@@ -1,22 +1,3 @@
-%{
-
-#include <alloca.h>
-#include <math.h>
-#include <stdlib.h>
-#include <stddef.h>
-#include <ctype.h>
-
-int yylex(void);
-int yyerror(char* s);
-
-%}
-
-%token IMPORTAR 	STRING 	SEMI 	CONSTANTE 	ID 	LPAREN 	RPAREN 	COMMA 	ATTR 	ESTRUTURA 	LBRACE 	RBRACE 	ENUM 	TIPO_PRIMITIVO 	STAR 	LBRACKET 	RBRACKET 	VAR 	PARAR 	CONTINUAR 	IRPARA 	LABEL 	RETORNAR 	SE 	SENAO 	ENQUANTO 	FAZER 	PARA 	DE 	ASC 	DESC 	ESCOLHA 	CASO 	COLON 	CC 	QUESTION 	INTEIRO 	REAL 	REALD 	CARACTERE 	DOT 	ATTRADD 	ATTRSUB 	ATTRMUL 	ATTRDIV 	ATTRMOD 	ATTRBITOR 	ATTROR 	ATTRBITAND 	ATTRAND 	ATTRSHIFTL 	ATTRSHIFTR 	AMPERSEND 	PLUS2 	MINUS2 	DIV 	MOD 	NEG 	MINUS 	PLUS 	SHIFTL 	SHIFTR 	EQQ 	NEQ 	GT 	LT 	GEQ 	LEQ 	PIPE 	AND 	OR
-
-%token-table
-
-%%
-
 START: INC DEC1 ;
 INC: IMPORTAR STRING SEMI INC ;
 INC:  ;
@@ -184,39 +165,4 @@ REL_OP: LEQ ;
 BITAND_OP: AMPERSEND ;
 BITOR_OP: PIPE ;
 LOGAND_OP: AND ;
-LOGOR_OP: OR ;
-
-%%
-
-#include <stdio.h>
-#include <ctype.h>
-
-char *progname;
-extern int line;
-extern int column;
-extern char* lexem;
-
-extern enum token getToken(void);
-extern enum token tok;
-
-int warning(char* s, char *t) {
-  fprintf(stderr, "%s in %s, line %d, column %d: unexpected %s\n", s, progname, line, column, lexem);
-  if (t)
-    fprintf( stderr , " %s\n" , t );
-}
-
-int yyerror(char* s) {
-  warning(s, ( char * )0 );
-  //yyparse();
-}
-
-int yywrap() {
-  return(1);
-}
-
-int main(int argc, char* argv[]) {
-  progname = argv[0];
-  //strcpy(format,"%g\n");
-  printf("%s %d", yytname[3], IMPORTAR);
-  yyparse();
-}
+LOGOR_OP: OR
