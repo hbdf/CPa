@@ -8,3 +8,7 @@ src/parser/*.tab.*
 src/parser/*.yy.*
 src/parser/recursive/*.o
 src/parser/recursive/cpa
+src/parser/yacc/*.o
+src/parser/yacc/*.tab.*
+src/parser/yacc/cpa
+src/parser/yacc/*.yy.*

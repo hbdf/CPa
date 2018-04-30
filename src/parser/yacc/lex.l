@@ -9,7 +9,6 @@
 #define YYSTYPE char*
 int line = 1;
 int column = 1;
-char* lexem;
 
 int yylex(void);
 
@@ -107,7 +106,6 @@ LABEL			{ID}:
 
 [\t ]+ {
 	column += yyleng;
-	lexem = yytext;
 }
 [\n ]	{
 	column = 1;
