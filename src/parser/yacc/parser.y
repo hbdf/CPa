@@ -192,28 +192,35 @@ LOGOR_OP: OR ;
 char *progname;
 extern int line;
 extern int column;
-extern char* lexem;
+extern char* yytext;
 
-extern enum token getToken(void);
-extern enum token tok;
+int success = 1;
 
 int warning(char* s, char *t) {
-  fprintf(stderr, "%s in %s, line %d, column %d: unexpected %s\n", s, progname, line, column, lexem);
+  fprintf(stderr, "%s in %s, line %d, column %d: unexpected %s\n", s, progname, line, column, yytext);
   if (t)
     fprintf( stderr , " %s\n" , t );
 }
 
 int yyerror(char* s) {
-  warning(s, ( char * )0 );
-  //yyparse();
+  if (yytext != 0 && yytext[0] != '\0') {
+  	warning(s, ( char * )0 );
+  	int t = yylex();
+  	while (t != 0 && t != SEMI)
+  		t = yylex();
+  	yyparse();
+  }
+  success = 0;
 }
 
 int yywrap() {
-  return(1);
+  return 1;
 }
 
 int main(int argc, char* argv[]) {
   progname = argv[0];
-  //strcpy(format,"%g\n");
   yyparse();
+  if (success)
+  	printf("Entrada lida com sucesso.\n");
+  return 1;
 }
