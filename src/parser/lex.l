@@ -18,10 +18,6 @@ void error() {
 	column += yyleng;
 }
 
-enum token getToken(void) {
-	return yylex();
-}
-
 %}
 
 /* Caracteres especiais OK */

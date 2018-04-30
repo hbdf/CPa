@@ -1,0 +1,118 @@
+<start> -> <inc> <dec1>
+
+<inc> -> `importar' STRING `;' <inc> | LAMBDA
+
+<dec1> -> <dec> <dec0>
+<dec0> -> <dec1> | LAMBDA
+<dec> -> <const-dec> | <id-dec> | <struct-dec> | <enum-dec>
+
+<const-dec> -> `const' <type> ID <expr> `;'
+
+<id-dec> -> <type> <array-type> ID <id-sufix>
+<id-sufix> -> <func-dec> | <var-dec>
+
+<func-dec> -> `(' <params> `)' <func-end>
+<func-end> -> `;' | <block>
+
+<var-dec> -> <id-init> <var-dec1>
+<var-dec1> -> `;' | `,' ID <var-dec>
+<id-init> -> `=' <expr> | LAMBDA
+
+<struct-dec> -> `estrutura' ID `{' <var-decs> `}'
+
+<var-decs> -> <id-dec> <var-decs> | LAMBDA
+
+<enum-dec> -> `enum' ID `{' <ids1> `}'
+<ids1> -> ID <ids0>
+<ids0> -> `,' <ids1> | LAMBDA
+
+<params> -> <param1> | LAMBDA
+<param1> -> <type> ID <param0>
+<param0> -> `,' <param1> | LAMBDA
+
+<type> -> ID | `int' | `caractere' | `string' | `real' | `reald' | `vazio' | `*' <type>
+<array-type> -> `[' <expr> `]' <array-type> | LAMBDA
+
+<block> -> `{' <stmts> `}'
+<stmts> -> <stmt> <stmts> | LAMBDA
+
+<stmt> -> `var' <id-dec> | <if> | <switch-case> | <for> | <while> | <do-while> | <block> | <expr> `;' | <return> | `parar' `;' | `continuar' `;' | `irpara' ID `;' | LABEL
+
+<return> -> `retornar' <return-expr> `;'
+<return-expr> -> <expr> | LAMBDA
+
+<if> -> `se' `(' <expr> `)' <stmt> <else>
+<else> -> `senao' <stmt> | LAMBDA
+
+<while> -> `enquanto' `(' <expr> `)' <stmt>
+<do-while> -> `faz' <stmt> `enquanto' `(' <expr> `)' `;'
+
+<for> -> `para' ID `de' `(' <expr> `)' <for-expr>
+<for-expr> -> <for-asc> | <for-desc>
+<for-asc> -> `asc' `(' <expr> `)' <stmt>
+<for-desc> -> `desc' `(' <expr> `)' <stmt>
+
+<switch-case> -> `escolha' `(' <expr> `)' `{' <case1> `}' 
+<case1> -> <case> <case0>
+<case0> -> <case1> | LAMBDA
+<case> -> `caso' <expr> `:' <stmts> | `cc' `:' <stmts>
+
+<expr> -> <attr-rule> <ternary>
+
+<ternary> -> `?' <expr> `:' <expr> | LAMBDA
+
+<attr-rule> -> <logor-chain> <attr-tail>
+<attr-tail> -> <attr-op> <logor-chain> | LAMBDA
+
+<logor-chain> -> <logand-chain> <logor-tail>
+<logor-tail> -> <logor-op> <logor-chain> | LAMBDA
+
+<logand-chain> -> <bitor-chain> <logand-tail>
+<logand-tail> -> <logand-op> <logand-chain> | LAMBDA
+
+<bitor-chain> -> <bitand-chain> <bitor-tail>
+<bitor-tail> -> <bitor-op> <bitor-chain> | LAMBDA
+
+<bitand-chain> -> <rel> <bitand-tail>
+<bitand-tail> -> <bitand-op> <bitand-chain> | LAMBDA
+
+<rel> -> <shift-chain> <rel-tail>
+<rel-tail> -> <rel-op> <shift-chain> | LAMBDA
+
+<shift-chain> -> <add-chain> <shift-tail>
+<shift-tail> -> <shift-op> <shift-chain> | LAMBDA
+
+<add-chain> -> <mul-chain> <add-tail>
+<add-tail> -> <add-op> <add-chain> | LAMBDA
+
+<mul-chain> -> <un-chain> <mul-tail>
+<mul-tail> -> <mul-op> <mul-chain> | LAMBDA
+
+<un-chain> -> <un-op> <un-chain> | <expr-leaf>
+
+<expr-leaf> -> <pre-op> <expr-leaf> | <var-call> | <expr-lit> | `(' <expr> `)'
+
+<var-call> -> <var-leaf> <call> 
+<call> -> `(' <args> `)'  | <pos-op> | LAMBDA
+<args1> -> <expr> <args0>
+<args0> -> `,' <args> | LAMBDA
+<args> -> <args1> | LAMBDA
+
+<expr-lit> -> INTEIRO | REAL | REALD | STRING | CARACTERE | <array-lit>
+<array-lit> -> `{' <args1> `}'
+
+<var-leaf> -> ID <var-mods>
+<var-mods> -> `.' ID <var-mods> | `[' <expr> `]' <var-mods> | LAMBDA
+
+<attr-op> -> `=' | `+=' | `-=' | `*=' | `/=' | `%=' | `pipe=' | `or=' | `&=' | `&&=' | `>>=' | `<<='
+<pre-op> -> `*' | `&' | `++' | `--'
+<pos-op> -> `++' | `--'
+<mul-op> -> `*' | `/' | `%'
+<un-op> -> `!' | `-' | `+'
+<add-op> -> `+' | `-'
+<shift-op> -> `<<' | `>>'
+<rel-op> -> `==' | `!=' | `>' | `<' | `>=' | `<='
+<bitand-op> -> `&'
+<bitor-op> -> `pipe'
+<logand-op> -> `&&'
+<logor-op> -> `or'
