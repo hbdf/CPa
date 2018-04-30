@@ -1,7 +1,7 @@
 importar "teste";
 importar "teste_novamente";
 
-estrutura pessoa { *char nome; int teste; }
+estrutura pessoa { *caractere nome; int teste; }
 enum enumeracao {E_1, E_2, E_3}
 const int vari_global 30;
 int var_global;
