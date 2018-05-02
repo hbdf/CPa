@@ -19,7 +19,7 @@ int principal(){
 		caso '/':
 			escreva("%i\n", x / y);
 			parar;
-		cc:
+		cc :
 			escreva("Operação inválida\n");
 	}
 }
