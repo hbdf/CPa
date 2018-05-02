@@ -8,6 +8,19 @@
 
 int yylex(void);
 int yyerror(char* s);
+int tabs = 0;
+
+void printt () {
+  int i;
+
+  for (i = 0; i < tabs; i++) {
+    printf("    ");
+  }
+}
+
+void eraset () {
+  printf("\b\b\b\b");
+}
 
 %}
 
@@ -35,14 +48,14 @@ FUNC_DEC: LPAREN {printf("%s ", $1);} PARAMS RPAREN {printf("%s ", $4);} FUNC_EN
 FUNC_END: SEMI {printf("%s ", $1);} ;
 FUNC_END: BLOCK ;
 VAR_DEC: ID_INIT VAR_DEC1 ;
-VAR_DEC1: SEMI {printf("%s\n", $1);} ;
+VAR_DEC1: SEMI {printf("%s\n", $1); printt();} ;
 VAR_DEC1: COMMA ID {printf("%s %s ", $1, $2);} VAR_DEC ;
 ID_INIT: ATTR {printf("%s ", $1);} EXPR ;
 ID_INIT:  ;
-STRUCT_DEC: ESTRUTURA ID LBRACE {printf("%s %s %s\n", $1, $2, $3);} VAR_DECS RBRACE {printf("%s\n", $6);};
+STRUCT_DEC: ESTRUTURA ID LBRACE {tabs++; printf("%s %s %s\n", $1, $2, $3); printt();} VAR_DECS RBRACE {tabs--; eraset(); printf("%s\n", $6);};
 VAR_DECS: ID_DEC VAR_DECS ;
 VAR_DECS:  ;
-ENUM_DEC: ENUM ID LBRACE {printf("%s %s %s\n", $1, $2, $3);} IDS1 RBRACE {printf("\n%s\n", $6);};
+ENUM_DEC: ENUM ID LBRACE {tabs++; printf("%s %s %s\n", $1, $2, $3); printt();} IDS1 RBRACE {tabs--; eraset(); printf("\n%s\n", $6);};
 IDS1: ID {printf("%s ", $1);} IDS0 ;
 IDS0: COMMA {printf("%s ", $1);} IDS1 ;
 IDS0:  ;
@@ -56,7 +69,7 @@ TYPE: TIPO_PRIMITIVO {printf("%s ", $1);} ;
 TYPE: STAR {printf("%s ", $1);} TYPE ;
 ARRAY_TYPE: LBRACKET {printf("%s ", $1);} EXPR RBRACKET {printf("%s ", $3);} ARRAY_TYPE ;
 ARRAY_TYPE:  ;
-BLOCK: LBRACE {printf("%s\n", $1);} STMTS RBRACE {printf("%s\n", $4);} ;
+BLOCK: LBRACE {tabs++; printf("%s\n", $1); printt();} STMTS RBRACE {tabs--; eraset(); printf("%s\n", $4); printt();} ;
 STMTS: STMT STMTS ;
 STMTS:  ;
 STMT: VAR {printf("%s ", $1);} ID_DEC ;
@@ -66,31 +79,31 @@ STMT: FOR ;
 STMT: WHILE ;
 STMT: DO_WHILE ;
 STMT: BLOCK ;
-STMT: EXPR SEMI {printf("%s\n", $2);} ;
+STMT: EXPR SEMI {printf("%s\n", $2); printt();} ;
 STMT: RETURN ;
-STMT: PARAR SEMI {printf("%s %s\n", $1, $2);} ;
-STMT: CONTINUAR SEMI {printf("%s %s\n", $1, $2);} ;
-STMT: IRPARA ID SEMI {printf("%s %s %s\n", $1, $2, $3);} ;
-STMT: LABEL {printf("%s\n", $1);} ;
-RETURN: RETORNAR {printf("%s ", $1);} RETURN_EXPR SEMI {printf("%s\n", $4);} ;
+STMT: PARAR SEMI {printf("%s %s\n", $1, $2); printt();} ;
+STMT: CONTINUAR SEMI {printf("%s %s\n", $1, $2); printt();} ;
+STMT: IRPARA ID SEMI {printf("%s %s %s\n", $1, $2, $3); printt();} ;
+STMT: LABEL {printf("%s\n", $1); printt();} ;
+RETURN: RETORNAR {printf("%s ", $1);} RETURN_EXPR SEMI {printf("%s\n", $4); printt();} ;
 RETURN_EXPR: EXPR ;
 RETURN_EXPR:  ;
 IF: SE LPAREN {printf("%s %s ", $1, $2);} EXPR RPAREN {printf("%s ", $5);} STMT ELSE ;
 ELSE: SENAO {printf("%s ", $1);} STMT ;
 ELSE:  ;
 WHILE: ENQUANTO LPAREN {printf("%s %s ", $1, $2);} EXPR RPAREN {printf("%s ", $5);} STMT ;
-DO_WHILE: FAZER {printf("%s ", $1);} STMT ENQUANTO LPAREN {printf("%s %s ", $4, $5);} EXPR RPAREN SEMI {printf("%s %s\n", $8, $9);} ;
+DO_WHILE: FAZER {printf("%s ", $1);} STMT ENQUANTO LPAREN {printf("%s %s ", $4, $5);} EXPR RPAREN SEMI {printf("%s %s\n", $8, $9); printt();} ;
 FOR: PARA ID DE LPAREN {printf("%s %s %s %s ", $1, $2, $3, $4);} EXPR RPAREN {printf("%s ", $7);} FOR_EXPR ;
 FOR_EXPR: FOR_ASC ;
 FOR_EXPR: FOR_DESC ;
 FOR_ASC: ASC LPAREN {printf("%s %s ", $1, $2);} EXPR RPAREN {printf("%s ", $5);} STMT ;
 FOR_DESC: DESC LPAREN {printf("%s %s ", $1, $2);} EXPR RPAREN {printf("%s ", $5);} STMT ;
-SWITCH_CASE: ESCOLHA LPAREN {printf("%s %s ", $1, $2);} EXPR RPAREN {printf("%s ", $5);} LBRACE {printf("%s\n", $7);} CASE1 RBRACE {printf("%s\n", $10);} ;
+SWITCH_CASE: ESCOLHA LPAREN {printf("%s %s ", $1, $2);} EXPR RPAREN {printf("%s ", $5);} LBRACE {tabs += 2; printf("%s\n", $7); printt();} CASE1 RBRACE {tabs -= 2; eraset(); eraset(); printf("%s\n", $10); printt();} ;
 CASE1: CASE CASE0 ;
 CASE0: CASE1 ;
 CASE0:  ;
-CASE: CASO {printf("%s ", $1);} EXPR COLON {printf("%s ", $4);} STMTS ;
-CASE: CC COLON {printf("%s %s ", $1, $2);} STMTS ;
+CASE: CASO {tabs--; eraset(); printf("%s ", $1);} EXPR COLON {printf("%s\n", $4); tabs++; printt();} STMTS ;
+CASE: CC COLON {tabs--; eraset(); printf("%s %s\n", $1, $2); tabs++; printt();} STMTS ;
 EXPR: ATTR_RULE TERNARY ;
 TERNARY: QUESTION {printf("%s ", $1);} EXPR COLON {printf("%s ", $4);} EXPR ;
 TERNARY:  ;

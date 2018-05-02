@@ -218,7 +218,7 @@ LABEL			{ID}:
 	return SEMI;
 }
 {COLON} {
-	yylval = strdup("SEMI");
+	yylval = strdup("COLON");
 	return COLON;
 }
 {DOT} {

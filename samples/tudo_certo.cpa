@@ -11,6 +11,9 @@ int var_global2 = 10, var_global3;
 
 //cbrhyegfbhjr
 
+/* faltou comentario 
+de bloco */
+
 int principal() {
 	var int t = 10;
 	var int b;
@@ -44,7 +47,7 @@ int principal() {
 			leia(x);
 		caso 4:
 		caso 5:
-		cc:
+		cc :
 			escreva("eh nois");
 	}
 
