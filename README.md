@@ -14,22 +14,26 @@ Federal do Rio Grande do Norte.
 ## Como testar
 
 1) Instale o LEX: http://dinosaur.compilertools.net/;
-2) Instale o git;
-3) Clone o repositório com o comando:
+2)_ Instale o Bison: http://ftp.gnu.org/gnu/bison/;
+3) Instale o git;
+4) Clone o repositório com o comando:
 ```
 git clone https://github.com/hbdf/CPa.git
 ```
-4) Use um desses dois comandos para testar cada parser:
+5) Use um desses três comandos para testar cada parser:
 ```
-cd CPa/src/parser/TableDrivenLL1
+cd CPa/src/parser/table
 cd CPa/src/parser/recursive
+cd CPa/src/parser/yacc
 ```
-5) Para testar o parser em um arquivo, use o comando:
+O parser "table" é o parser top-down utilizando a tabela LL1. O parser "recursive" é o parser top-down implementado com funções recursivas. O parser "yacc" é o parser bottom-up LALR implementado com o YACC.
+6) Para testar o parser em um arquivo, use o comando:
 ```
 make
-./cpa < ../../../samples/calculadora.cpa
+./cpa < ../../../samples/ARQUIVO.cpa
 ```
-6) Para testar interativamente, apenas digite:
+onde ARQUIVO é o nome de um dos exemplos dentro da pasta "samples". Isso devolverá um erro caso haja um ou uma confirmação de sucesso.
+7) Para testar interativamente, apenas digite:
 ```
 make
 ./cpa
