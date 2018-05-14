@@ -1,0 +1,14 @@
+int main() {
+	var int x;
+	var int y;
+	var int[20];
+	var int x = 1;
+
+	se (bla) {
+
+	} senao {
+
+	}
+
+	var int y = 0;
+}

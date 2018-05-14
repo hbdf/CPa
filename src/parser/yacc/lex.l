@@ -65,6 +65,11 @@ LBRACE 			"{"
 RBRACE 			"}"
 QUESTION 		"?"
 /* Tipos Primitivos OK */
+TIPO_INT		int
+TIPO_REAL		real
+TIPO_DUPLO		reald
+TIPO_CHAR		caractere
+TIPO_VAZIO		vazio
 TIPO_PRIMITIVO  int|real|duplo|caractere|vazio
 /* Palavras Reservadas OK */
 IMPORTAR 		importar
@@ -114,31 +119,51 @@ LABEL			{ID}:
 {BLOCKCOMMENT} {}
 {LINECOMMENT} {}
 {STRING} {
-	yylval = strdup("STRING");
+	yylval = strdup(yytext);
 	return STRING;
 }
 {CARACTERE} {
-	yylval = strdup("CARACTERE");
+	yylval = strdup(yytext);
 	return CARACTERE;
 }
 {INTEIRO} {
-	yylval = strdup("INTEIRO");
+	yylval = strdup(yytext);
 	return INTEIRO;
 }
 {REAL} {
-	yylval = strdup("REAL");
+	yylval = strdup(yytext);
 	return REAL;
 }
 {REALD} {
-	yylval = strdup("REALD");
+	yylval = strdup(yytext);
 	return REALD;
 }
 {STAR} {
 	yylval = strdup("STAR");
 	return STAR;
 }
+{TIPO_INT} {
+	yylval = strdup("int");
+	return TIPO_PRIMITIVO;
+}
+{TIPO_REAL} {
+	yylval = strdup("float");
+	return TIPO_PRIMITIVO;
+}
+{TIPO_DUPLO} {
+	yylval = strdup("double");
+	return TIPO_PRIMITIVO;
+}
+{TIPO_CHAR} {
+	yylval = strdup("char");
+	return TIPO_PRIMITIVO;
+}
+{TIPO_VAZIO} {
+	yylval = strdup("void");
+	return TIPO_PRIMITIVO;
+}
 {TIPO_PRIMITIVO} {
-	yylval = strdup("TIPO_PRIMITIVO");
+	yylval = strdup(yytext);
 	return TIPO_PRIMITIVO;
 }
 {IMPORTAR} {
@@ -394,7 +419,7 @@ LABEL			{ID}:
 	return LABEL;
 }
 {ID} {
-	yylval = strdup("ID");
+	yylval = strdup(yytext);
 	return ID;
 }
 . {

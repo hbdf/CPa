@@ -2,9 +2,9 @@ YFLAGS        = -d -v
  
 PROGRAM       = cpa
  
-OBJS          = parser.tab.o lex.yy.o
+OBJS          = code.o parser.tab.o lex.yy.o
  
-SRCS          = parser.tab.c lex.yy.c
+SRCS          = code.c parser.tab.c lex.yy.c
  
 CC            = gcc 
  

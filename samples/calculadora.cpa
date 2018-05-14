@@ -1,5 +1,3 @@
-estrutura pessoa { *caractere nome; int teste; int id;}
-
 int principal(){
 	var int x, y;
 	var caractere op;
