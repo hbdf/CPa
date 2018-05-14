@@ -9,6 +9,7 @@
 
 int yylex(void);
 int yyerror(char* s);
+void preprocImportar();
 
 %}
 
@@ -21,7 +22,7 @@ int yyerror(char* s);
 %%
 
 START: INC DEC1 ;
-INC: IMPORTAR STRING SEMI { } INC ;
+INC: IMPORTAR STRING { preprocImportar(); } SEMI INC ;
 INC:  ;
 DEC1: DEC DEC0 ;
 DEC0: DEC1 ;
@@ -231,14 +232,14 @@ LOGOR_OP: OR {printf("%s ", $1);} ;
 #include <ctype.h>
 
 char *progname;
+char* currentFile;
 extern int line;
 extern int column;
 extern char* yytext;
 
 int success = 1;
-
 int warning(char* s, char *t) {
-  fprintf(stderr, "%s in %s, line %d, column %d: unexpected %s\n", s, progname, line, column, yytext);
+  fprintf(stderr, "%s in %s, line %d, column %d: unexpected %s\n", s, currentFile, line, column, yytext);
   if (t)
     fprintf( stderr , " %s\n" , t );
 }
@@ -256,6 +257,15 @@ int yyerror(char* s) {
 
 int yywrap() {
   return 1;
+}
+
+void preprocImportar () {
+  //printf("--%s--\n", yytext);
+  currentFile = yytext;
+  char command [100] = "./cpa < ../../../samples/";
+  strcat(command, yytext);
+  system(command);
+
 }
 
 int main(int argc, char* argv[]) {

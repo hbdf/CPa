@@ -1,3 +1,5 @@
+importar "calculadora.cpa";
+
 int principal() {
 	var int [10] x;
 }

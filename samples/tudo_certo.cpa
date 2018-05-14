@@ -1,10 +1,9 @@
-importar "teste";
-importar "teste_novamente";
+importar "basico.cpa";
 
 estrutura pessoa { *caractere nome; int teste; }
 enum enumeracao {E_1, E_2, E_3}
 const int vari_global 30;
-int var_global;
+int var_global2;
 int var_global2 = 10, var_global3;
 
 //int func();
