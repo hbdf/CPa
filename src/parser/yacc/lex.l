@@ -415,7 +415,7 @@ LABEL			{ID}:
 	return ENUM;
 }
 {LABEL} {
-	yylval = strdup("LABEL");
+	yylval = strdup(yytext);
 	return LABEL;
 }
 {ID} {
