@@ -10,9 +10,14 @@
 int yylex(void);
 int yyerror(char* s);
 
+char* str;
+
 %}
 
-%define api.value.type {char*}
+%define api.value.type {union {
+  char* str;
+  int attr_op;
+}}
 
 %token IMPORTAR 	STRING 	SEMI 	CONSTANTE 	ID 	LPAREN 	RPAREN 	COMMA 	ATTR 	ESTRUTURA 	LBRACE 	RBRACE 	ENUM 	TIPO_PRIMITIVO 	STAR 	LBRACKET 	RBRACKET 	VAR 	PARAR 	CONTINUAR 	IRPARA 	LABEL 	RETORNAR 	SE 	SENAO 	ENQUANTO 	FAZER 	PARA 	DE 	ASC 	DESC 	ESCOLHA 	CASO 	COLON 	CC 	QUESTION 	INTEIRO 	REAL 	REALD 	CARACTERE 	DOT 	ATTRADD 	ATTRSUB 	ATTRMUL 	ATTRDIV 	ATTRMOD 	ATTRBITOR 	ATTROR 	ATTRBITAND 	ATTRAND 	ATTRSHIFTL 	ATTRSHIFTR 	AMPERSEND 	PLUS2 	MINUS2 	DIV 	MOD 	NEG 	MINUS 	PLUS 	SHIFTL 	SHIFTR 	EQQ 	NEQ 	GT 	LT 	GEQ 	LEQ 	PIPE 	AND 	OR
 
@@ -22,20 +27,20 @@ int yyerror(char* s);
 
 START: INC DEC1 ;
 INC: IMPORTAR STRING SEMI { } INC ;
-INC:  ;
+INC: ;
 DEC1: DEC DEC0 ;
 DEC0: DEC1 ;
-DEC0:  ;
+DEC0: ;
 DEC: CONST_DEC ;
 DEC: ID_DEC ;
 DEC: STRUCT_DEC ;
 DEC: ENUM_DEC ;
 
 // Print constants
-CONST_DEC: CONSTANTE { printf("const "); } TYPE ID { printf("%s = ", $4); } EXPR SEMI {printf(";\n"); };
+CONST_DEC: CONSTANTE { printf("const "); } TYPE ID { printf("%s = ", $4.str); } EXPR SEMI {printf(";\n"); };
 
 // Print array ID
-ID_DEC: TYPE ARRAY_TYPE ID { printf("%s ", $3); } ID_SUFIX ;
+ID_DEC: TYPE ARRAY_TYPE ID { printf("%s ", $3.str); } ID_SUFIX ;
 
 ID_SUFIX: FUNC_DEC ;
 ID_SUFIX: VAR_DEC ;
@@ -48,46 +53,46 @@ VAR_DEC: ID_INIT VAR_DEC1 ;
 VAR_DEC1: SEMI { printf(";\n"); } ;
 
 // Print var ID
-VAR_DEC1: COMMA ID { printf(", %s ", $2); } VAR_DEC ;
+VAR_DEC1: COMMA ID { printf(", %s ", $2.str); } VAR_DEC ;
 
 ID_INIT: ATTR { printf(" = "); } EXPR ;
 ID_INIT: ;
 
 // Print struct dec
-STRUCT_DEC: ESTRUTURA ID LBRACE {printf("struct %s {\n", $2); } VAR_DECS RBRACE { printf("}\n"); };
+STRUCT_DEC: ESTRUTURA ID LBRACE {printf("struct %s {\n", $2.str); } VAR_DECS RBRACE { printf("}\n"); };
 
 VAR_DECS: ID_DEC VAR_DECS ;
 VAR_DECS:  ;
 
 // Print enum
-ENUM_DEC: ENUM ID LBRACE { printf("enum %s {\n", $2); } IDS1 RBRACE { printf("\n}\n"); };
+ENUM_DEC: ENUM ID LBRACE { printf("enum %s {\n", $2.str); } IDS1 RBRACE { printf("\n}\n"); };
 
 // Print ID list
-IDS1: ID { printf("%s ", $1); } IDS0 ;
+IDS1: ID { printf("%s ", $1.str); } IDS0 ;
 IDS0: COMMA { printf(", "); } IDS1 ;
 
 IDS0:  ;
 PARAMS: PARAM1 ;
 PARAMS:  ;
-PARAM1: TYPE ID { printf("%s ", $2); } PARAM0 ;
+PARAM1: TYPE ID { printf("%s ", $2.str); } PARAM0 ;
 PARAM0: COMMA { printf(","); } PARAM1 ;
 PARAM0:  ;
 
 // Print type ID
-TYPE: ID { printf("%s ", $1); } ;
+TYPE: ID { printf("%s ", $1.str); } ;
 // Print primitive type
-TYPE: TIPO_PRIMITIVO { printf("%s ", $1); } ;
+TYPE: TIPO_PRIMITIVO { printf("%s ", $1.str); } ;
 // Pointer type
 TYPE: STAR TYPE { printf("* "); };
 // Array type
 ARRAY_TYPE: LBRACKET { printf("["); } EXPR RBRACKET { printf("]"); } ARRAY_TYPE ;
-ARRAY_TYPE:  ;
+ARRAY_TYPE: ;
 
 // Block
 BLOCK: LBRACE { printf("{\n"); } STMTS RBRACE { printf("}\n"); } ;
 
 STMTS: STMT STMTS ;
-STMTS:  ;
+STMTS: ;
 STMT: VAR ID_DEC ;
 STMT: IF ;
 STMT: SWITCH_CASE ;
@@ -109,10 +114,10 @@ STMT: PARAR SEMI { printf("break;\n"); } ;
 STMT: CONTINUAR SEMI {printf("continue;\n"); } ;
 
 // Goto call
-STMT: IRPARA ID SEMI {printf("goto %s ;\n", $2); } ;
+STMT: IRPARA ID SEMI {printf("goto %s ;\n", $2.str); } ;
 
 // Label define
-STMT: LABEL { printf("%s\n", $1); } ;
+STMT: LABEL { printf("%s\n", $1.str); } ;
 
 // Return
 RETURN: RETORNAR { printf("return "); } RETURN_EXPR SEMI {printf(";\n"); } ;
@@ -132,27 +137,35 @@ WHILE: ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN { printf(")"); } STMT 
 // Do while
 DO_WHILE: FAZER { printf("do "); } STMT ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN SEMI { printf(");\n"); } ;
 
-
-FOR: PARA ID DE LPAREN {printf("%s %s %s %s ", $1, $2, $3, $4);} EXPR RPAREN {printf("%s ", $7);} FOR_EXPR ;
+FOR: PARA ID DE LPAREN {printf("%s %s %s %s ", $1.str, $2.str, $3.str, $4.str); } EXPR RPAREN {printf("%s ", $7.str); } FOR_EXPR ;
 FOR_EXPR: FOR_ASC ;
 FOR_EXPR: FOR_DESC ;
-FOR_ASC: ASC LPAREN {printf("%s %s ", $1, $2);} EXPR RPAREN {printf("%s ", $5);} STMT ;
-FOR_DESC: DESC LPAREN {printf("%s %s ", $1, $2);} EXPR RPAREN {printf("%s ", $5);} STMT ;
-SWITCH_CASE: ESCOLHA LPAREN {printf("%s %s ", $1, $2);} EXPR RPAREN {printf("%s ", $5);} LBRACE { printf("%s\n", $7); } CASE1 RBRACE { printf("%s\n", $10); } ;
+FOR_ASC: ASC LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {printf("%s ", $5.str);} STMT ;
+FOR_DESC: DESC LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {printf("%s ", $5.str);} STMT ;
+SWITCH_CASE: ESCOLHA LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {printf("%s ", $5.str);} LBRACE { printf("%s\n", $7.str); } CASE1 RBRACE { printf("%s\n", $10.str); } ;
 CASE1: CASE CASE0 ;
 CASE0: CASE1 ;
-CASE0:  ;
-CASE: CASO {printf("%s ", $1);} EXPR COLON {printf("%s\n", $4); } STMTS ;
-CASE: CC COLON { printf("%s %s\n", $1, $2); } STMTS ;
+CASE0: ;
+CASE: CASO {printf("%s ", $1.str);} EXPR COLON {printf("%s\n", $4.str); } STMTS ;
+CASE: CC COLON { printf("%s %s\n", $1.str, $2.str); } STMTS ;
 
 // Ternary op
 TERNARY: QUESTION { printf(" ? "); } EXPR COLON { printf(" : "); } EXPR ;
-TERNARY:  ;
+TERNARY: ;
 
 EXPR: ATTR_RULE TERNARY ;
-ATTR_RULE: LOGOR_CHAIN ATTR_TAIL ;
-ATTR_TAIL: ATTR_OP LOGOR_CHAIN ;
+
+// Attr op
+ATTR_RULE: LOGOR_CHAIN { str = "bla"; } ATTR_TAIL ;
+ATTR_TAIL: ATTR_OP {
+  if ($1.attr_op == 1) {
+    printf(" = %s || ", str);
+  } else if ($1.attr_op) {
+    printf(" = %s && ", str);
+  }
+} LOGOR_CHAIN ;
 ATTR_TAIL:  ;
+
 LOGOR_CHAIN: LOGAND_CHAIN LOGOR_TAIL ;
 LOGOR_TAIL: LOGOR_OP LOGOR_CHAIN ;
 LOGOR_TAIL:  ;
@@ -188,31 +201,31 @@ EXPR_LEAF: LPAREN { printf("("); } EXPR RPAREN { printf(")"); } ;
 VAR_CALL: VAR_LEAF CALL ;
 CALL: LPAREN { printf("("); } ARGS RPAREN { printf(")"); } ;
 CALL: POS_OP ;
-CALL:  ;
+CALL: ;
 
 // Print args
 ARGS1: EXPR ARGS0 ;
 ARGS0: COMMA { printf(","); } ARGS ;
-ARGS0:  ;
+ARGS0: ;
 ARGS: ARGS1 ;
-ARGS:  ;
+ARGS: ;
 
 // Literals
-EXPR_LIT: INTEIRO {printf("%s ", $1);} ;
-EXPR_LIT: REAL {printf("%s ", $1);} ;
-EXPR_LIT: REALD {printf("%s ", $1);} ;
-EXPR_LIT: STRING {printf("%s ", $1);} ;
-EXPR_LIT: CARACTERE {printf("%s ", $1);} ;
+EXPR_LIT: INTEIRO {printf("%s ", $1.str);} ;
+EXPR_LIT: REAL {printf("%s ", $1.str);} ;
+EXPR_LIT: REALD {printf("%s ", $1.str);} ;
+EXPR_LIT: STRING {printf("%s ", $1.str);} ;
+EXPR_LIT: CARACTERE {printf("%s ", $1.str);} ;
 EXPR_LIT: ARRAY_LIT ;
 
 // Array
 ARRAY_LIT: LBRACE { printf("{"); } ARGS1 RBRACE { printf("}"); } ;
-VAR_LEAF: ID { printf("%s", $1); } VAR_MODS ;
+VAR_LEAF: ID { printf("%s", $1.str); } VAR_MODS ;
 
 // Print var field
-VAR_MODS: DOT ID { printf(".%s", $2); } VAR_MODS ;
+VAR_MODS: DOT ID { printf(".%s", $2.str); } VAR_MODS ;
 VAR_MODS: LBRACKET { printf("["); } EXPR RBRACKET { printf("]"); } VAR_MODS ;
-VAR_MODS:  ;
+VAR_MODS: ;
 
 // Print attr OP
 ATTR_OP: ATTR {printf("= ");} ;
@@ -222,11 +235,13 @@ ATTR_OP: ATTRMUL {printf("*= "); } ;
 ATTR_OP: ATTRDIV {printf("/= "); } ;
 ATTR_OP: ATTRMOD {printf("%%= "); } ;
 ATTR_OP: ATTRBITOR {printf("|= ");} ;
-ATTR_OP: ATTROR {printf("||= ");} ;
 ATTR_OP: ATTRBITAND {printf("&= ");} ;
-ATTR_OP: ATTRAND {printf("&&= ");} ;
-ATTR_OP: ATTRSHIFTL {printf("<<= ");} ;
-ATTR_OP: ATTRSHIFTR {printf(">>= ");} ;
+ATTR_OP: ATTRSHIFTL {printf("<<= "); } ;
+ATTR_OP: ATTRSHIFTR {printf(">>= "); } ;
+
+// Custom attr op
+ATTR_OP: ATTROR { $$.attr_op = 1; } ;
+ATTR_OP: ATTRAND { $$.attr_op = 2; } ;
 
 // Un-op
 PRE_OP: STAR {printf("* ");} ;
