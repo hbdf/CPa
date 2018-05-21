@@ -6,12 +6,15 @@
 #include <stddef.h>
 #include <ctype.h>
 #include <stdio.h>
+#include <string>
+#include <bits/stdc++.h>
 
 int yylex(void);
 int yyerror(char* s);
 void preprocImportar();
 
 char* str;
+using namespace std;
 
 %}
 
@@ -27,13 +30,8 @@ char* str;
 %%
 
 START: INC DEC1 ;
-<<<<<<< HEAD
 INC: IMPORTAR STRING { preprocImportar(); } SEMI INC ;
 INC:  ;
-=======
-INC: IMPORTAR STRING SEMI { } INC ;
-INC: ;
->>>>>>> 27e85256ee326fd356e14f291270e8ec74f65933
 DEC1: DEC DEC0 ;
 DEC0: DEC1 ;
 DEC0: ;
