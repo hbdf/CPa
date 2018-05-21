@@ -13,8 +13,8 @@ int yylex(void);
 int yyerror(char* s);
 void preprocImportar();
 
-char* str;
 using namespace std;
+string inherit;
 
 %}
 
@@ -59,7 +59,7 @@ VAR_DEC1: SEMI { printf(";\n"); } ;
 // Print var ID
 VAR_DEC1: COMMA ID { printf(", %s ", $2.str); } VAR_DEC ;
 
-ID_INIT: ATTR { printf(" = "); } EXPR ;
+ID_INIT: ATTR { printf("= "); } EXPR ;
 ID_INIT: ;
 
 // Print struct dec
@@ -160,12 +160,12 @@ TERNARY: ;
 EXPR: ATTR_RULE TERNARY ;
 
 // Attr op
-ATTR_RULE: LOGOR_CHAIN { str = "bla"; } ATTR_TAIL ;
+ATTR_RULE: LOGOR_CHAIN {inherit = $1.str;} ATTR_TAIL ;
 ATTR_TAIL: ATTR_OP {
   if ($1.attr_op == 1) {
-    printf(" = %s || ", str);
-  } else if ($1.attr_op) {
-    printf(" = %s && ", str);
+    printf(" = %s || ", inherit.c_str());
+  } else if ($1.attr_op == 2) {
+    printf(" = %s && ", inherit.c_str());
   }
 } LOGOR_CHAIN ;
 ATTR_TAIL:  ;
@@ -232,16 +232,16 @@ VAR_MODS: LBRACKET { printf("["); } EXPR RBRACKET { printf("]"); } VAR_MODS ;
 VAR_MODS: ;
 
 // Print attr OP
-ATTR_OP: ATTR {printf("= ");} ;
-ATTR_OP: ATTRADD {printf("+= "); } ;
-ATTR_OP: ATTRSUB {printf("-= "); } ;
-ATTR_OP: ATTRMUL {printf("*= "); } ;
-ATTR_OP: ATTRDIV {printf("/= "); } ;
-ATTR_OP: ATTRMOD {printf("%%= "); } ;
-ATTR_OP: ATTRBITOR {printf("|= ");} ;
-ATTR_OP: ATTRBITAND {printf("&= ");} ;
-ATTR_OP: ATTRSHIFTL {printf("<<= "); } ;
-ATTR_OP: ATTRSHIFTR {printf(">>= "); } ;
+ATTR_OP: ATTR {printf(" = ");} ;
+ATTR_OP: ATTRADD {printf(" += "); } ;
+ATTR_OP: ATTRSUB {printf(" -= "); } ;
+ATTR_OP: ATTRMUL {printf(" *= "); } ;
+ATTR_OP: ATTRDIV {printf(" /= "); } ;
+ATTR_OP: ATTRMOD {printf(" %%= "); } ;
+ATTR_OP: ATTRBITOR {printf(" |= ");} ;
+ATTR_OP: ATTRBITAND {printf(" &= ");} ;
+ATTR_OP: ATTRSHIFTL {printf(" <<= "); } ;
+ATTR_OP: ATTRSHIFTR {printf(" >>= "); } ;
 
 // Custom attr op
 ATTR_OP: ATTROR { $$.attr_op = 1; } ;

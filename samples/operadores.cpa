@@ -1,0 +1,9 @@
+int principal() {
+	var int x = 1;
+	x &&= y && z;
+	var int y = 2;
+		y = 2;
+	se(x &&= y) {
+		k ||= 10;
+	}
+}
