@@ -7,6 +7,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <string>
+#include <vector>
 #include <bits/stdc++.h>
 
 int yylex(void);
@@ -14,7 +15,8 @@ int yyerror(char* s);
 void preprocImportar();
 
 using namespace std;
-string inherit;
+vector<string> inherit;
+int for_label_count = 0;
 
 %}
 
@@ -160,12 +162,12 @@ TERNARY: ;
 EXPR: ATTR_RULE TERNARY ;
 
 // Attr op
-ATTR_RULE: LOGOR_CHAIN {inherit = $1.str;} ATTR_TAIL ;
+ATTR_RULE: LOGOR_CHAIN {inherit.push_back($1.str);} ATTR_TAIL ;
 ATTR_TAIL: ATTR_OP {
   if ($1.attr_op == 1) {
-    printf(" = %s || ", inherit.c_str());
+    printf(" = %s || ", inherit.back().c_str());
   } else if ($1.attr_op == 2) {
-    printf(" = %s && ", inherit.c_str());
+    printf(" = %s && ", inherit.back().c_str());
   }
 } LOGOR_CHAIN ;
 ATTR_TAIL:  ;
@@ -326,3 +328,12 @@ int main(int argc, char* argv[]) {
   	//printf("Entrada lida com sucesso.\n");
   return 1;
 }
+
+
+// string formatFor(string id, string start, string end, string increment, string ascdesc, string body) {
+//  string flabel = "for" + for_label_count + ":";
+//  string condition = "if ("
+//
+//  string update_counter = id + ((ascdesc == "ASC") ? "++" : "--");
+//  for_label_count++;
+// }
