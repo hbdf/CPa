@@ -6,7 +6,7 @@ OBJS          = parser.tab.o lex.yy.o
  
 SRCS          = parser.tab.c lex.yy.c
  
-CC            = g++ 
+CC            = g++ -std=c++11
  
 all:            parser lex $(PROGRAM)
  

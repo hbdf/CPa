@@ -15,7 +15,7 @@ int yyerror(char* s);
 void preprocImportar();
 
 using namespace std;
-vector<string> inherit;
+deque<string> inherit;
 int for_label_count = 0;
 
 %}
@@ -143,11 +143,21 @@ WHILE: ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN { printf(")"); } STMT 
 // Do while
 DO_WHILE: FAZER { printf("do "); } STMT ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN SEMI { printf(");\n"); } ;
 
-FOR: PARA ID DE LPAREN {printf("%s %s %s %s ", $1.str, $2.str, $3.str, $4.str); } EXPR RPAREN {printf("%s ", $7.str); } FOR_EXPR ;
+FOR: PARA ID DE LPAREN EXPR RPAREN {
+    printf("\n%s = %s;", $2.str, $5.str);
+    inherit.push_back($2.str);
+} FOR_EXPR ;
 FOR_EXPR: FOR_ASC ;
 FOR_EXPR: FOR_DESC ;
-FOR_ASC: ASC LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {printf("%s ", $5.str);} STMT ;
-FOR_DESC: DESC LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {printf("%s ", $5.str);} STMT ;
+FOR_ASC: ASC LPAREN EXPR RPAREN {
+    inherit.push_back($1.str);
+    inherit.push_back($3.str);
+    printf("for(;%s", inherit.front().c_str());
+    inherit.pop_front(); 
+    printf(" < %s;)", inherit.back().c_str());
+    inherit.pop_back();
+} STMT ;
+FOR_DESC: DESC LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {inherit.push_back({$1.str, $4.str});printf("%s ", $5.str);} STMT ;
 SWITCH_CASE: ESCOLHA LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {printf("%s ", $5.str);} LBRACE { printf("%s\n", $7.str); } CASE1 RBRACE { printf("%s\n", $10.str); } ;
 CASE1: CASE CASE0 ;
 CASE0: CASE1 ;
@@ -166,8 +176,10 @@ ATTR_RULE: LOGOR_CHAIN {inherit.push_back($1.str);} ATTR_TAIL ;
 ATTR_TAIL: ATTR_OP {
   if ($1.attr_op == 1) {
     printf(" = %s || ", inherit.back().c_str());
+    inherit.pop_back();
   } else if ($1.attr_op == 2) {
     printf(" = %s && ", inherit.back().c_str());
+    inherit.pop_back();
   }
 } LOGOR_CHAIN ;
 ATTR_TAIL:  ;
