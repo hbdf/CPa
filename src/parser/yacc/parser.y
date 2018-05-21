@@ -248,34 +248,34 @@ ATTR_OP: ATTROR { $$.attr_op = 1; } ;
 ATTR_OP: ATTRAND { $$.attr_op = 2; } ;
 
 // Un-op
-PRE_OP: STAR {printf("* ");} ;
-PRE_OP: AMPERSEND {printf("& ");} ;
-PRE_OP: PLUS2 {printf("++ ");} ;
-PRE_OP: MINUS2 {printf("-- ");} ;
+PRE_OP: STAR {printf("*");} ;
+PRE_OP: AMPERSEND {printf(" &");} ;
+PRE_OP: PLUS2 {printf(" ++");} ;
+PRE_OP: MINUS2 {printf(" --");} ;
 POS_OP: PLUS2 {printf("++ ");} ;
 POS_OP: MINUS2 {printf("-- ");} ;
 
 // Bin-op
-MUL_OP: STAR {printf("* ");} ;
-MUL_OP: DIV {printf("/ ");} ;
-MUL_OP: MOD {printf("%% ");} ;
-UN_OP: NEG {printf("! ");} ;
-UN_OP: MINUS {printf("- ");} ;
-UN_OP: PLUS {printf("+ ");} ;
-ADD_OP: PLUS {printf("+ ");} ;
-ADD_OP: MINUS {printf("- ");} ;
-SHIFT_OP: SHIFTL {printf("<< ");} ;
-SHIFT_OP: SHIFTR {printf(">> ");} ;
-REL_OP: EQQ {printf("== ");} ;
-REL_OP: NEQ {printf("!= ");} ;
-REL_OP: GT {printf("> ");} ;
-REL_OP: LT {printf("< ");} ;
-REL_OP: GEQ {printf(">= ");} ;
-REL_OP: LEQ {printf("<= ");} ;
-BITAND_OP: AMPERSEND {printf("& ");} ;
-BITOR_OP: PIPE {printf("| ");} ;
-LOGAND_OP: AND {printf("&& ");} ;
-LOGOR_OP: OR {printf("|| ");} ;
+MUL_OP: STAR {printf(" * ");} ;
+MUL_OP: DIV {printf(" / ");} ;
+MUL_OP: MOD {printf(" %% ");} ;
+UN_OP: NEG {printf(" ! ");} ;
+UN_OP: MINUS {printf(" - ");} ;
+UN_OP: PLUS {printf(" + ");} ;
+ADD_OP: PLUS {printf(" + ");} ;
+ADD_OP: MINUS {printf(" - ");} ;
+SHIFT_OP: SHIFTL {printf(" << ");} ;
+SHIFT_OP: SHIFTR {printf(" >> ");} ;
+REL_OP: EQQ {printf(" == ");} ;
+REL_OP: NEQ {printf(" != ");} ;
+REL_OP: GT {printf(" > ");} ;
+REL_OP: LT {printf(" < ");} ;
+REL_OP: GEQ {printf(" >= ");} ;
+REL_OP: LEQ {printf(" <= ");} ;
+BITAND_OP: AMPERSEND {printf(" & ");} ;
+BITOR_OP: PIPE {printf(" | ");} ;
+LOGAND_OP: AND {printf(" && ");} ;
+LOGOR_OP: OR {printf(" || ");} ;
 
 %%
 
