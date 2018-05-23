@@ -144,24 +144,27 @@ WHILE: ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN { printf(")"); } STMT 
 // Do while
 DO_WHILE: FAZER { printf("do "); } STMT ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN SEMI { printf(");\n"); } ;
 
-FOR: PARA ID DE LPAREN EXPR RPAREN {
-    printf("%s = %s;\n", $2.str, $5.str);
+FOR: PARA ID DE LPAREN {printf("%s = ", $2.str);} EXPR RPAREN {
+    printf("%s;\n", $5.str);
     inherit.push_back($2.str);
 } FOR_EXPR ;
 FOR_EXPR: FOR_ASC ;
 FOR_EXPR: FOR_DESC ;
-FOR_ASC: ASC LPAREN EXPR RPAREN {
+FOR_ASC: ASC LPAREN {
     string labelFor = "label" + to_string(labelCount);
     labelCount++;
     scopeStack.push_back(labelFor);
 
     printf("%s:\n", labelFor.c_str());
-    printf("if(!(%s < %s)) goto %s;\n", inherit.back().c_str(), $3.str, ("End" + labelFor).c_str());
-    inherit.pop_back();
+    printf("if(!(%s < ", inherit.back().c_str());
+} EXPR RPAREN {
+    printf("%s)){goto %s;}\n", $3.str, ("End" + scopeStack.back()).c_str());
 } STMT {
+    printf("%s++;\n", inherit.back().c_str());
     printf("goto %s;\n", scopeStack.back().c_str());
-    printf("%s:\n", ("End" + scopeStack.back()).c_str());
+    printf("%s:;\n", ("End" + scopeStack.back()).c_str());
     scopeStack.pop_back();
+    inherit.pop_back();
 };
 FOR_DESC: DESC LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {inherit.push_back({$1.str, $4.str});printf("%s ", $5.str);} STMT ;
 SWITCH_CASE: ESCOLHA LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {printf("%s ", $5.str);} LBRACE { printf("%s\n", $7.str); } CASE1 RBRACE { printf("%s\n", $10.str); } ;
