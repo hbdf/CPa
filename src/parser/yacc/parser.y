@@ -21,8 +21,8 @@ int labelCount = 0;
 
 %}
 
-%define api.value.type {union {
-  char* str;
+%define api.value.type {struct {
+  std::string str;
   int attr_op;
 }}
 
@@ -32,7 +32,7 @@ int labelCount = 0;
 
 %%
 
-START: INC DEC1 ;
+START: { printf("#define leia printf \n#define escreva scanf \n"); } INC DEC1 ;
 INC: IMPORTAR STRING { preprocImportar(); } SEMI INC ;
 INC:  ;
 DEC1: DEC DEC0 ;
@@ -44,10 +44,10 @@ DEC: STRUCT_DEC ;
 DEC: ENUM_DEC ;
 
 // Print constants
-CONST_DEC: CONSTANTE { printf("const "); } TYPE ID { printf("%s = ", $4.str); } EXPR SEMI {printf(";\n"); };
+CONST_DEC: CONSTANTE { printf("const "); } TYPE ID { printf("%s = ", $4.str.c_str()); } EXPR SEMI {printf(";\n"); };
 
 // Print array ID
-ID_DEC: TYPE ARRAY_TYPE ID { printf("%s ", $3.str); } ID_SUFIX ;
+ID_DEC: TYPE ARRAY_TYPE ID { printf("%s ", $3.str.c_str()); } ID_SUFIX ;
 
 ID_SUFIX: FUNC_DEC ;
 ID_SUFIX: VAR_DEC ;
@@ -60,35 +60,37 @@ VAR_DEC: ID_INIT VAR_DEC1 ;
 VAR_DEC1: SEMI { printf(";\n"); } ;
 
 // Print var ID
-VAR_DEC1: COMMA ID { printf(", %s ", $2.str); } VAR_DEC ;
+VAR_DEC1: COMMA ID { printf(", %s ", $2.str.c_str()); } VAR_DEC ;
 
-ID_INIT: ATTR { printf("= "); } EXPR ;
+ID_INIT: ATTR { printf("= "); } INIT_VALUE ;
 ID_INIT: ;
+INIT_VALUE: EXPR ;
+INIT_VALUE: ARRAY_LIT ;
 
 // Print struct dec
-STRUCT_DEC: ESTRUTURA ID LBRACE {printf("struct %s {\n", $2.str); } VAR_DECS RBRACE { printf("}\n"); };
+STRUCT_DEC: ESTRUTURA ID LBRACE {printf("struct %s {\n", $2.str.c_str()); } VAR_DECS RBRACE { printf("}\n"); };
 
 VAR_DECS: ID_DEC VAR_DECS ;
 VAR_DECS:  ;
 
 // Print enum
-ENUM_DEC: ENUM ID LBRACE { printf("enum %s {\n", $2.str); } IDS1 RBRACE { printf("\n}\n"); };
+ENUM_DEC: ENUM ID LBRACE { printf("enum %s {\n", $2.str.c_str()); } IDS1 RBRACE { printf("\n}\n"); };
 
 // Print ID list
-IDS1: ID { printf("%s ", $1.str); } IDS0 ;
+IDS1: ID { printf("%s ", $1.str.c_str()); } IDS0 ;
 IDS0: COMMA { printf(", "); } IDS1 ;
 
 IDS0:  ;
 PARAMS: PARAM1 ;
 PARAMS:  ;
-PARAM1: TYPE ID { printf("%s ", $2.str); } PARAM0 ;
+PARAM1: TYPE ID { printf("%s ", $2.str.c_str()); } PARAM0 ;
 PARAM0: COMMA { printf(","); } PARAM1 ;
 PARAM0:  ;
 
 // Print type ID
-TYPE: ID { printf("%s ", $1.str); } ;
+TYPE: ID { printf("%s ", $1.str.c_str()); } ;
 // Print primitive type
-TYPE: TIPO_PRIMITIVO { printf("%s ", $1.str); } ;
+TYPE: TIPO_PRIMITIVO { printf("%s ", $1.str.c_str()); } ;
 // Pointer type
 TYPE: STAR TYPE { printf("* "); };
 // Array type
@@ -121,22 +123,22 @@ STMT: PARAR SEMI { printf("break;\n"); } ;
 STMT: CONTINUAR SEMI {printf("continue;\n"); } ;
 
 // Goto call
-STMT: IRPARA ID SEMI {printf("goto %s ;\n", $2.str); } ;
+STMT: IRPARA ID SEMI {printf("goto %s ;\n", $2.str.c_str()); } ;
 
 // Label define
-STMT: LABEL { printf("%s\n", $1.str); } ;
+STMT: LABEL { printf("%s\n", $1.str.c_str()); } ;
 
 // Return
 RETURN: RETORNAR { printf("return "); } RETURN_EXPR SEMI {printf(";\n"); } ;
 RETURN_EXPR: EXPR ;
-RETURN_EXPR:  ;
+RETURN_EXPR: ;
 
 // If condition
 IF: SE LPAREN { printf("if ("); } EXPR RPAREN { printf(") "); } STMT ELSE ;
 
 // Else
 ELSE: SENAO { printf("else "); } STMT ;
-ELSE:  ;
+ELSE: ;
 
 // While
 WHILE: ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN { printf(")"); } STMT ;
@@ -144,8 +146,9 @@ WHILE: ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN { printf(")"); } STMT 
 // Do while
 DO_WHILE: FAZER { printf("do "); } STMT ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN SEMI { printf(");\n"); } ;
 
-FOR: PARA ID DE LPAREN {printf("%s = ", $2.str);} EXPR RPAREN {
-    printf("%s;\n", $5.str);
+// For loop
+FOR: PARA ID DE LPAREN {printf("%s = ", $2.str.c_str());} EXPR RPAREN {
+    printf("%s;\n", $5.str.c_str());
     inherit.push_back($2.str);
 } FOR_EXPR ;
 FOR_EXPR: FOR_ASC ;
@@ -154,11 +157,10 @@ FOR_ASC: ASC LPAREN {
     string labelFor = "label" + to_string(labelCount);
     labelCount++;
     scopeStack.push_back(labelFor);
-
     printf("%s:\n", labelFor.c_str());
     printf("if(!(%s < ", inherit.back().c_str());
 } EXPR RPAREN {
-    printf("%s)){goto %s;}\n", $3.str, ("End" + scopeStack.back()).c_str());
+    printf("%s)){goto %s;}\n", $3.str.c_str(), ("End" + scopeStack.back()).c_str());
 } STMT {
     printf("%s++;\n", inherit.back().c_str());
     printf("goto %s;\n", scopeStack.back().c_str());
@@ -166,13 +168,22 @@ FOR_ASC: ASC LPAREN {
     scopeStack.pop_back();
     inherit.pop_back();
 };
-FOR_DESC: DESC LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {inherit.push_back({$1.str, $4.str});printf("%s ", $5.str);} STMT ;
-SWITCH_CASE: ESCOLHA LPAREN {printf("%s %s ", $1.str, $2.str);} EXPR RPAREN {printf("%s ", $5.str);} LBRACE { printf("%s\n", $7.str); } CASE1 RBRACE { printf("%s\n", $10.str); } ;
+
+FOR_DESC: DESC LPAREN {printf("%s %s ", $1.str.c_str(), $2.str.c_str());} EXPR RPAREN {inherit.push_back({$1.str.c_str(), $4.str.c_str()});printf("%s ", $5.str.c_str());} STMT ;
+
+// Switch-case
+SWITCH_CASE: ESCOLHA LPAREN {
+  printf("%s %s ", $1.str.c_str(), $2.str.c_str());
+} EXPR RPAREN {
+  printf("%s ", $5.str.c_str());
+} LBRACE { 
+  printf("%s\n", $7.str.c_str()); 
+} CASE1 RBRACE { printf("%s\n", $10.str.c_str()); } ;
 CASE1: CASE CASE0 ;
 CASE0: CASE1 ;
 CASE0: ;
-CASE: CASO {printf("%s ", $1.str);} EXPR COLON {printf("%s\n", $4.str); } STMTS ;
-CASE: CC COLON { printf("%s %s\n", $1.str, $2.str); } STMTS ;
+CASE: CASO {printf("%s ", $1.str.c_str());} EXPR COLON {printf("%s\n", $4.str.c_str()); } STMTS ;
+CASE: CC COLON { printf("%s %s\n", $1.str.c_str(), $2.str.c_str()); } STMTS ;
 
 // Ternary op
 TERNARY: QUESTION { printf(" ? "); } EXPR COLON { printf(" : "); } EXPR ;
@@ -236,19 +247,18 @@ ARGS: ARGS1 ;
 ARGS: ;
 
 // Literals
-EXPR_LIT: INTEIRO {printf("%s ", $1.str);} ;
-EXPR_LIT: REAL {printf("%s ", $1.str);} ;
-EXPR_LIT: REALD {printf("%s ", $1.str);} ;
-EXPR_LIT: STRING {printf("%s ", $1.str);} ;
-EXPR_LIT: CARACTERE {printf("%s ", $1.str);} ;
-EXPR_LIT: ARRAY_LIT ;
+EXPR_LIT: INTEIRO {printf("%s ", $1.str.c_str());} ;
+EXPR_LIT: REAL {printf("%s ", $1.str.c_str());} ;
+EXPR_LIT: REALD {printf("%s ", $1.str.c_str());} ;
+EXPR_LIT: STRING {printf("%s ", $1.str.c_str());} ;
+EXPR_LIT: CARACTERE {printf("%s ", $1.str.c_str());} ;
 
 // Array
 ARRAY_LIT: LBRACE { printf("{"); } ARGS1 RBRACE { printf("}"); } ;
-VAR_LEAF: ID { printf("%s", $1.str); } VAR_MODS ;
+VAR_LEAF: ID { printf("%s", $1.str.c_str()); } VAR_MODS ;
 
 // Print var field
-VAR_MODS: DOT ID { printf(".%s", $2.str); } VAR_MODS ;
+VAR_MODS: DOT ID { printf(".%s", $2.str.c_str()); } VAR_MODS ;
 VAR_MODS: LBRACKET { printf("["); } EXPR RBRACKET { printf("]"); } VAR_MODS ;
 VAR_MODS: ;
 

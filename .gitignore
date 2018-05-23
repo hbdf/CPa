@@ -12,3 +12,4 @@ src/parser/yacc/*.o
 src/parser/yacc/*.tab.*
 src/parser/yacc/cpa
 src/parser/yacc/*.yy.*
+src/parser/yacc/*.output
