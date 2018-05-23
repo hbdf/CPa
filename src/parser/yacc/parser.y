@@ -9,12 +9,13 @@
 #include <string>
 #include <vector>
 #include <bits/stdc++.h>
+using namespace std;
 
 int yylex(void);
 int yyerror(char* s);
 void preprocImportar();
+string getLabel();
 
-using namespace std;
 deque<string> inherit;
 vector<string> scopeStack;
 int labelCount = 0;
@@ -155,8 +156,7 @@ FOR_EXPR: FOR_ASC ;
 FOR_EXPR: FOR_DESC ;
 
 FOR_ASC: ASC LPAREN {
-    string labelFor = "label" + to_string(labelCount);
-    labelCount++;
+    string labelFor = getLabel();
     scopeStack.push_back(labelFor);
     printf("%s:\n", labelFor.c_str());
     printf("if(!(%s < ", inherit.back().c_str());
@@ -171,8 +171,7 @@ FOR_ASC: ASC LPAREN {
 };
 
 FOR_DESC: DESC LPAREN {
-    string labelFor = "label" + to_string(labelCount);
-    labelCount++;
+    string labelFor = getLabel();
     scopeStack.push_back(labelFor);
     printf("%s:\n", labelFor.c_str());
     printf("if(!(%s > ", inherit.back().c_str());
@@ -363,6 +362,10 @@ void preprocImportar () {
   strcat(command, yytext);
   system(command);
 
+}
+
+string getLabel() {
+  return "label" + to_string(labelCount++);
 }
 
 int main(int argc, char* argv[]) {

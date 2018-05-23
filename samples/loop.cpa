@@ -4,4 +4,13 @@ int main() {
 		var int y = 0;
 		y++;
 	}
+
+	var int y;
+	para y de (10) desc (2) {
+		var int z = 0;
+		z++;
+		para ginga de (1) asc (30) {
+			escreva("Eh noiz!");
+		}
+	}
 }
