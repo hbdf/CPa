@@ -16,7 +16,8 @@ void preprocImportar();
 
 using namespace std;
 deque<string> inherit;
-int for_label_count = 0;
+vector<string> scopeStack;
+int labelCount = 0;
 
 %}
 
@@ -147,24 +148,25 @@ DO_WHILE: FAZER { printf("do "); } STMT ENQUANTO LPAREN { printf("while ("); } E
 
 // For loop
 FOR: PARA ID DE LPAREN EXPR RPAREN {
-    printf("\n%s = %s;", $2.str.c_str(), $5.str.c_str());
+    printf("%s = %s;\n", $2.str.c_str(), $5.str.c_str());
     inherit.push_back($2.str);
 } FOR_EXPR ;
 FOR_EXPR: FOR_ASC ;
 FOR_EXPR: FOR_DESC ;
 FOR_ASC: ASC LPAREN EXPR RPAREN {
-  inherit.push_back($1.str);
-  inherit.push_back($3.str);
-  printf("for(;%s", inherit.front().c_str());
-  inherit.pop_front(); 
-  printf(" < %s;)", inherit.back().c_str());
-  inherit.pop_back();
-} STMT ;
-FOR_DESC: DESC LPAREN { printf("%s %s ", $1.str.c_str(), $2.str.c_str());} EXPR RPAREN {
-  inherit.push_back($1.str);
-  inherit.push_back($4.str);
-  printf("%s ", $5.str.c_str());
-} STMT ;
+    string labelFor = "label" + to_string(labelCount);
+    labelCount++;
+    scopeStack.push_back(labelFor);
+    printf("%s:\n", labelFor.c_str());
+    printf("if(!(%s < %s)) goto %s;\n", inherit.back().c_str(), $3.str.c_str(), ("End" + labelFor).c_str());
+    inherit.pop_back();
+} STMT {
+    printf("goto %s;\n", scopeStack.back().c_str());
+    printf("%s:\n", ("End" + scopeStack.back()).c_str());
+    scopeStack.pop_back();
+};
+
+FOR_DESC: DESC LPAREN {printf("%s %s ", $1.str.c_str(), $2.str.c_str());} EXPR RPAREN {inherit.push_back({$1.str.c_str(), $4.str.c_str()});printf("%s ", $5.str.c_str());} STMT ;
 
 // Switch-case
 SWITCH_CASE: ESCOLHA LPAREN {
@@ -187,14 +189,12 @@ TERNARY: ;
 EXPR: ATTR_RULE TERNARY ;
 
 // Attr op
-ATTR_RULE: LOGOR_CHAIN { inherit.push_back($1.str); } ATTR_TAIL ;
+ATTR_RULE: LOGOR_CHAIN {inherit.push_back($1.str);} ATTR_TAIL {inherit.pop_back();};
 ATTR_TAIL: ATTR_OP {
   if ($1.attr_op == 1) {
     printf(" = %s || ", inherit.back().c_str());
-    inherit.pop_back();
   } else if ($1.attr_op == 2) {
     printf(" = %s && ", inherit.back().c_str());
-    inherit.pop_back();
   }
 } LOGOR_CHAIN ;
 ATTR_TAIL:  ;
