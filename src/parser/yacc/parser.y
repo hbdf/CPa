@@ -375,12 +375,3 @@ int main(int argc, char* argv[]) {
   	//printf("Entrada lida com sucesso.\n");
   return 1;
 }
-
-
-// string formatFor(string id, string start, string end, string increment, string ascdesc, string body) {
-//  string flabel = "for" + for_label_count + ":";
-//  string condition = "if ("
-//
-//  string update_counter = id + ((ascdesc == "ASC") ? "++" : "--");
-//  for_label_count++;
-// }
