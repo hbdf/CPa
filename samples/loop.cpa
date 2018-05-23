@@ -9,8 +9,21 @@ int main() {
 	para y de (10) desc (2) {
 		var int z = 0;
 		z++;
-		para ginga de (1) asc (30) {
-			escreva("Eh noiz!");
+		var int ginga = 0;
+		para ginga de (1) asc (3) {
+			escreva("Eh noiz!\n");
 		}
+	}
+
+	x = 0;
+	enquanto(x<10) {
+		escreva("Que voa!\n");
+		x++;
+	}
+
+	y = 10;
+	enquanto(y<10) {
+		escreva("Bruxo?");
+		y++;
 	}
 }

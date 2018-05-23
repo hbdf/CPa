@@ -33,7 +33,11 @@ int labelCount = 0;
 
 %%
 
-START: { printf("#define leia printf \n#define escreva scanf \n"); } INC DEC1 ;
+START: { 
+  printf("#include <stdio.h>\n");
+  printf("#define leia scanf\n");
+  printf("#define escreva printf\n"); 
+} INC DEC1 ;
 INC: IMPORTAR STRING { preprocImportar(); } SEMI INC ;
 INC:  ;
 DEC1: DEC DEC0 ;
@@ -142,7 +146,17 @@ ELSE: SENAO { printf("else "); } STMT ;
 ELSE: ;
 
 // While
-WHILE: ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN { printf(")"); } STMT ;
+WHILE: ENQUANTO LPAREN { 
+  scopeStack.push_back(getLabel());
+  printf("%s:\n", ("start" + scopeStack.back()).c_str());
+  printf("if(!(");
+} EXPR RPAREN { 
+  printf(")) goto %s;\n", ("end" + scopeStack.back()).c_str());
+} STMT {
+  printf("goto %s;\n", ("start" + scopeStack.back()).c_str());
+  printf("%s:;\n", ("end" + scopeStack.back()).c_str());
+  scopeStack.pop_back();
+};
 
 // Do while
 DO_WHILE: FAZER { printf("do "); } STMT ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN SEMI { printf(");\n"); } ;
