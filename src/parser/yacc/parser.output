@@ -1,436 +1,439 @@
-Estado 219 conflitos: 15 de redução/redução
-Estado 279 conflitos: 1 de deslocamento/redução
+Estado 280 conflitos: 1 de deslocamento/redução
 
 
 Gramática
 
     0 $accept: START $end
 
-    1 START: INC DEC1
+    1 $@1: %empty
 
-    2 $@1: %empty
+    2 START: $@1 INC DEC1
 
-    3 INC: IMPORTAR STRING $@1 SEMI INC
-    4    | %empty
+    3 $@2: %empty
 
-    5 DEC1: DEC DEC0
+    4 INC: IMPORTAR STRING $@2 SEMI INC
+    5    | %empty
 
-    6 DEC0: DEC1
-    7     | %empty
+    6 DEC1: DEC DEC0
 
-    8 DEC: CONST_DEC
-    9    | ID_DEC
-   10    | STRUCT_DEC
-   11    | ENUM_DEC
+    7 DEC0: DEC1
+    8     | %empty
 
-   12 $@2: %empty
+    9 DEC: CONST_DEC
+   10    | ID_DEC
+   11    | STRUCT_DEC
+   12    | ENUM_DEC
 
    13 $@3: %empty
 
-   14 CONST_DEC: CONSTANTE $@2 TYPE ID $@3 EXPR SEMI
+   14 $@4: %empty
 
-   15 $@4: %empty
+   15 CONST_DEC: CONSTANTE $@3 TYPE ID $@4 EXPR SEMI
 
-   16 ID_DEC: TYPE ARRAY_TYPE ID $@4 ID_SUFIX
+   16 $@5: %empty
 
-   17 ID_SUFIX: FUNC_DEC
-   18         | VAR_DEC
+   17 ID_DEC: TYPE ARRAY_TYPE ID $@5 ID_SUFIX
 
-   19 $@5: %empty
+   18 ID_SUFIX: FUNC_DEC
+   19         | VAR_DEC
 
    20 $@6: %empty
 
-   21 FUNC_DEC: LPAREN $@5 PARAMS RPAREN $@6 FUNC_END
+   21 $@7: %empty
 
-   22 FUNC_END: SEMI
-   23         | BLOCK
+   22 FUNC_DEC: LPAREN $@6 PARAMS RPAREN $@7 FUNC_END
 
-   24 VAR_DEC: ID_INIT VAR_DEC1
+   23 FUNC_END: SEMI
+   24         | BLOCK
 
-   25 VAR_DEC1: SEMI
+   25 VAR_DEC: ID_INIT VAR_DEC1
 
-   26 $@7: %empty
+   26 VAR_DEC1: SEMI
 
-   27 VAR_DEC1: COMMA ID $@7 VAR_DEC
+   27 $@8: %empty
 
-   28 $@8: %empty
+   28 VAR_DEC1: COMMA ID $@8 VAR_DEC
 
-   29 ID_INIT: ATTR $@8 EXPR
-   30        | %empty
+   29 $@9: %empty
 
-   31 $@9: %empty
+   30 ID_INIT: ATTR $@9 INIT_VALUE
+   31        | %empty
 
-   32 STRUCT_DEC: ESTRUTURA ID LBRACE $@9 VAR_DECS RBRACE
+   32 INIT_VALUE: EXPR
+   33           | ARRAY_LIT
 
-   33 VAR_DECS: ID_DEC VAR_DECS
-   34         | %empty
+   34 $@10: %empty
 
-   35 $@10: %empty
+   35 STRUCT_DEC: ESTRUTURA ID LBRACE $@10 VAR_DECS RBRACE
 
-   36 ENUM_DEC: ENUM ID LBRACE $@10 IDS1 RBRACE
+   36 VAR_DECS: ID_DEC VAR_DECS
+   37         | %empty
 
-   37 $@11: %empty
+   38 $@11: %empty
 
-   38 IDS1: ID $@11 IDS0
+   39 ENUM_DEC: ENUM ID LBRACE $@11 IDS1 RBRACE
 
-   39 $@12: %empty
+   40 $@12: %empty
 
-   40 IDS0: COMMA $@12 IDS1
-   41     | %empty
+   41 IDS1: ID $@12 IDS0
 
-   42 PARAMS: PARAM1
-   43       | %empty
+   42 $@13: %empty
 
-   44 $@13: %empty
+   43 IDS0: COMMA $@13 IDS1
+   44     | %empty
 
-   45 PARAM1: TYPE ID $@13 PARAM0
+   45 PARAMS: PARAM1
+   46       | %empty
 
-   46 $@14: %empty
+   47 $@14: %empty
 
-   47 PARAM0: COMMA $@14 PARAM1
-   48       | %empty
+   48 PARAM1: TYPE ID $@14 PARAM0
 
-   49 TYPE: ID
-   50     | TIPO_PRIMITIVO
-   51     | STAR TYPE
+   49 $@15: %empty
 
-   52 $@15: %empty
+   50 PARAM0: COMMA $@15 PARAM1
+   51       | %empty
 
-   53 $@16: %empty
+   52 TYPE: ID
+   53     | TIPO_PRIMITIVO
+   54     | STAR TYPE
 
-   54 ARRAY_TYPE: LBRACKET $@15 EXPR RBRACKET $@16 ARRAY_TYPE
-   55           | %empty
+   55 $@16: %empty
 
    56 $@17: %empty
 
-   57 BLOCK: LBRACE $@17 STMTS RBRACE
+   57 ARRAY_TYPE: LBRACKET $@16 EXPR RBRACKET $@17 ARRAY_TYPE
+   58           | %empty
 
-   58 STMTS: STMT STMTS
-   59      | %empty
+   59 $@18: %empty
 
-   60 STMT: VAR ID_DEC
-   61     | IF
-   62     | SWITCH_CASE
-   63     | FOR
-   64     | WHILE
-   65     | DO_WHILE
-   66     | BLOCK
-   67     | EXPR SEMI
-   68     | RETURN
-   69     | PARAR SEMI
-   70     | CONTINUAR SEMI
-   71     | IRPARA ID SEMI
-   72     | LABEL
+   60 BLOCK: LBRACE $@18 STMTS RBRACE
 
-   73 $@18: %empty
+   61 STMTS: STMT STMTS
+   62      | %empty
 
-   74 RETURN: RETORNAR $@18 RETURN_EXPR SEMI
+   63 STMT: VAR ID_DEC
+   64     | IF
+   65     | SWITCH_CASE
+   66     | FOR
+   67     | WHILE
+   68     | DO_WHILE
+   69     | BLOCK
+   70     | EXPR SEMI
+   71     | RETURN
+   72     | PARAR SEMI
+   73     | CONTINUAR SEMI
+   74     | IRPARA ID SEMI
+   75     | LABEL
 
-   75 RETURN_EXPR: EXPR
-   76            | %empty
+   76 $@19: %empty
 
-   77 $@19: %empty
+   77 RETURN: RETORNAR $@19 RETURN_EXPR SEMI
 
-   78 $@20: %empty
+   78 RETURN_EXPR: EXPR
+   79            | %empty
 
-   79 IF: SE LPAREN $@19 EXPR RPAREN $@20 STMT ELSE
+   80 $@20: %empty
 
-   80 $@21: %empty
+   81 $@21: %empty
 
-   81 ELSE: SENAO $@21 STMT
-   82     | %empty
+   82 IF: SE LPAREN $@20 EXPR RPAREN $@21 STMT ELSE
 
    83 $@22: %empty
 
-   84 $@23: %empty
+   84 ELSE: SENAO $@22 STMT
+   85     | %empty
 
-   85 WHILE: ENQUANTO LPAREN $@22 EXPR RPAREN $@23 STMT
+   86 $@23: %empty
 
-   86 $@24: %empty
+   87 $@24: %empty
 
-   87 $@25: %empty
+   88 WHILE: ENQUANTO LPAREN $@23 EXPR RPAREN $@24 STMT
 
-   88 DO_WHILE: FAZER $@24 STMT ENQUANTO LPAREN $@25 EXPR RPAREN SEMI
+   89 $@25: %empty
 
-   89 $@26: %empty
+   90 $@26: %empty
 
-   90 FOR: PARA ID DE LPAREN EXPR RPAREN $@26 FOR_EXPR
+   91 DO_WHILE: FAZER $@25 STMT ENQUANTO LPAREN $@26 EXPR RPAREN SEMI
 
-   91 FOR_EXPR: FOR_ASC
-   92         | FOR_DESC
+   92 $@27: %empty
 
-   93 $@27: %empty
+   93 FOR: PARA ID DE LPAREN EXPR RPAREN $@27 FOR_EXPR
 
-   94 FOR_ASC: ASC LPAREN EXPR RPAREN $@27 STMT
+   94 FOR_EXPR: FOR_ASC
+   95         | FOR_DESC
 
-   95 $@28: %empty
+   96 $@28: %empty
 
-   96 $@29: %empty
+   97 FOR_ASC: ASC LPAREN EXPR RPAREN $@28 STMT
 
-   97 FOR_DESC: DESC LPAREN $@28 EXPR RPAREN $@29 STMT
+   98 $@29: %empty
 
-   98 $@30: %empty
+   99 $@30: %empty
 
-   99 $@31: %empty
+  100 FOR_DESC: DESC LPAREN $@29 EXPR RPAREN $@30 STMT
 
-  100 $@32: %empty
+  101 $@31: %empty
 
-  101 SWITCH_CASE: ESCOLHA LPAREN $@30 EXPR RPAREN $@31 LBRACE $@32 CASE1 RBRACE
+  102 $@32: %empty
 
-  102 CASE1: CASE CASE0
+  103 $@33: %empty
 
-  103 CASE0: CASE1
-  104      | %empty
+  104 SWITCH_CASE: ESCOLHA LPAREN $@31 EXPR RPAREN $@32 LBRACE $@33 CASE1 RBRACE
 
-  105 $@33: %empty
+  105 CASE1: CASE CASE0
 
-  106 $@34: %empty
+  106 CASE0: CASE1
+  107      | %empty
 
-  107 CASE: CASO $@33 EXPR COLON $@34 STMTS
+  108 $@34: %empty
 
-  108 $@35: %empty
+  109 $@35: %empty
 
-  109 CASE: CC COLON $@35 STMTS
+  110 CASE: CASO $@34 EXPR COLON $@35 STMTS
 
-  110 $@36: %empty
+  111 $@36: %empty
 
-  111 $@37: %empty
+  112 CASE: CC COLON $@36 STMTS
 
-  112 TERNARY: QUESTION $@36 EXPR COLON $@37 EXPR
-  113        | %empty
+  113 $@37: %empty
 
-  114 EXPR: ATTR_RULE TERNARY
+  114 $@38: %empty
 
-  115 $@38: %empty
+  115 TERNARY: QUESTION $@37 EXPR COLON $@38 EXPR
+  116        | %empty
 
-  116 ATTR_RULE: LOGOR_CHAIN $@38 ATTR_TAIL
+  117 EXPR: ATTR_RULE TERNARY
 
-  117 $@39: %empty
+  118 $@39: %empty
 
-  118 ATTR_TAIL: ATTR_OP $@39 LOGOR_CHAIN
-  119          | %empty
+  119 ATTR_RULE: LOGOR_CHAIN $@39 ATTR_TAIL
 
-  120 LOGOR_CHAIN: LOGAND_CHAIN LOGOR_TAIL
+  120 $@40: %empty
 
-  121 LOGOR_TAIL: LOGOR_OP LOGOR_CHAIN
-  122           | %empty
+  121 ATTR_TAIL: ATTR_OP $@40 LOGOR_CHAIN
+  122          | %empty
 
-  123 LOGAND_CHAIN: BITOR_CHAIN LOGAND_TAIL
+  123 LOGOR_CHAIN: LOGAND_CHAIN LOGOR_TAIL
 
-  124 LOGAND_TAIL: LOGAND_OP LOGAND_CHAIN
-  125            | %empty
+  124 LOGOR_TAIL: LOGOR_OP LOGOR_CHAIN
+  125           | %empty
 
-  126 BITOR_CHAIN: BITAND_CHAIN BITOR_TAIL
+  126 LOGAND_CHAIN: BITOR_CHAIN LOGAND_TAIL
 
-  127 BITOR_TAIL: BITOR_OP BITOR_CHAIN
-  128           | %empty
+  127 LOGAND_TAIL: LOGAND_OP LOGAND_CHAIN
+  128            | %empty
 
-  129 BITAND_CHAIN: REL BITAND_TAIL
+  129 BITOR_CHAIN: BITAND_CHAIN BITOR_TAIL
 
-  130 BITAND_TAIL: BITAND_OP BITAND_CHAIN
-  131            | %empty
+  130 BITOR_TAIL: BITOR_OP BITOR_CHAIN
+  131           | %empty
 
-  132 REL: SHIFT_CHAIN REL_TAIL
+  132 BITAND_CHAIN: REL BITAND_TAIL
 
-  133 REL_TAIL: REL_OP SHIFT_CHAIN
-  134         | %empty
+  133 BITAND_TAIL: BITAND_OP BITAND_CHAIN
+  134            | %empty
 
-  135 SHIFT_CHAIN: ADD_CHAIN SHIFT_TAIL
+  135 REL: SHIFT_CHAIN REL_TAIL
 
-  136 SHIFT_TAIL: SHIFT_OP SHIFT_CHAIN
-  137           | %empty
+  136 REL_TAIL: REL_OP SHIFT_CHAIN
+  137         | %empty
 
-  138 ADD_CHAIN: MUL_CHAIN ADD_TAIL
+  138 SHIFT_CHAIN: ADD_CHAIN SHIFT_TAIL
 
-  139 ADD_TAIL: ADD_OP ADD_CHAIN
-  140         | %empty
+  139 SHIFT_TAIL: SHIFT_OP SHIFT_CHAIN
+  140           | %empty
 
-  141 MUL_CHAIN: UN_CHAIN MUL_TAIL
+  141 ADD_CHAIN: MUL_CHAIN ADD_TAIL
 
-  142 MUL_TAIL: MUL_OP MUL_CHAIN
+  142 ADD_TAIL: ADD_OP ADD_CHAIN
   143         | %empty
 
-  144 UN_CHAIN: UN_OP UN_CHAIN
-  145         | EXPR_LEAF
+  144 MUL_CHAIN: UN_CHAIN MUL_TAIL
 
-  146 EXPR_LEAF: PRE_OP EXPR_LEAF
-  147          | VAR_CALL
-  148          | EXPR_LIT
+  145 MUL_TAIL: MUL_OP MUL_CHAIN
+  146         | %empty
 
-  149 $@40: %empty
+  147 UN_CHAIN: UN_OP UN_CHAIN
+  148         | EXPR_LEAF
 
-  150 EXPR_LEAF: LPAREN $@40 EXPR RPAREN
-
-  151 VAR_CALL: VAR_LEAF CALL
+  149 EXPR_LEAF: PRE_OP EXPR_LEAF
+  150          | VAR_CALL
+  151          | EXPR_LIT
 
   152 $@41: %empty
 
-  153 CALL: LPAREN $@41 ARGS RPAREN
-  154     | POS_OP
-  155     | %empty
+  153 EXPR_LEAF: LPAREN $@41 EXPR RPAREN
 
-  156 ARGS1: EXPR ARGS0
+  154 VAR_CALL: VAR_LEAF CALL
 
-  157 $@42: %empty
+  155 $@42: %empty
 
-  158 ARGS0: COMMA $@42 ARGS
-  159      | %empty
+  156 CALL: LPAREN $@42 ARGS RPAREN
+  157     | POS_OP
+  158     | %empty
 
-  160 ARGS: ARGS1
-  161     | %empty
+  159 ARGS1: EXPR ARGS0
 
-  162 EXPR_LIT: INTEIRO
-  163         | REAL
-  164         | REALD
-  165         | STRING
-  166         | CARACTERE
-  167         | ARRAY_LIT
+  160 $@43: %empty
 
-  168 $@43: %empty
+  161 ARGS0: COMMA $@43 ARGS
+  162      | %empty
 
-  169 ARRAY_LIT: LBRACE $@43 ARGS1 RBRACE
+  163 ARGS: ARGS1
+  164     | %empty
+
+  165 EXPR_LIT: INTEIRO
+  166         | REAL
+  167         | REALD
+  168         | STRING
+  169         | CARACTERE
 
   170 $@44: %empty
 
-  171 VAR_LEAF: ID $@44 VAR_MODS
+  171 ARRAY_LIT: LBRACE $@44 ARGS1 RBRACE
 
   172 $@45: %empty
 
-  173 VAR_MODS: DOT ID $@45 VAR_MODS
+  173 VAR_LEAF: ID $@45 VAR_MODS
 
   174 $@46: %empty
 
-  175 $@47: %empty
+  175 VAR_MODS: DOT ID $@46 VAR_MODS
 
-  176 VAR_MODS: LBRACKET $@46 EXPR RBRACKET $@47 VAR_MODS
-  177         | %empty
+  176 $@47: %empty
 
-  178 ATTR_OP: ATTR
-  179        | ATTRADD
-  180        | ATTRSUB
-  181        | ATTRMUL
-  182        | ATTRDIV
-  183        | ATTRMOD
-  184        | ATTRBITOR
-  185        | ATTRBITAND
-  186        | ATTRSHIFTL
-  187        | ATTRSHIFTR
-  188        | ATTROR
-  189        | ATTRAND
+  177 $@48: %empty
 
-  190 PRE_OP: STAR
-  191       | AMPERSEND
-  192       | PLUS2
-  193       | MINUS2
+  178 VAR_MODS: LBRACKET $@47 EXPR RBRACKET $@48 VAR_MODS
+  179         | %empty
 
-  194 POS_OP: PLUS2
+  180 ATTR_OP: ATTR
+  181        | ATTRADD
+  182        | ATTRSUB
+  183        | ATTRMUL
+  184        | ATTRDIV
+  185        | ATTRMOD
+  186        | ATTRBITOR
+  187        | ATTRBITAND
+  188        | ATTRSHIFTL
+  189        | ATTRSHIFTR
+  190        | ATTROR
+  191        | ATTRAND
+
+  192 PRE_OP: STAR
+  193       | AMPERSEND
+  194       | PLUS2
   195       | MINUS2
 
-  196 MUL_OP: STAR
-  197       | DIV
-  198       | MOD
+  196 POS_OP: PLUS2
+  197       | MINUS2
 
-  199 UN_OP: NEG
-  200      | MINUS
-  201      | PLUS
+  198 MUL_OP: STAR
+  199       | DIV
+  200       | MOD
 
-  202 ADD_OP: PLUS
-  203       | MINUS
+  201 UN_OP: NEG
+  202      | MINUS
+  203      | PLUS
 
-  204 SHIFT_OP: SHIFTL
-  205         | SHIFTR
+  204 ADD_OP: PLUS
+  205       | MINUS
 
-  206 REL_OP: EQQ
-  207       | NEQ
-  208       | GT
-  209       | LT
-  210       | GEQ
-  211       | LEQ
+  206 SHIFT_OP: SHIFTL
+  207         | SHIFTR
 
-  212 BITAND_OP: AMPERSEND
+  208 REL_OP: EQQ
+  209       | NEQ
+  210       | GT
+  211       | LT
+  212       | GEQ
+  213       | LEQ
 
-  213 BITOR_OP: PIPE
+  214 BITAND_OP: AMPERSEND
 
-  214 LOGAND_OP: AND
+  215 BITOR_OP: PIPE
 
-  215 LOGOR_OP: OR
+  216 LOGAND_OP: AND
+
+  217 LOGOR_OP: OR
 
 
 Terminais, com as regras onde eles aparecem
 
 $end (0) 0
 error (256)
-IMPORTAR (258) 3
-STRING (259) 3 165
-SEMI (260) 3 14 22 25 67 69 70 71 74 88
-CONSTANTE (261) 14
-ID (262) 14 16 27 32 36 38 45 49 71 90 171 173
-LPAREN (263) 21 79 85 88 90 94 97 101 150 153
-RPAREN (264) 21 79 85 88 90 94 97 101 150 153
-COMMA (265) 27 40 47 158
-ATTR (266) 29 178
-ESTRUTURA (267) 32
-LBRACE (268) 32 36 57 101 169
-RBRACE (269) 32 36 57 101 169
-ENUM (270) 36
-TIPO_PRIMITIVO (271) 50
-STAR (272) 51 190 196
-LBRACKET (273) 54 176
-RBRACKET (274) 54 176
-VAR (275) 60
-PARAR (276) 69
-CONTINUAR (277) 70
-IRPARA (278) 71
-LABEL (279) 72
-RETORNAR (280) 74
-SE (281) 79
-SENAO (282) 81
-ENQUANTO (283) 85 88
-FAZER (284) 88
-PARA (285) 90
-DE (286) 90
-ASC (287) 94
-DESC (288) 97
-ESCOLHA (289) 101
-CASO (290) 107
-COLON (291) 107 109 112
-CC (292) 109
-QUESTION (293) 112
-INTEIRO (294) 162
-REAL (295) 163
-REALD (296) 164
-CARACTERE (297) 166
-DOT (298) 173
-ATTRADD (299) 179
-ATTRSUB (300) 180
-ATTRMUL (301) 181
-ATTRDIV (302) 182
-ATTRMOD (303) 183
-ATTRBITOR (304) 184
-ATTROR (305) 188
-ATTRBITAND (306) 185
-ATTRAND (307) 189
-ATTRSHIFTL (308) 186
-ATTRSHIFTR (309) 187
-AMPERSEND (310) 191 212
-PLUS2 (311) 192 194
-MINUS2 (312) 193 195
-DIV (313) 197
-MOD (314) 198
-NEG (315) 199
-MINUS (316) 200 203
-PLUS (317) 201 202
-SHIFTL (318) 204
-SHIFTR (319) 205
-EQQ (320) 206
-NEQ (321) 207
-GT (322) 208
-LT (323) 209
-GEQ (324) 210
-LEQ (325) 211
-PIPE (326) 213
-AND (327) 214
-OR (328) 215
+IMPORTAR (258) 4
+STRING (259) 4 168
+SEMI (260) 4 15 23 26 70 72 73 74 77 91
+CONSTANTE (261) 15
+ID (262) 15 17 28 35 39 41 48 52 74 93 173 175
+LPAREN (263) 22 82 88 91 93 97 100 104 153 156
+RPAREN (264) 22 82 88 91 93 97 100 104 153 156
+COMMA (265) 28 43 50 161
+ATTR (266) 30 180
+ESTRUTURA (267) 35
+LBRACE (268) 35 39 60 104 171
+RBRACE (269) 35 39 60 104 171
+ENUM (270) 39
+TIPO_PRIMITIVO (271) 53
+STAR (272) 54 192 198
+LBRACKET (273) 57 178
+RBRACKET (274) 57 178
+VAR (275) 63
+PARAR (276) 72
+CONTINUAR (277) 73
+IRPARA (278) 74
+LABEL (279) 75
+RETORNAR (280) 77
+SE (281) 82
+SENAO (282) 84
+ENQUANTO (283) 88 91
+FAZER (284) 91
+PARA (285) 93
+DE (286) 93
+ASC (287) 97
+DESC (288) 100
+ESCOLHA (289) 104
+CASO (290) 110
+COLON (291) 110 112 115
+CC (292) 112
+QUESTION (293) 115
+INTEIRO (294) 165
+REAL (295) 166
+REALD (296) 167
+CARACTERE (297) 169
+DOT (298) 175
+ATTRADD (299) 181
+ATTRSUB (300) 182
+ATTRMUL (301) 183
+ATTRDIV (302) 184
+ATTRMOD (303) 185
+ATTRBITOR (304) 186
+ATTROR (305) 190
+ATTRBITAND (306) 187
+ATTRAND (307) 191
+ATTRSHIFTL (308) 188
+ATTRSHIFTR (309) 189
+AMPERSEND (310) 193 214
+PLUS2 (311) 194 196
+MINUS2 (312) 195 197
+DIV (313) 199
+MOD (314) 200
+NEG (315) 201
+MINUS (316) 202 205
+PLUS (317) 203 204
+SHIFTL (318) 206
+SHIFTR (319) 207
+EQQ (320) 208
+NEQ (321) 209
+GT (322) 210
+LT (323) 211
+GEQ (324) 212
+LEQ (325) 213
+PIPE (326) 215
+AND (327) 216
+OR (328) 217
 
 
 Não terminais com as regras onde eles aparecem
@@ -438,562 +441,574 @@ Não terminais com as regras onde eles aparecem
 $accept (74)
     à esquerda: 0
 START (75)
-    à esquerda: 1, à direita: 0
-INC (76)
-    à esquerda: 3 4, à direita: 1 3
-$@1 (77)
-    à esquerda: 2, à direita: 3
-DEC1 (78)
-    à esquerda: 5, à direita: 1 6
-DEC0 (79)
-    à esquerda: 6 7, à direita: 5
-DEC (80)
-    à esquerda: 8 9 10 11, à direita: 5
-CONST_DEC (81)
-    à esquerda: 14, à direita: 8
-$@2 (82)
-    à esquerda: 12, à direita: 14
+    à esquerda: 2, à direita: 0
+$@1 (76)
+    à esquerda: 1, à direita: 2
+INC (77)
+    à esquerda: 4 5, à direita: 2 4
+$@2 (78)
+    à esquerda: 3, à direita: 4
+DEC1 (79)
+    à esquerda: 6, à direita: 2 7
+DEC0 (80)
+    à esquerda: 7 8, à direita: 6
+DEC (81)
+    à esquerda: 9 10 11 12, à direita: 6
+CONST_DEC (82)
+    à esquerda: 15, à direita: 9
 $@3 (83)
-    à esquerda: 13, à direita: 14
-ID_DEC (84)
-    à esquerda: 16, à direita: 9 33 60
-$@4 (85)
-    à esquerda: 15, à direita: 16
-ID_SUFIX (86)
-    à esquerda: 17 18, à direita: 16
-FUNC_DEC (87)
-    à esquerda: 21, à direita: 17
-$@5 (88)
-    à esquerda: 19, à direita: 21
+    à esquerda: 13, à direita: 15
+$@4 (84)
+    à esquerda: 14, à direita: 15
+ID_DEC (85)
+    à esquerda: 17, à direita: 10 36 63
+$@5 (86)
+    à esquerda: 16, à direita: 17
+ID_SUFIX (87)
+    à esquerda: 18 19, à direita: 17
+FUNC_DEC (88)
+    à esquerda: 22, à direita: 18
 $@6 (89)
-    à esquerda: 20, à direita: 21
-FUNC_END (90)
-    à esquerda: 22 23, à direita: 21
-VAR_DEC (91)
-    à esquerda: 24, à direita: 18 27
-VAR_DEC1 (92)
-    à esquerda: 25 27, à direita: 24
-$@7 (93)
-    à esquerda: 26, à direita: 27
-ID_INIT (94)
-    à esquerda: 29 30, à direita: 24
-$@8 (95)
-    à esquerda: 28, à direita: 29
-STRUCT_DEC (96)
-    à esquerda: 32, à direita: 10
-$@9 (97)
-    à esquerda: 31, à direita: 32
-VAR_DECS (98)
-    à esquerda: 33 34, à direita: 32 33
-ENUM_DEC (99)
-    à esquerda: 36, à direita: 11
-$@10 (100)
-    à esquerda: 35, à direita: 36
-IDS1 (101)
-    à esquerda: 38, à direita: 36 40
+    à esquerda: 20, à direita: 22
+$@7 (90)
+    à esquerda: 21, à direita: 22
+FUNC_END (91)
+    à esquerda: 23 24, à direita: 22
+VAR_DEC (92)
+    à esquerda: 25, à direita: 19 28
+VAR_DEC1 (93)
+    à esquerda: 26 28, à direita: 25
+$@8 (94)
+    à esquerda: 27, à direita: 28
+ID_INIT (95)
+    à esquerda: 30 31, à direita: 25
+$@9 (96)
+    à esquerda: 29, à direita: 30
+INIT_VALUE (97)
+    à esquerda: 32 33, à direita: 30
+STRUCT_DEC (98)
+    à esquerda: 35, à direita: 11
+$@10 (99)
+    à esquerda: 34, à direita: 35
+VAR_DECS (100)
+    à esquerda: 36 37, à direita: 35 36
+ENUM_DEC (101)
+    à esquerda: 39, à direita: 12
 $@11 (102)
-    à esquerda: 37, à direita: 38
-IDS0 (103)
-    à esquerda: 40 41, à direita: 38
+    à esquerda: 38, à direita: 39
+IDS1 (103)
+    à esquerda: 41, à direita: 39 43
 $@12 (104)
-    à esquerda: 39, à direita: 40
-PARAMS (105)
-    à esquerda: 42 43, à direita: 21
-PARAM1 (106)
-    à esquerda: 45, à direita: 42 47
-$@13 (107)
-    à esquerda: 44, à direita: 45
-PARAM0 (108)
-    à esquerda: 47 48, à direita: 45
+    à esquerda: 40, à direita: 41
+IDS0 (105)
+    à esquerda: 43 44, à direita: 41
+$@13 (106)
+    à esquerda: 42, à direita: 43
+PARAMS (107)
+    à esquerda: 45 46, à direita: 22
+PARAM1 (108)
+    à esquerda: 48, à direita: 45 50
 $@14 (109)
-    à esquerda: 46, à direita: 47
-TYPE (110)
-    à esquerda: 49 50 51, à direita: 14 16 45 51
-ARRAY_TYPE (111)
-    à esquerda: 54 55, à direita: 16 54
-$@15 (112)
-    à esquerda: 52, à direita: 54
-$@16 (113)
-    à esquerda: 53, à direita: 54
-BLOCK (114)
-    à esquerda: 57, à direita: 23 66
+    à esquerda: 47, à direita: 48
+PARAM0 (110)
+    à esquerda: 50 51, à direita: 48
+$@15 (111)
+    à esquerda: 49, à direita: 50
+TYPE (112)
+    à esquerda: 52 53 54, à direita: 15 17 48 54
+ARRAY_TYPE (113)
+    à esquerda: 57 58, à direita: 17 57
+$@16 (114)
+    à esquerda: 55, à direita: 57
 $@17 (115)
     à esquerda: 56, à direita: 57
-STMTS (116)
-    à esquerda: 58 59, à direita: 57 58 107 109
-STMT (117)
-    à esquerda: 60 61 62 63 64 65 66 67 68 69 70 71 72, à direita:
-    58 79 81 85 88 94 97
-RETURN (118)
-    à esquerda: 74, à direita: 68
-$@18 (119)
-    à esquerda: 73, à direita: 74
-RETURN_EXPR (120)
-    à esquerda: 75 76, à direita: 74
-IF (121)
-    à esquerda: 79, à direita: 61
-$@19 (122)
-    à esquerda: 77, à direita: 79
-$@20 (123)
-    à esquerda: 78, à direita: 79
-ELSE (124)
-    à esquerda: 81 82, à direita: 79
+BLOCK (116)
+    à esquerda: 60, à direita: 24 69
+$@18 (117)
+    à esquerda: 59, à direita: 60
+STMTS (118)
+    à esquerda: 61 62, à direita: 60 61 110 112
+STMT (119)
+    à esquerda: 63 64 65 66 67 68 69 70 71 72 73 74 75, à direita:
+    61 82 84 88 91 97 100
+RETURN (120)
+    à esquerda: 77, à direita: 71
+$@19 (121)
+    à esquerda: 76, à direita: 77
+RETURN_EXPR (122)
+    à esquerda: 78 79, à direita: 77
+IF (123)
+    à esquerda: 82, à direita: 64
+$@20 (124)
+    à esquerda: 80, à direita: 82
 $@21 (125)
-    à esquerda: 80, à direita: 81
-WHILE (126)
-    à esquerda: 85, à direita: 64
+    à esquerda: 81, à direita: 82
+ELSE (126)
+    à esquerda: 84 85, à direita: 82
 $@22 (127)
-    à esquerda: 83, à direita: 85
-$@23 (128)
-    à esquerda: 84, à direita: 85
-DO_WHILE (129)
-    à esquerda: 88, à direita: 65
-$@24 (130)
+    à esquerda: 83, à direita: 84
+WHILE (128)
+    à esquerda: 88, à direita: 67
+$@23 (129)
     à esquerda: 86, à direita: 88
-$@25 (131)
+$@24 (130)
     à esquerda: 87, à direita: 88
-FOR (132)
-    à esquerda: 90, à direita: 63
+DO_WHILE (131)
+    à esquerda: 91, à direita: 68
+$@25 (132)
+    à esquerda: 89, à direita: 91
 $@26 (133)
-    à esquerda: 89, à direita: 90
-FOR_EXPR (134)
-    à esquerda: 91 92, à direita: 90
-FOR_ASC (135)
-    à esquerda: 94, à direita: 91
-$@27 (136)
-    à esquerda: 93, à direita: 94
-FOR_DESC (137)
-    à esquerda: 97, à direita: 92
+    à esquerda: 90, à direita: 91
+FOR (134)
+    à esquerda: 93, à direita: 66
+$@27 (135)
+    à esquerda: 92, à direita: 93
+FOR_EXPR (136)
+    à esquerda: 94 95, à direita: 93
+FOR_ASC (137)
+    à esquerda: 97, à direita: 94
 $@28 (138)
-    à esquerda: 95, à direita: 97
-$@29 (139)
     à esquerda: 96, à direita: 97
-SWITCH_CASE (140)
-    à esquerda: 101, à direita: 62
+FOR_DESC (139)
+    à esquerda: 100, à direita: 95
+$@29 (140)
+    à esquerda: 98, à direita: 100
 $@30 (141)
-    à esquerda: 98, à direita: 101
-$@31 (142)
-    à esquerda: 99, à direita: 101
-$@32 (143)
-    à esquerda: 100, à direita: 101
-CASE1 (144)
-    à esquerda: 102, à direita: 101 103
-CASE0 (145)
-    à esquerda: 103 104, à direita: 102
-CASE (146)
-    à esquerda: 107 109, à direita: 102
-$@33 (147)
-    à esquerda: 105, à direita: 107
-$@34 (148)
-    à esquerda: 106, à direita: 107
-$@35 (149)
-    à esquerda: 108, à direita: 109
-TERNARY (150)
-    à esquerda: 112 113, à direita: 114
+    à esquerda: 99, à direita: 100
+SWITCH_CASE (142)
+    à esquerda: 104, à direita: 65
+$@31 (143)
+    à esquerda: 101, à direita: 104
+$@32 (144)
+    à esquerda: 102, à direita: 104
+$@33 (145)
+    à esquerda: 103, à direita: 104
+CASE1 (146)
+    à esquerda: 105, à direita: 104 106
+CASE0 (147)
+    à esquerda: 106 107, à direita: 105
+CASE (148)
+    à esquerda: 110 112, à direita: 105
+$@34 (149)
+    à esquerda: 108, à direita: 110
+$@35 (150)
+    à esquerda: 109, à direita: 110
 $@36 (151)
-    à esquerda: 110, à direita: 112
-$@37 (152)
     à esquerda: 111, à direita: 112
-EXPR (153)
-    à esquerda: 114, à direita: 14 29 54 67 75 79 85 88 90 94 97
-    101 107 112 150 156 176
-ATTR_RULE (154)
-    à esquerda: 116, à direita: 114
-$@38 (155)
-    à esquerda: 115, à direita: 116
-ATTR_TAIL (156)
-    à esquerda: 118 119, à direita: 116
+TERNARY (152)
+    à esquerda: 115 116, à direita: 117
+$@37 (153)
+    à esquerda: 113, à direita: 115
+$@38 (154)
+    à esquerda: 114, à direita: 115
+EXPR (155)
+    à esquerda: 117, à direita: 15 32 57 70 78 82 88 91 93 97 100
+    104 110 115 153 159 178
+ATTR_RULE (156)
+    à esquerda: 119, à direita: 117
 $@39 (157)
-    à esquerda: 117, à direita: 118
-LOGOR_CHAIN (158)
-    à esquerda: 120, à direita: 116 118 121
-LOGOR_TAIL (159)
-    à esquerda: 121 122, à direita: 120
-LOGAND_CHAIN (160)
-    à esquerda: 123, à direita: 120 124
-LOGAND_TAIL (161)
+    à esquerda: 118, à direita: 119
+ATTR_TAIL (158)
+    à esquerda: 121 122, à direita: 119
+$@40 (159)
+    à esquerda: 120, à direita: 121
+LOGOR_CHAIN (160)
+    à esquerda: 123, à direita: 119 121 124
+LOGOR_TAIL (161)
     à esquerda: 124 125, à direita: 123
-BITOR_CHAIN (162)
+LOGAND_CHAIN (162)
     à esquerda: 126, à direita: 123 127
-BITOR_TAIL (163)
+LOGAND_TAIL (163)
     à esquerda: 127 128, à direita: 126
-BITAND_CHAIN (164)
+BITOR_CHAIN (164)
     à esquerda: 129, à direita: 126 130
-BITAND_TAIL (165)
+BITOR_TAIL (165)
     à esquerda: 130 131, à direita: 129
-REL (166)
-    à esquerda: 132, à direita: 129
-REL_TAIL (167)
+BITAND_CHAIN (166)
+    à esquerda: 132, à direita: 129 133
+BITAND_TAIL (167)
     à esquerda: 133 134, à direita: 132
-SHIFT_CHAIN (168)
-    à esquerda: 135, à direita: 132 133 136
-SHIFT_TAIL (169)
+REL (168)
+    à esquerda: 135, à direita: 132
+REL_TAIL (169)
     à esquerda: 136 137, à direita: 135
-ADD_CHAIN (170)
-    à esquerda: 138, à direita: 135 139
-ADD_TAIL (171)
+SHIFT_CHAIN (170)
+    à esquerda: 138, à direita: 135 136 139
+SHIFT_TAIL (171)
     à esquerda: 139 140, à direita: 138
-MUL_CHAIN (172)
+ADD_CHAIN (172)
     à esquerda: 141, à direita: 138 142
-MUL_TAIL (173)
+ADD_TAIL (173)
     à esquerda: 142 143, à direita: 141
-UN_CHAIN (174)
-    à esquerda: 144 145, à direita: 141 144
-EXPR_LEAF (175)
-    à esquerda: 146 147 148 150, à direita: 145 146
-$@40 (176)
-    à esquerda: 149, à direita: 150
-VAR_CALL (177)
-    à esquerda: 151, à direita: 147
-CALL (178)
-    à esquerda: 153 154 155, à direita: 151
-$@41 (179)
+MUL_CHAIN (174)
+    à esquerda: 144, à direita: 141 145
+MUL_TAIL (175)
+    à esquerda: 145 146, à direita: 144
+UN_CHAIN (176)
+    à esquerda: 147 148, à direita: 144 147
+EXPR_LEAF (177)
+    à esquerda: 149 150 151 153, à direita: 148 149
+$@41 (178)
     à esquerda: 152, à direita: 153
-ARGS1 (180)
-    à esquerda: 156, à direita: 160 169
-ARGS0 (181)
-    à esquerda: 158 159, à direita: 156
-$@42 (182)
-    à esquerda: 157, à direita: 158
-ARGS (183)
-    à esquerda: 160 161, à direita: 153 158
-EXPR_LIT (184)
-    à esquerda: 162 163 164 165 166 167, à direita: 148
-ARRAY_LIT (185)
-    à esquerda: 169, à direita: 167
-$@43 (186)
-    à esquerda: 168, à direita: 169
-VAR_LEAF (187)
-    à esquerda: 171, à direita: 151
+VAR_CALL (179)
+    à esquerda: 154, à direita: 150
+CALL (180)
+    à esquerda: 156 157 158, à direita: 154
+$@42 (181)
+    à esquerda: 155, à direita: 156
+ARGS1 (182)
+    à esquerda: 159, à direita: 163 171
+ARGS0 (183)
+    à esquerda: 161 162, à direita: 159
+$@43 (184)
+    à esquerda: 160, à direita: 161
+ARGS (185)
+    à esquerda: 163 164, à direita: 156 161
+EXPR_LIT (186)
+    à esquerda: 165 166 167 168 169, à direita: 151
+ARRAY_LIT (187)
+    à esquerda: 171, à direita: 33
 $@44 (188)
     à esquerda: 170, à direita: 171
-VAR_MODS (189)
-    à esquerda: 173 176 177, à direita: 171 173 176
+VAR_LEAF (189)
+    à esquerda: 173, à direita: 154
 $@45 (190)
     à esquerda: 172, à direita: 173
-$@46 (191)
-    à esquerda: 174, à direita: 176
-$@47 (192)
-    à esquerda: 175, à direita: 176
-ATTR_OP (193)
-    à esquerda: 178 179 180 181 182 183 184 185 186 187 188 189, à direita:
-    118
-PRE_OP (194)
-    à esquerda: 190 191 192 193, à direita: 146
-POS_OP (195)
-    à esquerda: 194 195, à direita: 154
-MUL_OP (196)
-    à esquerda: 196 197 198, à direita: 142
-UN_OP (197)
-    à esquerda: 199 200 201, à direita: 144
-ADD_OP (198)
-    à esquerda: 202 203, à direita: 139
-SHIFT_OP (199)
-    à esquerda: 204 205, à direita: 136
-REL_OP (200)
-    à esquerda: 206 207 208 209 210 211, à direita: 133
-BITAND_OP (201)
-    à esquerda: 212, à direita: 130
-BITOR_OP (202)
-    à esquerda: 213, à direita: 127
-LOGAND_OP (203)
-    à esquerda: 214, à direita: 124
-LOGOR_OP (204)
-    à esquerda: 215, à direita: 121
+VAR_MODS (191)
+    à esquerda: 175 178 179, à direita: 173 175 178
+$@46 (192)
+    à esquerda: 174, à direita: 175
+$@47 (193)
+    à esquerda: 176, à direita: 178
+$@48 (194)
+    à esquerda: 177, à direita: 178
+ATTR_OP (195)
+    à esquerda: 180 181 182 183 184 185 186 187 188 189 190 191, à direita:
+    121
+PRE_OP (196)
+    à esquerda: 192 193 194 195, à direita: 149
+POS_OP (197)
+    à esquerda: 196 197, à direita: 157
+MUL_OP (198)
+    à esquerda: 198 199 200, à direita: 145
+UN_OP (199)
+    à esquerda: 201 202 203, à direita: 147
+ADD_OP (200)
+    à esquerda: 204 205, à direita: 142
+SHIFT_OP (201)
+    à esquerda: 206 207, à direita: 139
+REL_OP (202)
+    à esquerda: 208 209 210 211 212 213, à direita: 136
+BITAND_OP (203)
+    à esquerda: 214, à direita: 133
+BITOR_OP (204)
+    à esquerda: 215, à direita: 130
+LOGAND_OP (205)
+    à esquerda: 216, à direita: 127
+LOGOR_OP (206)
+    à esquerda: 217, à direita: 124
 
 
 Estado 0
 
     0 $accept: . START $end
 
-    IMPORTAR  deslocar, e ir ao estado 1
+    $padrão  reduzir usando a regra 1 ($@1)
 
-    $padrão  reduzir usando a regra 4 (INC)
-
-    START  ir ao estado 2
-    INC    ir ao estado 3
+    START  ir ao estado 1
+    $@1    ir ao estado 2
 
 
 Estado 1
 
-    3 INC: IMPORTAR . STRING $@1 SEMI INC
+    0 $accept: START . $end
 
-    STRING  deslocar, e ir ao estado 4
+    $end  deslocar, e ir ao estado 3
 
 
 Estado 2
 
-    0 $accept: START . $end
+    2 START: $@1 . INC DEC1
 
-    $end  deslocar, e ir ao estado 5
+    IMPORTAR  deslocar, e ir ao estado 4
+
+    $padrão  reduzir usando a regra 5 (INC)
+
+    INC  ir ao estado 5
 
 
 Estado 3
-
-    1 START: INC . DEC1
-
-    CONSTANTE       deslocar, e ir ao estado 6
-    ID              deslocar, e ir ao estado 7
-    ESTRUTURA       deslocar, e ir ao estado 8
-    ENUM            deslocar, e ir ao estado 9
-    TIPO_PRIMITIVO  deslocar, e ir ao estado 10
-    STAR            deslocar, e ir ao estado 11
-
-    DEC1        ir ao estado 12
-    DEC         ir ao estado 13
-    CONST_DEC   ir ao estado 14
-    ID_DEC      ir ao estado 15
-    STRUCT_DEC  ir ao estado 16
-    ENUM_DEC    ir ao estado 17
-    TYPE        ir ao estado 18
-
-
-Estado 4
-
-    3 INC: IMPORTAR STRING . $@1 SEMI INC
-
-    $padrão  reduzir usando a regra 2 ($@1)
-
-    $@1  ir ao estado 19
-
-
-Estado 5
 
     0 $accept: START $end .
 
     $padrão  aceitar
 
 
+Estado 4
+
+    4 INC: IMPORTAR . STRING $@2 SEMI INC
+
+    STRING  deslocar, e ir ao estado 6
+
+
+Estado 5
+
+    2 START: $@1 INC . DEC1
+
+    CONSTANTE       deslocar, e ir ao estado 7
+    ID              deslocar, e ir ao estado 8
+    ESTRUTURA       deslocar, e ir ao estado 9
+    ENUM            deslocar, e ir ao estado 10
+    TIPO_PRIMITIVO  deslocar, e ir ao estado 11
+    STAR            deslocar, e ir ao estado 12
+
+    DEC1        ir ao estado 13
+    DEC         ir ao estado 14
+    CONST_DEC   ir ao estado 15
+    ID_DEC      ir ao estado 16
+    STRUCT_DEC  ir ao estado 17
+    ENUM_DEC    ir ao estado 18
+    TYPE        ir ao estado 19
+
+
 Estado 6
 
-   14 CONST_DEC: CONSTANTE . $@2 TYPE ID $@3 EXPR SEMI
+    4 INC: IMPORTAR STRING . $@2 SEMI INC
 
-    $padrão  reduzir usando a regra 12 ($@2)
+    $padrão  reduzir usando a regra 3 ($@2)
 
     $@2  ir ao estado 20
 
 
 Estado 7
 
-   49 TYPE: ID .
+   15 CONST_DEC: CONSTANTE . $@3 TYPE ID $@4 EXPR SEMI
 
-    $padrão  reduzir usando a regra 49 (TYPE)
+    $padrão  reduzir usando a regra 13 ($@3)
+
+    $@3  ir ao estado 21
 
 
 Estado 8
 
-   32 STRUCT_DEC: ESTRUTURA . ID LBRACE $@9 VAR_DECS RBRACE
+   52 TYPE: ID .
 
-    ID  deslocar, e ir ao estado 21
+    $padrão  reduzir usando a regra 52 (TYPE)
 
 
 Estado 9
 
-   36 ENUM_DEC: ENUM . ID LBRACE $@10 IDS1 RBRACE
+   35 STRUCT_DEC: ESTRUTURA . ID LBRACE $@10 VAR_DECS RBRACE
 
     ID  deslocar, e ir ao estado 22
 
 
 Estado 10
 
-   50 TYPE: TIPO_PRIMITIVO .
+   39 ENUM_DEC: ENUM . ID LBRACE $@11 IDS1 RBRACE
 
-    $padrão  reduzir usando a regra 50 (TYPE)
+    ID  deslocar, e ir ao estado 23
 
 
 Estado 11
 
-   51 TYPE: STAR . TYPE
+   53 TYPE: TIPO_PRIMITIVO .
 
-    ID              deslocar, e ir ao estado 7
-    TIPO_PRIMITIVO  deslocar, e ir ao estado 10
-    STAR            deslocar, e ir ao estado 11
-
-    TYPE  ir ao estado 23
+    $padrão  reduzir usando a regra 53 (TYPE)
 
 
 Estado 12
 
-    1 START: INC DEC1 .
+   54 TYPE: STAR . TYPE
 
-    $padrão  reduzir usando a regra 1 (START)
+    ID              deslocar, e ir ao estado 8
+    TIPO_PRIMITIVO  deslocar, e ir ao estado 11
+    STAR            deslocar, e ir ao estado 12
+
+    TYPE  ir ao estado 24
 
 
 Estado 13
 
-    5 DEC1: DEC . DEC0
+    2 START: $@1 INC DEC1 .
 
-    CONSTANTE       deslocar, e ir ao estado 6
-    ID              deslocar, e ir ao estado 7
-    ESTRUTURA       deslocar, e ir ao estado 8
-    ENUM            deslocar, e ir ao estado 9
-    TIPO_PRIMITIVO  deslocar, e ir ao estado 10
-    STAR            deslocar, e ir ao estado 11
-
-    $padrão  reduzir usando a regra 7 (DEC0)
-
-    DEC1        ir ao estado 24
-    DEC0        ir ao estado 25
-    DEC         ir ao estado 13
-    CONST_DEC   ir ao estado 14
-    ID_DEC      ir ao estado 15
-    STRUCT_DEC  ir ao estado 16
-    ENUM_DEC    ir ao estado 17
-    TYPE        ir ao estado 18
+    $padrão  reduzir usando a regra 2 (START)
 
 
 Estado 14
 
-    8 DEC: CONST_DEC .
+    6 DEC1: DEC . DEC0
 
-    $padrão  reduzir usando a regra 8 (DEC)
+    CONSTANTE       deslocar, e ir ao estado 7
+    ID              deslocar, e ir ao estado 8
+    ESTRUTURA       deslocar, e ir ao estado 9
+    ENUM            deslocar, e ir ao estado 10
+    TIPO_PRIMITIVO  deslocar, e ir ao estado 11
+    STAR            deslocar, e ir ao estado 12
+
+    $padrão  reduzir usando a regra 8 (DEC0)
+
+    DEC1        ir ao estado 25
+    DEC0        ir ao estado 26
+    DEC         ir ao estado 14
+    CONST_DEC   ir ao estado 15
+    ID_DEC      ir ao estado 16
+    STRUCT_DEC  ir ao estado 17
+    ENUM_DEC    ir ao estado 18
+    TYPE        ir ao estado 19
 
 
 Estado 15
 
-    9 DEC: ID_DEC .
+    9 DEC: CONST_DEC .
 
     $padrão  reduzir usando a regra 9 (DEC)
 
 
 Estado 16
 
-   10 DEC: STRUCT_DEC .
+   10 DEC: ID_DEC .
 
     $padrão  reduzir usando a regra 10 (DEC)
 
 
 Estado 17
 
-   11 DEC: ENUM_DEC .
+   11 DEC: STRUCT_DEC .
 
     $padrão  reduzir usando a regra 11 (DEC)
 
 
 Estado 18
 
-   16 ID_DEC: TYPE . ARRAY_TYPE ID $@4 ID_SUFIX
+   12 DEC: ENUM_DEC .
 
-    LBRACKET  deslocar, e ir ao estado 26
-
-    $padrão  reduzir usando a regra 55 (ARRAY_TYPE)
-
-    ARRAY_TYPE  ir ao estado 27
+    $padrão  reduzir usando a regra 12 (DEC)
 
 
 Estado 19
 
-    3 INC: IMPORTAR STRING $@1 . SEMI INC
+   17 ID_DEC: TYPE . ARRAY_TYPE ID $@5 ID_SUFIX
 
-    SEMI  deslocar, e ir ao estado 28
+    LBRACKET  deslocar, e ir ao estado 27
+
+    $padrão  reduzir usando a regra 58 (ARRAY_TYPE)
+
+    ARRAY_TYPE  ir ao estado 28
 
 
 Estado 20
 
-   14 CONST_DEC: CONSTANTE $@2 . TYPE ID $@3 EXPR SEMI
+    4 INC: IMPORTAR STRING $@2 . SEMI INC
 
-    ID              deslocar, e ir ao estado 7
-    TIPO_PRIMITIVO  deslocar, e ir ao estado 10
-    STAR            deslocar, e ir ao estado 11
-
-    TYPE  ir ao estado 29
+    SEMI  deslocar, e ir ao estado 29
 
 
 Estado 21
 
-   32 STRUCT_DEC: ESTRUTURA ID . LBRACE $@9 VAR_DECS RBRACE
+   15 CONST_DEC: CONSTANTE $@3 . TYPE ID $@4 EXPR SEMI
 
-    LBRACE  deslocar, e ir ao estado 30
+    ID              deslocar, e ir ao estado 8
+    TIPO_PRIMITIVO  deslocar, e ir ao estado 11
+    STAR            deslocar, e ir ao estado 12
+
+    TYPE  ir ao estado 30
 
 
 Estado 22
 
-   36 ENUM_DEC: ENUM ID . LBRACE $@10 IDS1 RBRACE
+   35 STRUCT_DEC: ESTRUTURA ID . LBRACE $@10 VAR_DECS RBRACE
 
     LBRACE  deslocar, e ir ao estado 31
 
 
 Estado 23
 
-   51 TYPE: STAR TYPE .
+   39 ENUM_DEC: ENUM ID . LBRACE $@11 IDS1 RBRACE
 
-    $padrão  reduzir usando a regra 51 (TYPE)
+    LBRACE  deslocar, e ir ao estado 32
 
 
 Estado 24
 
-    6 DEC0: DEC1 .
+   54 TYPE: STAR TYPE .
 
-    $padrão  reduzir usando a regra 6 (DEC0)
+    $padrão  reduzir usando a regra 54 (TYPE)
 
 
 Estado 25
 
-    5 DEC1: DEC DEC0 .
+    7 DEC0: DEC1 .
 
-    $padrão  reduzir usando a regra 5 (DEC1)
+    $padrão  reduzir usando a regra 7 (DEC0)
 
 
 Estado 26
 
-   54 ARRAY_TYPE: LBRACKET . $@15 EXPR RBRACKET $@16 ARRAY_TYPE
+    6 DEC1: DEC DEC0 .
 
-    $padrão  reduzir usando a regra 52 ($@15)
-
-    $@15  ir ao estado 32
+    $padrão  reduzir usando a regra 6 (DEC1)
 
 
 Estado 27
 
-   16 ID_DEC: TYPE ARRAY_TYPE . ID $@4 ID_SUFIX
+   57 ARRAY_TYPE: LBRACKET . $@16 EXPR RBRACKET $@17 ARRAY_TYPE
 
-    ID  deslocar, e ir ao estado 33
+    $padrão  reduzir usando a regra 55 ($@16)
+
+    $@16  ir ao estado 33
 
 
 Estado 28
 
-    3 INC: IMPORTAR STRING $@1 SEMI . INC
+   17 ID_DEC: TYPE ARRAY_TYPE . ID $@5 ID_SUFIX
 
-    IMPORTAR  deslocar, e ir ao estado 1
-
-    $padrão  reduzir usando a regra 4 (INC)
-
-    INC  ir ao estado 34
+    ID  deslocar, e ir ao estado 34
 
 
 Estado 29
 
-   14 CONST_DEC: CONSTANTE $@2 TYPE . ID $@3 EXPR SEMI
+    4 INC: IMPORTAR STRING $@2 SEMI . INC
 
-    ID  deslocar, e ir ao estado 35
+    IMPORTAR  deslocar, e ir ao estado 4
+
+    $padrão  reduzir usando a regra 5 (INC)
+
+    INC  ir ao estado 35
 
 
 Estado 30
 
-   32 STRUCT_DEC: ESTRUTURA ID LBRACE . $@9 VAR_DECS RBRACE
+   15 CONST_DEC: CONSTANTE $@3 TYPE . ID $@4 EXPR SEMI
 
-    $padrão  reduzir usando a regra 31 ($@9)
-
-    $@9  ir ao estado 36
+    ID  deslocar, e ir ao estado 36
 
 
 Estado 31
 
-   36 ENUM_DEC: ENUM ID LBRACE . $@10 IDS1 RBRACE
+   35 STRUCT_DEC: ESTRUTURA ID LBRACE . $@10 VAR_DECS RBRACE
 
-    $padrão  reduzir usando a regra 35 ($@10)
+    $padrão  reduzir usando a regra 34 ($@10)
 
     $@10  ir ao estado 37
 
 
 Estado 32
 
-   54 ARRAY_TYPE: LBRACKET $@15 . EXPR RBRACKET $@16 ARRAY_TYPE
+   39 ENUM_DEC: ENUM ID LBRACE . $@11 IDS1 RBRACE
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    $padrão  reduzir usando a regra 38 ($@11)
+
+    $@11  ir ao estado 38
+
+
+Estado 33
+
+   57 ARRAY_TYPE: LBRACKET $@16 . EXPR RBRACKET $@17 ARRAY_TYPE
+
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -1020,354 +1035,359 @@ Estado 32
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
-
-
-Estado 33
-
-   16 ID_DEC: TYPE ARRAY_TYPE ID . $@4 ID_SUFIX
-
-    $padrão  reduzir usando a regra 15 ($@4)
-
-    $@4  ir ao estado 71
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 34
 
-    3 INC: IMPORTAR STRING $@1 SEMI INC .
+   17 ID_DEC: TYPE ARRAY_TYPE ID . $@5 ID_SUFIX
 
-    $padrão  reduzir usando a regra 3 (INC)
+    $padrão  reduzir usando a regra 16 ($@5)
+
+    $@5  ir ao estado 70
 
 
 Estado 35
 
-   14 CONST_DEC: CONSTANTE $@2 TYPE ID . $@3 EXPR SEMI
+    4 INC: IMPORTAR STRING $@2 SEMI INC .
 
-    $padrão  reduzir usando a regra 13 ($@3)
-
-    $@3  ir ao estado 72
+    $padrão  reduzir usando a regra 4 (INC)
 
 
 Estado 36
 
-   32 STRUCT_DEC: ESTRUTURA ID LBRACE $@9 . VAR_DECS RBRACE
+   15 CONST_DEC: CONSTANTE $@3 TYPE ID . $@4 EXPR SEMI
 
-    ID              deslocar, e ir ao estado 7
-    TIPO_PRIMITIVO  deslocar, e ir ao estado 10
-    STAR            deslocar, e ir ao estado 11
+    $padrão  reduzir usando a regra 14 ($@4)
 
-    $padrão  reduzir usando a regra 34 (VAR_DECS)
-
-    ID_DEC    ir ao estado 73
-    VAR_DECS  ir ao estado 74
-    TYPE      ir ao estado 18
+    $@4  ir ao estado 71
 
 
 Estado 37
 
-   36 ENUM_DEC: ENUM ID LBRACE $@10 . IDS1 RBRACE
+   35 STRUCT_DEC: ESTRUTURA ID LBRACE $@10 . VAR_DECS RBRACE
 
-    ID  deslocar, e ir ao estado 75
+    ID              deslocar, e ir ao estado 8
+    TIPO_PRIMITIVO  deslocar, e ir ao estado 11
+    STAR            deslocar, e ir ao estado 12
 
-    IDS1  ir ao estado 76
+    $padrão  reduzir usando a regra 37 (VAR_DECS)
+
+    ID_DEC    ir ao estado 72
+    VAR_DECS  ir ao estado 73
+    TYPE      ir ao estado 19
 
 
 Estado 38
 
-  165 EXPR_LIT: STRING .
+   39 ENUM_DEC: ENUM ID LBRACE $@11 . IDS1 RBRACE
 
-    $padrão  reduzir usando a regra 165 (EXPR_LIT)
+    ID  deslocar, e ir ao estado 74
+
+    IDS1  ir ao estado 75
 
 
 Estado 39
 
-  171 VAR_LEAF: ID . $@44 VAR_MODS
+  168 EXPR_LIT: STRING .
 
-    $padrão  reduzir usando a regra 170 ($@44)
-
-    $@44  ir ao estado 77
+    $padrão  reduzir usando a regra 168 (EXPR_LIT)
 
 
 Estado 40
 
-  150 EXPR_LEAF: LPAREN . $@40 EXPR RPAREN
+  173 VAR_LEAF: ID . $@45 VAR_MODS
 
-    $padrão  reduzir usando a regra 149 ($@40)
+    $padrão  reduzir usando a regra 172 ($@45)
 
-    $@40  ir ao estado 78
+    $@45  ir ao estado 76
 
 
 Estado 41
 
-  169 ARRAY_LIT: LBRACE . $@43 ARGS1 RBRACE
+  153 EXPR_LEAF: LPAREN . $@41 EXPR RPAREN
 
-    $padrão  reduzir usando a regra 168 ($@43)
+    $padrão  reduzir usando a regra 152 ($@41)
 
-    $@43  ir ao estado 79
+    $@41  ir ao estado 77
 
 
 Estado 42
 
-  190 PRE_OP: STAR .
-
-    $padrão  reduzir usando a regra 190 (PRE_OP)
-
-
-Estado 43
-
-  162 EXPR_LIT: INTEIRO .
-
-    $padrão  reduzir usando a regra 162 (EXPR_LIT)
-
-
-Estado 44
-
-  163 EXPR_LIT: REAL .
-
-    $padrão  reduzir usando a regra 163 (EXPR_LIT)
-
-
-Estado 45
-
-  164 EXPR_LIT: REALD .
-
-    $padrão  reduzir usando a regra 164 (EXPR_LIT)
-
-
-Estado 46
-
-  166 EXPR_LIT: CARACTERE .
-
-    $padrão  reduzir usando a regra 166 (EXPR_LIT)
-
-
-Estado 47
-
-  191 PRE_OP: AMPERSEND .
-
-    $padrão  reduzir usando a regra 191 (PRE_OP)
-
-
-Estado 48
-
-  192 PRE_OP: PLUS2 .
+  192 PRE_OP: STAR .
 
     $padrão  reduzir usando a regra 192 (PRE_OP)
 
 
-Estado 49
+Estado 43
 
-  193 PRE_OP: MINUS2 .
+  165 EXPR_LIT: INTEIRO .
 
-    $padrão  reduzir usando a regra 193 (PRE_OP)
+    $padrão  reduzir usando a regra 165 (EXPR_LIT)
 
 
-Estado 50
+Estado 44
 
-  199 UN_OP: NEG .
+  166 EXPR_LIT: REAL .
 
-    $padrão  reduzir usando a regra 199 (UN_OP)
+    $padrão  reduzir usando a regra 166 (EXPR_LIT)
 
 
-Estado 51
+Estado 45
 
-  200 UN_OP: MINUS .
-
-    $padrão  reduzir usando a regra 200 (UN_OP)
-
-
-Estado 52
-
-  201 UN_OP: PLUS .
-
-    $padrão  reduzir usando a regra 201 (UN_OP)
-
-
-Estado 53
-
-   54 ARRAY_TYPE: LBRACKET $@15 EXPR . RBRACKET $@16 ARRAY_TYPE
-
-    RBRACKET  deslocar, e ir ao estado 80
-
-
-Estado 54
-
-  114 EXPR: ATTR_RULE . TERNARY
-
-    QUESTION  deslocar, e ir ao estado 81
-
-    $padrão  reduzir usando a regra 113 (TERNARY)
-
-    TERNARY  ir ao estado 82
-
-
-Estado 55
-
-  116 ATTR_RULE: LOGOR_CHAIN . $@38 ATTR_TAIL
-
-    $padrão  reduzir usando a regra 115 ($@38)
-
-    $@38  ir ao estado 83
-
-
-Estado 56
-
-  120 LOGOR_CHAIN: LOGAND_CHAIN . LOGOR_TAIL
-
-    OR  deslocar, e ir ao estado 84
-
-    $padrão  reduzir usando a regra 122 (LOGOR_TAIL)
-
-    LOGOR_TAIL  ir ao estado 85
-    LOGOR_OP    ir ao estado 86
-
-
-Estado 57
-
-  123 LOGAND_CHAIN: BITOR_CHAIN . LOGAND_TAIL
-
-    AND  deslocar, e ir ao estado 87
-
-    $padrão  reduzir usando a regra 125 (LOGAND_TAIL)
-
-    LOGAND_TAIL  ir ao estado 88
-    LOGAND_OP    ir ao estado 89
-
-
-Estado 58
-
-  126 BITOR_CHAIN: BITAND_CHAIN . BITOR_TAIL
-
-    PIPE  deslocar, e ir ao estado 90
-
-    $padrão  reduzir usando a regra 128 (BITOR_TAIL)
-
-    BITOR_TAIL  ir ao estado 91
-    BITOR_OP    ir ao estado 92
-
-
-Estado 59
-
-  129 BITAND_CHAIN: REL . BITAND_TAIL
-
-    AMPERSEND  deslocar, e ir ao estado 93
-
-    $padrão  reduzir usando a regra 131 (BITAND_TAIL)
-
-    BITAND_TAIL  ir ao estado 94
-    BITAND_OP    ir ao estado 95
-
-
-Estado 60
-
-  132 REL: SHIFT_CHAIN . REL_TAIL
-
-    EQQ  deslocar, e ir ao estado 96
-    NEQ  deslocar, e ir ao estado 97
-    GT   deslocar, e ir ao estado 98
-    LT   deslocar, e ir ao estado 99
-    GEQ  deslocar, e ir ao estado 100
-    LEQ  deslocar, e ir ao estado 101
-
-    $padrão  reduzir usando a regra 134 (REL_TAIL)
-
-    REL_TAIL  ir ao estado 102
-    REL_OP    ir ao estado 103
-
-
-Estado 61
-
-  135 SHIFT_CHAIN: ADD_CHAIN . SHIFT_TAIL
-
-    SHIFTL  deslocar, e ir ao estado 104
-    SHIFTR  deslocar, e ir ao estado 105
-
-    $padrão  reduzir usando a regra 137 (SHIFT_TAIL)
-
-    SHIFT_TAIL  ir ao estado 106
-    SHIFT_OP    ir ao estado 107
-
-
-Estado 62
-
-  138 ADD_CHAIN: MUL_CHAIN . ADD_TAIL
-
-    MINUS  deslocar, e ir ao estado 108
-    PLUS   deslocar, e ir ao estado 109
-
-    $padrão  reduzir usando a regra 140 (ADD_TAIL)
-
-    ADD_TAIL  ir ao estado 110
-    ADD_OP    ir ao estado 111
-
-
-Estado 63
-
-  141 MUL_CHAIN: UN_CHAIN . MUL_TAIL
-
-    STAR  deslocar, e ir ao estado 112
-    DIV   deslocar, e ir ao estado 113
-    MOD   deslocar, e ir ao estado 114
-
-    $padrão  reduzir usando a regra 143 (MUL_TAIL)
-
-    MUL_TAIL  ir ao estado 115
-    MUL_OP    ir ao estado 116
-
-
-Estado 64
-
-  145 UN_CHAIN: EXPR_LEAF .
-
-    $padrão  reduzir usando a regra 145 (UN_CHAIN)
-
-
-Estado 65
-
-  147 EXPR_LEAF: VAR_CALL .
-
-    $padrão  reduzir usando a regra 147 (EXPR_LEAF)
-
-
-Estado 66
-
-  148 EXPR_LEAF: EXPR_LIT .
-
-    $padrão  reduzir usando a regra 148 (EXPR_LEAF)
-
-
-Estado 67
-
-  167 EXPR_LIT: ARRAY_LIT .
+  167 EXPR_LIT: REALD .
 
     $padrão  reduzir usando a regra 167 (EXPR_LIT)
 
 
+Estado 46
+
+  169 EXPR_LIT: CARACTERE .
+
+    $padrão  reduzir usando a regra 169 (EXPR_LIT)
+
+
+Estado 47
+
+  193 PRE_OP: AMPERSEND .
+
+    $padrão  reduzir usando a regra 193 (PRE_OP)
+
+
+Estado 48
+
+  194 PRE_OP: PLUS2 .
+
+    $padrão  reduzir usando a regra 194 (PRE_OP)
+
+
+Estado 49
+
+  195 PRE_OP: MINUS2 .
+
+    $padrão  reduzir usando a regra 195 (PRE_OP)
+
+
+Estado 50
+
+  201 UN_OP: NEG .
+
+    $padrão  reduzir usando a regra 201 (UN_OP)
+
+
+Estado 51
+
+  202 UN_OP: MINUS .
+
+    $padrão  reduzir usando a regra 202 (UN_OP)
+
+
+Estado 52
+
+  203 UN_OP: PLUS .
+
+    $padrão  reduzir usando a regra 203 (UN_OP)
+
+
+Estado 53
+
+   57 ARRAY_TYPE: LBRACKET $@16 EXPR . RBRACKET $@17 ARRAY_TYPE
+
+    RBRACKET  deslocar, e ir ao estado 78
+
+
+Estado 54
+
+  117 EXPR: ATTR_RULE . TERNARY
+
+    QUESTION  deslocar, e ir ao estado 79
+
+    $padrão  reduzir usando a regra 116 (TERNARY)
+
+    TERNARY  ir ao estado 80
+
+
+Estado 55
+
+  119 ATTR_RULE: LOGOR_CHAIN . $@39 ATTR_TAIL
+
+    $padrão  reduzir usando a regra 118 ($@39)
+
+    $@39  ir ao estado 81
+
+
+Estado 56
+
+  123 LOGOR_CHAIN: LOGAND_CHAIN . LOGOR_TAIL
+
+    OR  deslocar, e ir ao estado 82
+
+    $padrão  reduzir usando a regra 125 (LOGOR_TAIL)
+
+    LOGOR_TAIL  ir ao estado 83
+    LOGOR_OP    ir ao estado 84
+
+
+Estado 57
+
+  126 LOGAND_CHAIN: BITOR_CHAIN . LOGAND_TAIL
+
+    AND  deslocar, e ir ao estado 85
+
+    $padrão  reduzir usando a regra 128 (LOGAND_TAIL)
+
+    LOGAND_TAIL  ir ao estado 86
+    LOGAND_OP    ir ao estado 87
+
+
+Estado 58
+
+  129 BITOR_CHAIN: BITAND_CHAIN . BITOR_TAIL
+
+    PIPE  deslocar, e ir ao estado 88
+
+    $padrão  reduzir usando a regra 131 (BITOR_TAIL)
+
+    BITOR_TAIL  ir ao estado 89
+    BITOR_OP    ir ao estado 90
+
+
+Estado 59
+
+  132 BITAND_CHAIN: REL . BITAND_TAIL
+
+    AMPERSEND  deslocar, e ir ao estado 91
+
+    $padrão  reduzir usando a regra 134 (BITAND_TAIL)
+
+    BITAND_TAIL  ir ao estado 92
+    BITAND_OP    ir ao estado 93
+
+
+Estado 60
+
+  135 REL: SHIFT_CHAIN . REL_TAIL
+
+    EQQ  deslocar, e ir ao estado 94
+    NEQ  deslocar, e ir ao estado 95
+    GT   deslocar, e ir ao estado 96
+    LT   deslocar, e ir ao estado 97
+    GEQ  deslocar, e ir ao estado 98
+    LEQ  deslocar, e ir ao estado 99
+
+    $padrão  reduzir usando a regra 137 (REL_TAIL)
+
+    REL_TAIL  ir ao estado 100
+    REL_OP    ir ao estado 101
+
+
+Estado 61
+
+  138 SHIFT_CHAIN: ADD_CHAIN . SHIFT_TAIL
+
+    SHIFTL  deslocar, e ir ao estado 102
+    SHIFTR  deslocar, e ir ao estado 103
+
+    $padrão  reduzir usando a regra 140 (SHIFT_TAIL)
+
+    SHIFT_TAIL  ir ao estado 104
+    SHIFT_OP    ir ao estado 105
+
+
+Estado 62
+
+  141 ADD_CHAIN: MUL_CHAIN . ADD_TAIL
+
+    MINUS  deslocar, e ir ao estado 106
+    PLUS   deslocar, e ir ao estado 107
+
+    $padrão  reduzir usando a regra 143 (ADD_TAIL)
+
+    ADD_TAIL  ir ao estado 108
+    ADD_OP    ir ao estado 109
+
+
+Estado 63
+
+  144 MUL_CHAIN: UN_CHAIN . MUL_TAIL
+
+    STAR  deslocar, e ir ao estado 110
+    DIV   deslocar, e ir ao estado 111
+    MOD   deslocar, e ir ao estado 112
+
+    $padrão  reduzir usando a regra 146 (MUL_TAIL)
+
+    MUL_TAIL  ir ao estado 113
+    MUL_OP    ir ao estado 114
+
+
+Estado 64
+
+  148 UN_CHAIN: EXPR_LEAF .
+
+    $padrão  reduzir usando a regra 148 (UN_CHAIN)
+
+
+Estado 65
+
+  150 EXPR_LEAF: VAR_CALL .
+
+    $padrão  reduzir usando a regra 150 (EXPR_LEAF)
+
+
+Estado 66
+
+  151 EXPR_LEAF: EXPR_LIT .
+
+    $padrão  reduzir usando a regra 151 (EXPR_LEAF)
+
+
+Estado 67
+
+  154 VAR_CALL: VAR_LEAF . CALL
+
+    LPAREN  deslocar, e ir ao estado 115
+    PLUS2   deslocar, e ir ao estado 116
+    MINUS2  deslocar, e ir ao estado 117
+
+    $padrão  reduzir usando a regra 158 (CALL)
+
+    CALL    ir ao estado 118
+    POS_OP  ir ao estado 119
+
+
 Estado 68
 
-  151 VAR_CALL: VAR_LEAF . CALL
+  149 EXPR_LEAF: PRE_OP . EXPR_LEAF
 
-    LPAREN  deslocar, e ir ao estado 117
-    PLUS2   deslocar, e ir ao estado 118
-    MINUS2  deslocar, e ir ao estado 119
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    STAR       deslocar, e ir ao estado 42
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
 
-    $padrão  reduzir usando a regra 155 (CALL)
-
-    CALL    ir ao estado 120
-    POS_OP  ir ao estado 121
+    EXPR_LEAF  ir ao estado 120
+    VAR_CALL   ir ao estado 65
+    EXPR_LIT   ir ao estado 66
+    VAR_LEAF   ir ao estado 67
+    PRE_OP     ir ao estado 68
 
 
 Estado 69
 
-  146 EXPR_LEAF: PRE_OP . EXPR_LEAF
+  147 UN_CHAIN: UN_OP . UN_CHAIN
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -1376,301 +1396,229 @@ Estado 69
     AMPERSEND  deslocar, e ir ao estado 47
     PLUS2      deslocar, e ir ao estado 48
     MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
 
-    EXPR_LEAF  ir ao estado 122
+    UN_CHAIN   ir ao estado 121
+    EXPR_LEAF  ir ao estado 64
     VAR_CALL   ir ao estado 65
     EXPR_LIT   ir ao estado 66
-    ARRAY_LIT  ir ao estado 67
-    VAR_LEAF   ir ao estado 68
-    PRE_OP     ir ao estado 69
+    VAR_LEAF   ir ao estado 67
+    PRE_OP     ir ao estado 68
+    UN_OP      ir ao estado 69
 
 
 Estado 70
 
-  144 UN_CHAIN: UN_OP . UN_CHAIN
+   17 ID_DEC: TYPE ARRAY_TYPE ID $@5 . ID_SUFIX
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
-    STAR       deslocar, e ir ao estado 42
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
+    LPAREN  deslocar, e ir ao estado 122
+    ATTR    deslocar, e ir ao estado 123
 
-    UN_CHAIN   ir ao estado 123
-    EXPR_LEAF  ir ao estado 64
-    VAR_CALL   ir ao estado 65
-    EXPR_LIT   ir ao estado 66
-    ARRAY_LIT  ir ao estado 67
-    VAR_LEAF   ir ao estado 68
-    PRE_OP     ir ao estado 69
-    UN_OP      ir ao estado 70
+    $padrão  reduzir usando a regra 31 (ID_INIT)
+
+    ID_SUFIX  ir ao estado 124
+    FUNC_DEC  ir ao estado 125
+    VAR_DEC   ir ao estado 126
+    ID_INIT   ir ao estado 127
 
 
 Estado 71
 
-   16 ID_DEC: TYPE ARRAY_TYPE ID $@4 . ID_SUFIX
+   15 CONST_DEC: CONSTANTE $@3 TYPE ID $@4 . EXPR SEMI
 
-    LPAREN  deslocar, e ir ao estado 124
-    ATTR    deslocar, e ir ao estado 125
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    STAR       deslocar, e ir ao estado 42
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
 
-    $padrão  reduzir usando a regra 30 (ID_INIT)
-
-    ID_SUFIX  ir ao estado 126
-    FUNC_DEC  ir ao estado 127
-    VAR_DEC   ir ao estado 128
-    ID_INIT   ir ao estado 129
+    EXPR          ir ao estado 128
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 72
 
-   14 CONST_DEC: CONSTANTE $@2 TYPE ID $@3 . EXPR SEMI
+   36 VAR_DECS: ID_DEC . VAR_DECS
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
-    STAR       deslocar, e ir ao estado 42
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
+    ID              deslocar, e ir ao estado 8
+    TIPO_PRIMITIVO  deslocar, e ir ao estado 11
+    STAR            deslocar, e ir ao estado 12
 
-    EXPR          ir ao estado 130
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    $padrão  reduzir usando a regra 37 (VAR_DECS)
+
+    ID_DEC    ir ao estado 72
+    VAR_DECS  ir ao estado 129
+    TYPE      ir ao estado 19
 
 
 Estado 73
 
-   33 VAR_DECS: ID_DEC . VAR_DECS
+   35 STRUCT_DEC: ESTRUTURA ID LBRACE $@10 VAR_DECS . RBRACE
 
-    ID              deslocar, e ir ao estado 7
-    TIPO_PRIMITIVO  deslocar, e ir ao estado 10
-    STAR            deslocar, e ir ao estado 11
-
-    $padrão  reduzir usando a regra 34 (VAR_DECS)
-
-    ID_DEC    ir ao estado 73
-    VAR_DECS  ir ao estado 131
-    TYPE      ir ao estado 18
+    RBRACE  deslocar, e ir ao estado 130
 
 
 Estado 74
 
-   32 STRUCT_DEC: ESTRUTURA ID LBRACE $@9 VAR_DECS . RBRACE
+   41 IDS1: ID . $@12 IDS0
 
-    RBRACE  deslocar, e ir ao estado 132
+    $padrão  reduzir usando a regra 40 ($@12)
+
+    $@12  ir ao estado 131
 
 
 Estado 75
 
-   38 IDS1: ID . $@11 IDS0
+   39 ENUM_DEC: ENUM ID LBRACE $@11 IDS1 . RBRACE
 
-    $padrão  reduzir usando a regra 37 ($@11)
-
-    $@11  ir ao estado 133
+    RBRACE  deslocar, e ir ao estado 132
 
 
 Estado 76
 
-   36 ENUM_DEC: ENUM ID LBRACE $@10 IDS1 . RBRACE
+  173 VAR_LEAF: ID $@45 . VAR_MODS
 
-    RBRACE  deslocar, e ir ao estado 134
+    LBRACKET  deslocar, e ir ao estado 133
+    DOT       deslocar, e ir ao estado 134
+
+    $padrão  reduzir usando a regra 179 (VAR_MODS)
+
+    VAR_MODS  ir ao estado 135
 
 
 Estado 77
 
-  171 VAR_LEAF: ID $@44 . VAR_MODS
+  153 EXPR_LEAF: LPAREN $@41 . EXPR RPAREN
 
-    LBRACKET  deslocar, e ir ao estado 135
-    DOT       deslocar, e ir ao estado 136
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    STAR       deslocar, e ir ao estado 42
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
 
-    $padrão  reduzir usando a regra 177 (VAR_MODS)
-
-    VAR_MODS  ir ao estado 137
+    EXPR          ir ao estado 136
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 78
 
-  150 EXPR_LEAF: LPAREN $@40 . EXPR RPAREN
+   57 ARRAY_TYPE: LBRACKET $@16 EXPR RBRACKET . $@17 ARRAY_TYPE
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
-    STAR       deslocar, e ir ao estado 42
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
+    $padrão  reduzir usando a regra 56 ($@17)
 
-    EXPR          ir ao estado 138
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    $@17  ir ao estado 137
 
 
 Estado 79
 
-  169 ARRAY_LIT: LBRACE $@43 . ARGS1 RBRACE
+  115 TERNARY: QUESTION . $@37 EXPR COLON $@38 EXPR
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
-    STAR       deslocar, e ir ao estado 42
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
+    $padrão  reduzir usando a regra 113 ($@37)
 
-    EXPR          ir ao estado 139
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    ARGS1         ir ao estado 140
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    $@37  ir ao estado 138
 
 
 Estado 80
 
-   54 ARRAY_TYPE: LBRACKET $@15 EXPR RBRACKET . $@16 ARRAY_TYPE
+  117 EXPR: ATTR_RULE TERNARY .
 
-    $padrão  reduzir usando a regra 53 ($@16)
-
-    $@16  ir ao estado 141
+    $padrão  reduzir usando a regra 117 (EXPR)
 
 
 Estado 81
 
-  112 TERNARY: QUESTION . $@36 EXPR COLON $@37 EXPR
+  119 ATTR_RULE: LOGOR_CHAIN $@39 . ATTR_TAIL
 
-    $padrão  reduzir usando a regra 110 ($@36)
+    ATTR        deslocar, e ir ao estado 139
+    ATTRADD     deslocar, e ir ao estado 140
+    ATTRSUB     deslocar, e ir ao estado 141
+    ATTRMUL     deslocar, e ir ao estado 142
+    ATTRDIV     deslocar, e ir ao estado 143
+    ATTRMOD     deslocar, e ir ao estado 144
+    ATTRBITOR   deslocar, e ir ao estado 145
+    ATTROR      deslocar, e ir ao estado 146
+    ATTRBITAND  deslocar, e ir ao estado 147
+    ATTRAND     deslocar, e ir ao estado 148
+    ATTRSHIFTL  deslocar, e ir ao estado 149
+    ATTRSHIFTR  deslocar, e ir ao estado 150
 
-    $@36  ir ao estado 142
+    $padrão  reduzir usando a regra 122 (ATTR_TAIL)
+
+    ATTR_TAIL  ir ao estado 151
+    ATTR_OP    ir ao estado 152
 
 
 Estado 82
 
-  114 EXPR: ATTR_RULE TERNARY .
+  217 LOGOR_OP: OR .
 
-    $padrão  reduzir usando a regra 114 (EXPR)
+    $padrão  reduzir usando a regra 217 (LOGOR_OP)
 
 
 Estado 83
 
-  116 ATTR_RULE: LOGOR_CHAIN $@38 . ATTR_TAIL
+  123 LOGOR_CHAIN: LOGAND_CHAIN LOGOR_TAIL .
 
-    ATTR        deslocar, e ir ao estado 143
-    ATTRADD     deslocar, e ir ao estado 144
-    ATTRSUB     deslocar, e ir ao estado 145
-    ATTRMUL     deslocar, e ir ao estado 146
-    ATTRDIV     deslocar, e ir ao estado 147
-    ATTRMOD     deslocar, e ir ao estado 148
-    ATTRBITOR   deslocar, e ir ao estado 149
-    ATTROR      deslocar, e ir ao estado 150
-    ATTRBITAND  deslocar, e ir ao estado 151
-    ATTRAND     deslocar, e ir ao estado 152
-    ATTRSHIFTL  deslocar, e ir ao estado 153
-    ATTRSHIFTR  deslocar, e ir ao estado 154
-
-    $padrão  reduzir usando a regra 119 (ATTR_TAIL)
-
-    ATTR_TAIL  ir ao estado 155
-    ATTR_OP    ir ao estado 156
+    $padrão  reduzir usando a regra 123 (LOGOR_CHAIN)
 
 
 Estado 84
 
-  215 LOGOR_OP: OR .
+  124 LOGOR_TAIL: LOGOR_OP . LOGOR_CHAIN
 
-    $padrão  reduzir usando a regra 215 (LOGOR_OP)
-
-
-Estado 85
-
-  120 LOGOR_CHAIN: LOGAND_CHAIN LOGOR_TAIL .
-
-    $padrão  reduzir usando a regra 120 (LOGOR_CHAIN)
-
-
-Estado 86
-
-  121 LOGOR_TAIL: LOGOR_OP . LOGOR_CHAIN
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -1683,7 +1631,7 @@ Estado 86
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    LOGOR_CHAIN   ir ao estado 157
+    LOGOR_CHAIN   ir ao estado 153
     LOGAND_CHAIN  ir ao estado 56
     BITOR_CHAIN   ir ao estado 57
     BITAND_CHAIN  ir ao estado 58
@@ -1695,34 +1643,32 @@ Estado 86
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 85
+
+  216 LOGAND_OP: AND .
+
+    $padrão  reduzir usando a regra 216 (LOGAND_OP)
+
+
+Estado 86
+
+  126 LOGAND_CHAIN: BITOR_CHAIN LOGAND_TAIL .
+
+    $padrão  reduzir usando a regra 126 (LOGAND_CHAIN)
 
 
 Estado 87
 
-  214 LOGAND_OP: AND .
+  127 LOGAND_TAIL: LOGAND_OP . LOGAND_CHAIN
 
-    $padrão  reduzir usando a regra 214 (LOGAND_OP)
-
-
-Estado 88
-
-  123 LOGAND_CHAIN: BITOR_CHAIN LOGAND_TAIL .
-
-    $padrão  reduzir usando a regra 123 (LOGAND_CHAIN)
-
-
-Estado 89
-
-  124 LOGAND_TAIL: LOGAND_OP . LOGAND_CHAIN
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -1735,7 +1681,7 @@ Estado 89
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    LOGAND_CHAIN  ir ao estado 158
+    LOGAND_CHAIN  ir ao estado 154
     BITOR_CHAIN   ir ao estado 57
     BITAND_CHAIN  ir ao estado 58
     REL           ir ao estado 59
@@ -1746,34 +1692,32 @@ Estado 89
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 88
+
+  215 BITOR_OP: PIPE .
+
+    $padrão  reduzir usando a regra 215 (BITOR_OP)
+
+
+Estado 89
+
+  129 BITOR_CHAIN: BITAND_CHAIN BITOR_TAIL .
+
+    $padrão  reduzir usando a regra 129 (BITOR_CHAIN)
 
 
 Estado 90
 
-  213 BITOR_OP: PIPE .
+  130 BITOR_TAIL: BITOR_OP . BITOR_CHAIN
 
-    $padrão  reduzir usando a regra 213 (BITOR_OP)
-
-
-Estado 91
-
-  126 BITOR_CHAIN: BITAND_CHAIN BITOR_TAIL .
-
-    $padrão  reduzir usando a regra 126 (BITOR_CHAIN)
-
-
-Estado 92
-
-  127 BITOR_TAIL: BITOR_OP . BITOR_CHAIN
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -1786,7 +1730,7 @@ Estado 92
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    BITOR_CHAIN   ir ao estado 159
+    BITOR_CHAIN   ir ao estado 155
     BITAND_CHAIN  ir ao estado 58
     REL           ir ao estado 59
     SHIFT_CHAIN   ir ao estado 60
@@ -1796,34 +1740,32 @@ Estado 92
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 91
+
+  214 BITAND_OP: AMPERSEND .
+
+    $padrão  reduzir usando a regra 214 (BITAND_OP)
+
+
+Estado 92
+
+  132 BITAND_CHAIN: REL BITAND_TAIL .
+
+    $padrão  reduzir usando a regra 132 (BITAND_CHAIN)
 
 
 Estado 93
 
-  212 BITAND_OP: AMPERSEND .
+  133 BITAND_TAIL: BITAND_OP . BITAND_CHAIN
 
-    $padrão  reduzir usando a regra 212 (BITAND_OP)
-
-
-Estado 94
-
-  129 BITAND_CHAIN: REL BITAND_TAIL .
-
-    $padrão  reduzir usando a regra 129 (BITAND_CHAIN)
-
-
-Estado 95
-
-  130 BITAND_TAIL: BITAND_OP . BITAND_CHAIN
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -1836,7 +1778,7 @@ Estado 95
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    BITAND_CHAIN  ir ao estado 160
+    BITAND_CHAIN  ir ao estado 156
     REL           ir ao estado 59
     SHIFT_CHAIN   ir ao estado 60
     ADD_CHAIN     ir ao estado 61
@@ -1845,123 +1787,119 @@ Estado 95
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
-Estado 96
+Estado 94
 
-  206 REL_OP: EQQ .
-
-    $padrão  reduzir usando a regra 206 (REL_OP)
-
-
-Estado 97
-
-  207 REL_OP: NEQ .
-
-    $padrão  reduzir usando a regra 207 (REL_OP)
-
-
-Estado 98
-
-  208 REL_OP: GT .
+  208 REL_OP: EQQ .
 
     $padrão  reduzir usando a regra 208 (REL_OP)
 
 
-Estado 99
+Estado 95
 
-  209 REL_OP: LT .
+  209 REL_OP: NEQ .
 
     $padrão  reduzir usando a regra 209 (REL_OP)
 
 
-Estado 100
+Estado 96
 
-  210 REL_OP: GEQ .
+  210 REL_OP: GT .
 
     $padrão  reduzir usando a regra 210 (REL_OP)
 
 
-Estado 101
+Estado 97
 
-  211 REL_OP: LEQ .
+  211 REL_OP: LT .
 
     $padrão  reduzir usando a regra 211 (REL_OP)
 
 
+Estado 98
+
+  212 REL_OP: GEQ .
+
+    $padrão  reduzir usando a regra 212 (REL_OP)
+
+
+Estado 99
+
+  213 REL_OP: LEQ .
+
+    $padrão  reduzir usando a regra 213 (REL_OP)
+
+
+Estado 100
+
+  135 REL: SHIFT_CHAIN REL_TAIL .
+
+    $padrão  reduzir usando a regra 135 (REL)
+
+
+Estado 101
+
+  136 REL_TAIL: REL_OP . SHIFT_CHAIN
+
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    STAR       deslocar, e ir ao estado 42
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
+
+    SHIFT_CHAIN  ir ao estado 157
+    ADD_CHAIN    ir ao estado 61
+    MUL_CHAIN    ir ao estado 62
+    UN_CHAIN     ir ao estado 63
+    EXPR_LEAF    ir ao estado 64
+    VAR_CALL     ir ao estado 65
+    EXPR_LIT     ir ao estado 66
+    VAR_LEAF     ir ao estado 67
+    PRE_OP       ir ao estado 68
+    UN_OP        ir ao estado 69
+
+
 Estado 102
 
-  132 REL: SHIFT_CHAIN REL_TAIL .
+  206 SHIFT_OP: SHIFTL .
 
-    $padrão  reduzir usando a regra 132 (REL)
+    $padrão  reduzir usando a regra 206 (SHIFT_OP)
 
 
 Estado 103
 
-  133 REL_TAIL: REL_OP . SHIFT_CHAIN
+  207 SHIFT_OP: SHIFTR .
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
-    STAR       deslocar, e ir ao estado 42
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
-
-    SHIFT_CHAIN  ir ao estado 161
-    ADD_CHAIN    ir ao estado 61
-    MUL_CHAIN    ir ao estado 62
-    UN_CHAIN     ir ao estado 63
-    EXPR_LEAF    ir ao estado 64
-    VAR_CALL     ir ao estado 65
-    EXPR_LIT     ir ao estado 66
-    ARRAY_LIT    ir ao estado 67
-    VAR_LEAF     ir ao estado 68
-    PRE_OP       ir ao estado 69
-    UN_OP        ir ao estado 70
+    $padrão  reduzir usando a regra 207 (SHIFT_OP)
 
 
 Estado 104
 
-  204 SHIFT_OP: SHIFTL .
+  138 SHIFT_CHAIN: ADD_CHAIN SHIFT_TAIL .
 
-    $padrão  reduzir usando a regra 204 (SHIFT_OP)
+    $padrão  reduzir usando a regra 138 (SHIFT_CHAIN)
 
 
 Estado 105
 
-  205 SHIFT_OP: SHIFTR .
+  139 SHIFT_TAIL: SHIFT_OP . SHIFT_CHAIN
 
-    $padrão  reduzir usando a regra 205 (SHIFT_OP)
-
-
-Estado 106
-
-  135 SHIFT_CHAIN: ADD_CHAIN SHIFT_TAIL .
-
-    $padrão  reduzir usando a regra 135 (SHIFT_CHAIN)
-
-
-Estado 107
-
-  136 SHIFT_TAIL: SHIFT_OP . SHIFT_CHAIN
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -1974,48 +1912,46 @@ Estado 107
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    SHIFT_CHAIN  ir ao estado 162
+    SHIFT_CHAIN  ir ao estado 158
     ADD_CHAIN    ir ao estado 61
     MUL_CHAIN    ir ao estado 62
     UN_CHAIN     ir ao estado 63
     EXPR_LEAF    ir ao estado 64
     VAR_CALL     ir ao estado 65
     EXPR_LIT     ir ao estado 66
-    ARRAY_LIT    ir ao estado 67
-    VAR_LEAF     ir ao estado 68
-    PRE_OP       ir ao estado 69
-    UN_OP        ir ao estado 70
+    VAR_LEAF     ir ao estado 67
+    PRE_OP       ir ao estado 68
+    UN_OP        ir ao estado 69
+
+
+Estado 106
+
+  205 ADD_OP: MINUS .
+
+    $padrão  reduzir usando a regra 205 (ADD_OP)
+
+
+Estado 107
+
+  204 ADD_OP: PLUS .
+
+    $padrão  reduzir usando a regra 204 (ADD_OP)
 
 
 Estado 108
 
-  203 ADD_OP: MINUS .
+  141 ADD_CHAIN: MUL_CHAIN ADD_TAIL .
 
-    $padrão  reduzir usando a regra 203 (ADD_OP)
+    $padrão  reduzir usando a regra 141 (ADD_CHAIN)
 
 
 Estado 109
 
-  202 ADD_OP: PLUS .
+  142 ADD_TAIL: ADD_OP . ADD_CHAIN
 
-    $padrão  reduzir usando a regra 202 (ADD_OP)
-
-
-Estado 110
-
-  138 ADD_CHAIN: MUL_CHAIN ADD_TAIL .
-
-    $padrão  reduzir usando a regra 138 (ADD_CHAIN)
-
-
-Estado 111
-
-  139 ADD_TAIL: ADD_OP . ADD_CHAIN
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -2028,54 +1964,52 @@ Estado 111
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    ADD_CHAIN  ir ao estado 163
+    ADD_CHAIN  ir ao estado 159
     MUL_CHAIN  ir ao estado 62
     UN_CHAIN   ir ao estado 63
     EXPR_LEAF  ir ao estado 64
     VAR_CALL   ir ao estado 65
     EXPR_LIT   ir ao estado 66
-    ARRAY_LIT  ir ao estado 67
-    VAR_LEAF   ir ao estado 68
-    PRE_OP     ir ao estado 69
-    UN_OP      ir ao estado 70
+    VAR_LEAF   ir ao estado 67
+    PRE_OP     ir ao estado 68
+    UN_OP      ir ao estado 69
 
 
-Estado 112
+Estado 110
 
-  196 MUL_OP: STAR .
-
-    $padrão  reduzir usando a regra 196 (MUL_OP)
-
-
-Estado 113
-
-  197 MUL_OP: DIV .
-
-    $padrão  reduzir usando a regra 197 (MUL_OP)
-
-
-Estado 114
-
-  198 MUL_OP: MOD .
+  198 MUL_OP: STAR .
 
     $padrão  reduzir usando a regra 198 (MUL_OP)
 
 
-Estado 115
+Estado 111
 
-  141 MUL_CHAIN: UN_CHAIN MUL_TAIL .
+  199 MUL_OP: DIV .
 
-    $padrão  reduzir usando a regra 141 (MUL_CHAIN)
+    $padrão  reduzir usando a regra 199 (MUL_OP)
 
 
-Estado 116
+Estado 112
 
-  142 MUL_TAIL: MUL_OP . MUL_CHAIN
+  200 MUL_OP: MOD .
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    $padrão  reduzir usando a regra 200 (MUL_OP)
+
+
+Estado 113
+
+  144 MUL_CHAIN: UN_CHAIN MUL_TAIL .
+
+    $padrão  reduzir usando a regra 144 (MUL_CHAIN)
+
+
+Estado 114
+
+  145 MUL_TAIL: MUL_OP . MUL_CHAIN
+
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -2088,419 +2022,397 @@ Estado 116
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    MUL_CHAIN  ir ao estado 164
+    MUL_CHAIN  ir ao estado 160
     UN_CHAIN   ir ao estado 63
     EXPR_LEAF  ir ao estado 64
     VAR_CALL   ir ao estado 65
     EXPR_LIT   ir ao estado 66
-    ARRAY_LIT  ir ao estado 67
-    VAR_LEAF   ir ao estado 68
-    PRE_OP     ir ao estado 69
-    UN_OP      ir ao estado 70
+    VAR_LEAF   ir ao estado 67
+    PRE_OP     ir ao estado 68
+    UN_OP      ir ao estado 69
+
+
+Estado 115
+
+  156 CALL: LPAREN . $@42 ARGS RPAREN
+
+    $padrão  reduzir usando a regra 155 ($@42)
+
+    $@42  ir ao estado 161
+
+
+Estado 116
+
+  196 POS_OP: PLUS2 .
+
+    $padrão  reduzir usando a regra 196 (POS_OP)
 
 
 Estado 117
 
-  153 CALL: LPAREN . $@41 ARGS RPAREN
+  197 POS_OP: MINUS2 .
 
-    $padrão  reduzir usando a regra 152 ($@41)
-
-    $@41  ir ao estado 165
+    $padrão  reduzir usando a regra 197 (POS_OP)
 
 
 Estado 118
 
-  194 POS_OP: PLUS2 .
+  154 VAR_CALL: VAR_LEAF CALL .
 
-    $padrão  reduzir usando a regra 194 (POS_OP)
+    $padrão  reduzir usando a regra 154 (VAR_CALL)
 
 
 Estado 119
 
-  195 POS_OP: MINUS2 .
+  157 CALL: POS_OP .
 
-    $padrão  reduzir usando a regra 195 (POS_OP)
+    $padrão  reduzir usando a regra 157 (CALL)
 
 
 Estado 120
 
-  151 VAR_CALL: VAR_LEAF CALL .
+  149 EXPR_LEAF: PRE_OP EXPR_LEAF .
 
-    $padrão  reduzir usando a regra 151 (VAR_CALL)
+    $padrão  reduzir usando a regra 149 (EXPR_LEAF)
 
 
 Estado 121
 
-  154 CALL: POS_OP .
+  147 UN_CHAIN: UN_OP UN_CHAIN .
 
-    $padrão  reduzir usando a regra 154 (CALL)
+    $padrão  reduzir usando a regra 147 (UN_CHAIN)
 
 
 Estado 122
 
-  146 EXPR_LEAF: PRE_OP EXPR_LEAF .
+   22 FUNC_DEC: LPAREN . $@6 PARAMS RPAREN $@7 FUNC_END
 
-    $padrão  reduzir usando a regra 146 (EXPR_LEAF)
+    $padrão  reduzir usando a regra 20 ($@6)
+
+    $@6  ir ao estado 162
 
 
 Estado 123
 
-  144 UN_CHAIN: UN_OP UN_CHAIN .
+   30 ID_INIT: ATTR . $@9 INIT_VALUE
 
-    $padrão  reduzir usando a regra 144 (UN_CHAIN)
+    $padrão  reduzir usando a regra 29 ($@9)
+
+    $@9  ir ao estado 163
 
 
 Estado 124
 
-   21 FUNC_DEC: LPAREN . $@5 PARAMS RPAREN $@6 FUNC_END
+   17 ID_DEC: TYPE ARRAY_TYPE ID $@5 ID_SUFIX .
 
-    $padrão  reduzir usando a regra 19 ($@5)
-
-    $@5  ir ao estado 166
+    $padrão  reduzir usando a regra 17 (ID_DEC)
 
 
 Estado 125
 
-   29 ID_INIT: ATTR . $@8 EXPR
-
-    $padrão  reduzir usando a regra 28 ($@8)
-
-    $@8  ir ao estado 167
-
-
-Estado 126
-
-   16 ID_DEC: TYPE ARRAY_TYPE ID $@4 ID_SUFIX .
-
-    $padrão  reduzir usando a regra 16 (ID_DEC)
-
-
-Estado 127
-
-   17 ID_SUFIX: FUNC_DEC .
-
-    $padrão  reduzir usando a regra 17 (ID_SUFIX)
-
-
-Estado 128
-
-   18 ID_SUFIX: VAR_DEC .
+   18 ID_SUFIX: FUNC_DEC .
 
     $padrão  reduzir usando a regra 18 (ID_SUFIX)
 
 
+Estado 126
+
+   19 ID_SUFIX: VAR_DEC .
+
+    $padrão  reduzir usando a regra 19 (ID_SUFIX)
+
+
+Estado 127
+
+   25 VAR_DEC: ID_INIT . VAR_DEC1
+
+    SEMI   deslocar, e ir ao estado 164
+    COMMA  deslocar, e ir ao estado 165
+
+    VAR_DEC1  ir ao estado 166
+
+
+Estado 128
+
+   15 CONST_DEC: CONSTANTE $@3 TYPE ID $@4 EXPR . SEMI
+
+    SEMI  deslocar, e ir ao estado 167
+
+
 Estado 129
 
-   24 VAR_DEC: ID_INIT . VAR_DEC1
+   36 VAR_DECS: ID_DEC VAR_DECS .
 
-    SEMI   deslocar, e ir ao estado 168
-    COMMA  deslocar, e ir ao estado 169
-
-    VAR_DEC1  ir ao estado 170
+    $padrão  reduzir usando a regra 36 (VAR_DECS)
 
 
 Estado 130
 
-   14 CONST_DEC: CONSTANTE $@2 TYPE ID $@3 EXPR . SEMI
+   35 STRUCT_DEC: ESTRUTURA ID LBRACE $@10 VAR_DECS RBRACE .
 
-    SEMI  deslocar, e ir ao estado 171
+    $padrão  reduzir usando a regra 35 (STRUCT_DEC)
 
 
 Estado 131
 
-   33 VAR_DECS: ID_DEC VAR_DECS .
+   41 IDS1: ID $@12 . IDS0
 
-    $padrão  reduzir usando a regra 33 (VAR_DECS)
+    COMMA  deslocar, e ir ao estado 168
+
+    $padrão  reduzir usando a regra 44 (IDS0)
+
+    IDS0  ir ao estado 169
 
 
 Estado 132
 
-   32 STRUCT_DEC: ESTRUTURA ID LBRACE $@9 VAR_DECS RBRACE .
+   39 ENUM_DEC: ENUM ID LBRACE $@11 IDS1 RBRACE .
 
-    $padrão  reduzir usando a regra 32 (STRUCT_DEC)
+    $padrão  reduzir usando a regra 39 (ENUM_DEC)
 
 
 Estado 133
 
-   38 IDS1: ID $@11 . IDS0
+  178 VAR_MODS: LBRACKET . $@47 EXPR RBRACKET $@48 VAR_MODS
 
-    COMMA  deslocar, e ir ao estado 172
+    $padrão  reduzir usando a regra 176 ($@47)
 
-    $padrão  reduzir usando a regra 41 (IDS0)
-
-    IDS0  ir ao estado 173
+    $@47  ir ao estado 170
 
 
 Estado 134
 
-   36 ENUM_DEC: ENUM ID LBRACE $@10 IDS1 RBRACE .
+  175 VAR_MODS: DOT . ID $@46 VAR_MODS
 
-    $padrão  reduzir usando a regra 36 (ENUM_DEC)
+    ID  deslocar, e ir ao estado 171
 
 
 Estado 135
 
-  176 VAR_MODS: LBRACKET . $@46 EXPR RBRACKET $@47 VAR_MODS
+  173 VAR_LEAF: ID $@45 VAR_MODS .
 
-    $padrão  reduzir usando a regra 174 ($@46)
-
-    $@46  ir ao estado 174
+    $padrão  reduzir usando a regra 173 (VAR_LEAF)
 
 
 Estado 136
 
-  173 VAR_MODS: DOT . ID $@45 VAR_MODS
+  153 EXPR_LEAF: LPAREN $@41 EXPR . RPAREN
 
-    ID  deslocar, e ir ao estado 175
+    RPAREN  deslocar, e ir ao estado 172
 
 
 Estado 137
 
-  171 VAR_LEAF: ID $@44 VAR_MODS .
+   57 ARRAY_TYPE: LBRACKET $@16 EXPR RBRACKET $@17 . ARRAY_TYPE
 
-    $padrão  reduzir usando a regra 171 (VAR_LEAF)
+    LBRACKET  deslocar, e ir ao estado 27
+
+    $padrão  reduzir usando a regra 58 (ARRAY_TYPE)
+
+    ARRAY_TYPE  ir ao estado 173
 
 
 Estado 138
 
-  150 EXPR_LEAF: LPAREN $@40 EXPR . RPAREN
+  115 TERNARY: QUESTION $@37 . EXPR COLON $@38 EXPR
 
-    RPAREN  deslocar, e ir ao estado 176
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    STAR       deslocar, e ir ao estado 42
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
+
+    EXPR          ir ao estado 174
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 139
 
-  156 ARGS1: EXPR . ARGS0
-
-    COMMA  deslocar, e ir ao estado 177
-
-    $padrão  reduzir usando a regra 159 (ARGS0)
-
-    ARGS0  ir ao estado 178
-
-
-Estado 140
-
-  169 ARRAY_LIT: LBRACE $@43 ARGS1 . RBRACE
-
-    RBRACE  deslocar, e ir ao estado 179
-
-
-Estado 141
-
-   54 ARRAY_TYPE: LBRACKET $@15 EXPR RBRACKET $@16 . ARRAY_TYPE
-
-    LBRACKET  deslocar, e ir ao estado 26
-
-    $padrão  reduzir usando a regra 55 (ARRAY_TYPE)
-
-    ARRAY_TYPE  ir ao estado 180
-
-
-Estado 142
-
-  112 TERNARY: QUESTION $@36 . EXPR COLON $@37 EXPR
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
-    STAR       deslocar, e ir ao estado 42
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
-
-    EXPR          ir ao estado 181
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
-
-
-Estado 143
-
-  178 ATTR_OP: ATTR .
-
-    $padrão  reduzir usando a regra 178 (ATTR_OP)
-
-
-Estado 144
-
-  179 ATTR_OP: ATTRADD .
-
-    $padrão  reduzir usando a regra 179 (ATTR_OP)
-
-
-Estado 145
-
-  180 ATTR_OP: ATTRSUB .
+  180 ATTR_OP: ATTR .
 
     $padrão  reduzir usando a regra 180 (ATTR_OP)
 
 
-Estado 146
+Estado 140
 
-  181 ATTR_OP: ATTRMUL .
+  181 ATTR_OP: ATTRADD .
 
     $padrão  reduzir usando a regra 181 (ATTR_OP)
 
 
-Estado 147
+Estado 141
 
-  182 ATTR_OP: ATTRDIV .
+  182 ATTR_OP: ATTRSUB .
 
     $padrão  reduzir usando a regra 182 (ATTR_OP)
 
 
-Estado 148
+Estado 142
 
-  183 ATTR_OP: ATTRMOD .
+  183 ATTR_OP: ATTRMUL .
 
     $padrão  reduzir usando a regra 183 (ATTR_OP)
 
 
-Estado 149
+Estado 143
 
-  184 ATTR_OP: ATTRBITOR .
+  184 ATTR_OP: ATTRDIV .
 
     $padrão  reduzir usando a regra 184 (ATTR_OP)
 
 
-Estado 150
+Estado 144
 
-  188 ATTR_OP: ATTROR .
-
-    $padrão  reduzir usando a regra 188 (ATTR_OP)
-
-
-Estado 151
-
-  185 ATTR_OP: ATTRBITAND .
+  185 ATTR_OP: ATTRMOD .
 
     $padrão  reduzir usando a regra 185 (ATTR_OP)
 
 
-Estado 152
+Estado 145
 
-  189 ATTR_OP: ATTRAND .
-
-    $padrão  reduzir usando a regra 189 (ATTR_OP)
-
-
-Estado 153
-
-  186 ATTR_OP: ATTRSHIFTL .
+  186 ATTR_OP: ATTRBITOR .
 
     $padrão  reduzir usando a regra 186 (ATTR_OP)
 
 
-Estado 154
+Estado 146
 
-  187 ATTR_OP: ATTRSHIFTR .
+  190 ATTR_OP: ATTROR .
+
+    $padrão  reduzir usando a regra 190 (ATTR_OP)
+
+
+Estado 147
+
+  187 ATTR_OP: ATTRBITAND .
 
     $padrão  reduzir usando a regra 187 (ATTR_OP)
 
 
+Estado 148
+
+  191 ATTR_OP: ATTRAND .
+
+    $padrão  reduzir usando a regra 191 (ATTR_OP)
+
+
+Estado 149
+
+  188 ATTR_OP: ATTRSHIFTL .
+
+    $padrão  reduzir usando a regra 188 (ATTR_OP)
+
+
+Estado 150
+
+  189 ATTR_OP: ATTRSHIFTR .
+
+    $padrão  reduzir usando a regra 189 (ATTR_OP)
+
+
+Estado 151
+
+  119 ATTR_RULE: LOGOR_CHAIN $@39 ATTR_TAIL .
+
+    $padrão  reduzir usando a regra 119 (ATTR_RULE)
+
+
+Estado 152
+
+  121 ATTR_TAIL: ATTR_OP . $@40 LOGOR_CHAIN
+
+    $padrão  reduzir usando a regra 120 ($@40)
+
+    $@40  ir ao estado 175
+
+
+Estado 153
+
+  124 LOGOR_TAIL: LOGOR_OP LOGOR_CHAIN .
+
+    $padrão  reduzir usando a regra 124 (LOGOR_TAIL)
+
+
+Estado 154
+
+  127 LOGAND_TAIL: LOGAND_OP LOGAND_CHAIN .
+
+    $padrão  reduzir usando a regra 127 (LOGAND_TAIL)
+
+
 Estado 155
 
-  116 ATTR_RULE: LOGOR_CHAIN $@38 ATTR_TAIL .
+  130 BITOR_TAIL: BITOR_OP BITOR_CHAIN .
 
-    $padrão  reduzir usando a regra 116 (ATTR_RULE)
+    $padrão  reduzir usando a regra 130 (BITOR_TAIL)
 
 
 Estado 156
 
-  118 ATTR_TAIL: ATTR_OP . $@39 LOGOR_CHAIN
+  133 BITAND_TAIL: BITAND_OP BITAND_CHAIN .
 
-    $padrão  reduzir usando a regra 117 ($@39)
-
-    $@39  ir ao estado 182
+    $padrão  reduzir usando a regra 133 (BITAND_TAIL)
 
 
 Estado 157
 
-  121 LOGOR_TAIL: LOGOR_OP LOGOR_CHAIN .
+  136 REL_TAIL: REL_OP SHIFT_CHAIN .
 
-    $padrão  reduzir usando a regra 121 (LOGOR_TAIL)
+    $padrão  reduzir usando a regra 136 (REL_TAIL)
 
 
 Estado 158
 
-  124 LOGAND_TAIL: LOGAND_OP LOGAND_CHAIN .
+  139 SHIFT_TAIL: SHIFT_OP SHIFT_CHAIN .
 
-    $padrão  reduzir usando a regra 124 (LOGAND_TAIL)
+    $padrão  reduzir usando a regra 139 (SHIFT_TAIL)
 
 
 Estado 159
 
-  127 BITOR_TAIL: BITOR_OP BITOR_CHAIN .
+  142 ADD_TAIL: ADD_OP ADD_CHAIN .
 
-    $padrão  reduzir usando a regra 127 (BITOR_TAIL)
+    $padrão  reduzir usando a regra 142 (ADD_TAIL)
 
 
 Estado 160
 
-  130 BITAND_TAIL: BITAND_OP BITAND_CHAIN .
+  145 MUL_TAIL: MUL_OP MUL_CHAIN .
 
-    $padrão  reduzir usando a regra 130 (BITAND_TAIL)
+    $padrão  reduzir usando a regra 145 (MUL_TAIL)
 
 
 Estado 161
 
-  133 REL_TAIL: REL_OP SHIFT_CHAIN .
+  156 CALL: LPAREN $@42 . ARGS RPAREN
 
-    $padrão  reduzir usando a regra 133 (REL_TAIL)
-
-
-Estado 162
-
-  136 SHIFT_TAIL: SHIFT_OP SHIFT_CHAIN .
-
-    $padrão  reduzir usando a regra 136 (SHIFT_TAIL)
-
-
-Estado 163
-
-  139 ADD_TAIL: ADD_OP ADD_CHAIN .
-
-    $padrão  reduzir usando a regra 139 (ADD_TAIL)
-
-
-Estado 164
-
-  142 MUL_TAIL: MUL_OP MUL_CHAIN .
-
-    $padrão  reduzir usando a regra 142 (MUL_TAIL)
-
-
-Estado 165
-
-  153 CALL: LPAREN $@41 . ARGS RPAREN
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -2513,9 +2425,9 @@ Estado 165
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    $padrão  reduzir usando a regra 161 (ARGS)
+    $padrão  reduzir usando a regra 164 (ARGS)
 
-    EXPR          ir ao estado 139
+    EXPR          ir ao estado 176
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -2528,38 +2440,121 @@ Estado 165
     UN_CHAIN      ir ao estado 63
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
-    ARGS1         ir ao estado 183
-    ARGS          ir ao estado 184
+    ARGS1         ir ao estado 177
+    ARGS          ir ao estado 178
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 162
+
+   22 FUNC_DEC: LPAREN $@6 . PARAMS RPAREN $@7 FUNC_END
+
+    ID              deslocar, e ir ao estado 8
+    TIPO_PRIMITIVO  deslocar, e ir ao estado 11
+    STAR            deslocar, e ir ao estado 12
+
+    $padrão  reduzir usando a regra 46 (PARAMS)
+
+    PARAMS  ir ao estado 179
+    PARAM1  ir ao estado 180
+    TYPE    ir ao estado 181
+
+
+Estado 163
+
+   30 ID_INIT: ATTR $@9 . INIT_VALUE
+
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 182
+    STAR       deslocar, e ir ao estado 42
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
+
+    INIT_VALUE    ir ao estado 183
+    EXPR          ir ao estado 184
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    ARRAY_LIT     ir ao estado 185
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 164
+
+   26 VAR_DEC1: SEMI .
+
+    $padrão  reduzir usando a regra 26 (VAR_DEC1)
+
+
+Estado 165
+
+   28 VAR_DEC1: COMMA . ID $@8 VAR_DEC
+
+    ID  deslocar, e ir ao estado 186
 
 
 Estado 166
 
-   21 FUNC_DEC: LPAREN $@5 . PARAMS RPAREN $@6 FUNC_END
+   25 VAR_DEC: ID_INIT VAR_DEC1 .
 
-    ID              deslocar, e ir ao estado 7
-    TIPO_PRIMITIVO  deslocar, e ir ao estado 10
-    STAR            deslocar, e ir ao estado 11
-
-    $padrão  reduzir usando a regra 43 (PARAMS)
-
-    PARAMS  ir ao estado 185
-    PARAM1  ir ao estado 186
-    TYPE    ir ao estado 187
+    $padrão  reduzir usando a regra 25 (VAR_DEC)
 
 
 Estado 167
 
-   29 ID_INIT: ATTR $@8 . EXPR
+   15 CONST_DEC: CONSTANTE $@3 TYPE ID $@4 EXPR SEMI .
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    $padrão  reduzir usando a regra 15 (CONST_DEC)
+
+
+Estado 168
+
+   43 IDS0: COMMA . $@13 IDS1
+
+    $padrão  reduzir usando a regra 42 ($@13)
+
+    $@13  ir ao estado 187
+
+
+Estado 169
+
+   41 IDS1: ID $@12 IDS0 .
+
+    $padrão  reduzir usando a regra 41 (IDS1)
+
+
+Estado 170
+
+  178 VAR_MODS: LBRACKET $@47 . EXPR RBRACKET $@48 VAR_MODS
+
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -2586,157 +2581,48 @@ Estado 167
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
-
-
-Estado 168
-
-   25 VAR_DEC1: SEMI .
-
-    $padrão  reduzir usando a regra 25 (VAR_DEC1)
-
-
-Estado 169
-
-   27 VAR_DEC1: COMMA . ID $@7 VAR_DEC
-
-    ID  deslocar, e ir ao estado 189
-
-
-Estado 170
-
-   24 VAR_DEC: ID_INIT VAR_DEC1 .
-
-    $padrão  reduzir usando a regra 24 (VAR_DEC)
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 171
 
-   14 CONST_DEC: CONSTANTE $@2 TYPE ID $@3 EXPR SEMI .
+  175 VAR_MODS: DOT ID . $@46 VAR_MODS
 
-    $padrão  reduzir usando a regra 14 (CONST_DEC)
+    $padrão  reduzir usando a regra 174 ($@46)
+
+    $@46  ir ao estado 189
 
 
 Estado 172
 
-   40 IDS0: COMMA . $@12 IDS1
+  153 EXPR_LEAF: LPAREN $@41 EXPR RPAREN .
 
-    $padrão  reduzir usando a regra 39 ($@12)
-
-    $@12  ir ao estado 190
+    $padrão  reduzir usando a regra 153 (EXPR_LEAF)
 
 
 Estado 173
 
-   38 IDS1: ID $@11 IDS0 .
+   57 ARRAY_TYPE: LBRACKET $@16 EXPR RBRACKET $@17 ARRAY_TYPE .
 
-    $padrão  reduzir usando a regra 38 (IDS1)
+    $padrão  reduzir usando a regra 57 (ARRAY_TYPE)
 
 
 Estado 174
 
-  176 VAR_MODS: LBRACKET $@46 . EXPR RBRACKET $@47 VAR_MODS
+  115 TERNARY: QUESTION $@37 EXPR . COLON $@38 EXPR
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
-    STAR       deslocar, e ir ao estado 42
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
-
-    EXPR          ir ao estado 191
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    COLON  deslocar, e ir ao estado 190
 
 
 Estado 175
 
-  173 VAR_MODS: DOT ID . $@45 VAR_MODS
+  121 ATTR_TAIL: ATTR_OP $@40 . LOGOR_CHAIN
 
-    $padrão  reduzir usando a regra 172 ($@45)
-
-    $@45  ir ao estado 192
-
-
-Estado 176
-
-  150 EXPR_LEAF: LPAREN $@40 EXPR RPAREN .
-
-    $padrão  reduzir usando a regra 150 (EXPR_LEAF)
-
-
-Estado 177
-
-  158 ARGS0: COMMA . $@42 ARGS
-
-    $padrão  reduzir usando a regra 157 ($@42)
-
-    $@42  ir ao estado 193
-
-
-Estado 178
-
-  156 ARGS1: EXPR ARGS0 .
-
-    $padrão  reduzir usando a regra 156 (ARGS1)
-
-
-Estado 179
-
-  169 ARRAY_LIT: LBRACE $@43 ARGS1 RBRACE .
-
-    $padrão  reduzir usando a regra 169 (ARRAY_LIT)
-
-
-Estado 180
-
-   54 ARRAY_TYPE: LBRACKET $@15 EXPR RBRACKET $@16 ARRAY_TYPE .
-
-    $padrão  reduzir usando a regra 54 (ARRAY_TYPE)
-
-
-Estado 181
-
-  112 TERNARY: QUESTION $@36 EXPR . COLON $@37 EXPR
-
-    COLON  deslocar, e ir ao estado 194
-
-
-Estado 182
-
-  118 ATTR_TAIL: ATTR_OP $@39 . LOGOR_CHAIN
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -2749,7 +2635,7 @@ Estado 182
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    LOGOR_CHAIN   ir ao estado 195
+    LOGOR_CHAIN   ir ao estado 191
     LOGAND_CHAIN  ir ao estado 56
     BITOR_CHAIN   ir ao estado 57
     BITAND_CHAIN  ir ao estado 58
@@ -2761,99 +2647,188 @@ Estado 182
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 176
+
+  159 ARGS1: EXPR . ARGS0
+
+    COMMA  deslocar, e ir ao estado 192
+
+    $padrão  reduzir usando a regra 162 (ARGS0)
+
+    ARGS0  ir ao estado 193
+
+
+Estado 177
+
+  163 ARGS: ARGS1 .
+
+    $padrão  reduzir usando a regra 163 (ARGS)
+
+
+Estado 178
+
+  156 CALL: LPAREN $@42 ARGS . RPAREN
+
+    RPAREN  deslocar, e ir ao estado 194
+
+
+Estado 179
+
+   22 FUNC_DEC: LPAREN $@6 PARAMS . RPAREN $@7 FUNC_END
+
+    RPAREN  deslocar, e ir ao estado 195
+
+
+Estado 180
+
+   45 PARAMS: PARAM1 .
+
+    $padrão  reduzir usando a regra 45 (PARAMS)
+
+
+Estado 181
+
+   48 PARAM1: TYPE . ID $@14 PARAM0
+
+    ID  deslocar, e ir ao estado 196
+
+
+Estado 182
+
+  171 ARRAY_LIT: LBRACE . $@44 ARGS1 RBRACE
+
+    $padrão  reduzir usando a regra 170 ($@44)
+
+    $@44  ir ao estado 197
 
 
 Estado 183
 
-  160 ARGS: ARGS1 .
+   30 ID_INIT: ATTR $@9 INIT_VALUE .
 
-    $padrão  reduzir usando a regra 160 (ARGS)
+    $padrão  reduzir usando a regra 30 (ID_INIT)
 
 
 Estado 184
 
-  153 CALL: LPAREN $@41 ARGS . RPAREN
+   32 INIT_VALUE: EXPR .
 
-    RPAREN  deslocar, e ir ao estado 196
+    $padrão  reduzir usando a regra 32 (INIT_VALUE)
 
 
 Estado 185
 
-   21 FUNC_DEC: LPAREN $@5 PARAMS . RPAREN $@6 FUNC_END
+   33 INIT_VALUE: ARRAY_LIT .
 
-    RPAREN  deslocar, e ir ao estado 197
+    $padrão  reduzir usando a regra 33 (INIT_VALUE)
 
 
 Estado 186
 
-   42 PARAMS: PARAM1 .
+   28 VAR_DEC1: COMMA ID . $@8 VAR_DEC
 
-    $padrão  reduzir usando a regra 42 (PARAMS)
+    $padrão  reduzir usando a regra 27 ($@8)
+
+    $@8  ir ao estado 198
 
 
 Estado 187
 
-   45 PARAM1: TYPE . ID $@13 PARAM0
+   43 IDS0: COMMA $@13 . IDS1
 
-    ID  deslocar, e ir ao estado 198
+    ID  deslocar, e ir ao estado 74
+
+    IDS1  ir ao estado 199
 
 
 Estado 188
 
-   29 ID_INIT: ATTR $@8 EXPR .
+  178 VAR_MODS: LBRACKET $@47 EXPR . RBRACKET $@48 VAR_MODS
 
-    $padrão  reduzir usando a regra 29 (ID_INIT)
+    RBRACKET  deslocar, e ir ao estado 200
 
 
 Estado 189
 
-   27 VAR_DEC1: COMMA ID . $@7 VAR_DEC
+  175 VAR_MODS: DOT ID $@46 . VAR_MODS
 
-    $padrão  reduzir usando a regra 26 ($@7)
+    LBRACKET  deslocar, e ir ao estado 133
+    DOT       deslocar, e ir ao estado 134
 
-    $@7  ir ao estado 199
+    $padrão  reduzir usando a regra 179 (VAR_MODS)
+
+    VAR_MODS  ir ao estado 201
 
 
 Estado 190
 
-   40 IDS0: COMMA $@12 . IDS1
+  115 TERNARY: QUESTION $@37 EXPR COLON . $@38 EXPR
 
-    ID  deslocar, e ir ao estado 75
+    $padrão  reduzir usando a regra 114 ($@38)
 
-    IDS1  ir ao estado 200
+    $@38  ir ao estado 202
 
 
 Estado 191
 
-  176 VAR_MODS: LBRACKET $@46 EXPR . RBRACKET $@47 VAR_MODS
+  121 ATTR_TAIL: ATTR_OP $@40 LOGOR_CHAIN .
 
-    RBRACKET  deslocar, e ir ao estado 201
+    $padrão  reduzir usando a regra 121 (ATTR_TAIL)
 
 
 Estado 192
 
-  173 VAR_MODS: DOT ID $@45 . VAR_MODS
+  161 ARGS0: COMMA . $@43 ARGS
 
-    LBRACKET  deslocar, e ir ao estado 135
-    DOT       deslocar, e ir ao estado 136
+    $padrão  reduzir usando a regra 160 ($@43)
 
-    $padrão  reduzir usando a regra 177 (VAR_MODS)
-
-    VAR_MODS  ir ao estado 202
+    $@43  ir ao estado 203
 
 
 Estado 193
 
-  158 ARGS0: COMMA $@42 . ARGS
+  159 ARGS1: EXPR ARGS0 .
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    $padrão  reduzir usando a regra 159 (ARGS1)
+
+
+Estado 194
+
+  156 CALL: LPAREN $@42 ARGS RPAREN .
+
+    $padrão  reduzir usando a regra 156 (CALL)
+
+
+Estado 195
+
+   22 FUNC_DEC: LPAREN $@6 PARAMS RPAREN . $@7 FUNC_END
+
+    $padrão  reduzir usando a regra 21 ($@7)
+
+    $@7  ir ao estado 204
+
+
+Estado 196
+
+   48 PARAM1: TYPE ID . $@14 PARAM0
+
+    $padrão  reduzir usando a regra 47 ($@14)
+
+    $@14  ir ao estado 205
+
+
+Estado 197
+
+  171 ARRAY_LIT: LBRACE $@44 . ARGS1 RBRACE
+
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -2866,9 +2841,7 @@ Estado 193
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    $padrão  reduzir usando a regra 161 (ARGS)
-
-    EXPR          ir ao estado 139
+    EXPR          ir ao estado 176
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -2881,106 +2854,55 @@ Estado 193
     UN_CHAIN      ir ao estado 63
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
-    ARGS1         ir ao estado 183
-    ARGS          ir ao estado 203
+    ARGS1         ir ao estado 206
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
-
-
-Estado 194
-
-  112 TERNARY: QUESTION $@36 EXPR COLON . $@37 EXPR
-
-    $padrão  reduzir usando a regra 111 ($@37)
-
-    $@37  ir ao estado 204
-
-
-Estado 195
-
-  118 ATTR_TAIL: ATTR_OP $@39 LOGOR_CHAIN .
-
-    $padrão  reduzir usando a regra 118 (ATTR_TAIL)
-
-
-Estado 196
-
-  153 CALL: LPAREN $@41 ARGS RPAREN .
-
-    $padrão  reduzir usando a regra 153 (CALL)
-
-
-Estado 197
-
-   21 FUNC_DEC: LPAREN $@5 PARAMS RPAREN . $@6 FUNC_END
-
-    $padrão  reduzir usando a regra 20 ($@6)
-
-    $@6  ir ao estado 205
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 198
 
-   45 PARAM1: TYPE ID . $@13 PARAM0
+   28 VAR_DEC1: COMMA ID $@8 . VAR_DEC
 
-    $padrão  reduzir usando a regra 44 ($@13)
+    ATTR  deslocar, e ir ao estado 123
 
-    $@13  ir ao estado 206
+    $padrão  reduzir usando a regra 31 (ID_INIT)
+
+    VAR_DEC  ir ao estado 207
+    ID_INIT  ir ao estado 127
 
 
 Estado 199
 
-   27 VAR_DEC1: COMMA ID $@7 . VAR_DEC
+   43 IDS0: COMMA $@13 IDS1 .
 
-    ATTR  deslocar, e ir ao estado 125
-
-    $padrão  reduzir usando a regra 30 (ID_INIT)
-
-    VAR_DEC  ir ao estado 207
-    ID_INIT  ir ao estado 129
+    $padrão  reduzir usando a regra 43 (IDS0)
 
 
 Estado 200
 
-   40 IDS0: COMMA $@12 IDS1 .
+  178 VAR_MODS: LBRACKET $@47 EXPR RBRACKET . $@48 VAR_MODS
 
-    $padrão  reduzir usando a regra 40 (IDS0)
+    $padrão  reduzir usando a regra 177 ($@48)
+
+    $@48  ir ao estado 208
 
 
 Estado 201
 
-  176 VAR_MODS: LBRACKET $@46 EXPR RBRACKET . $@47 VAR_MODS
+  175 VAR_MODS: DOT ID $@46 VAR_MODS .
 
-    $padrão  reduzir usando a regra 175 ($@47)
-
-    $@47  ir ao estado 208
+    $padrão  reduzir usando a regra 175 (VAR_MODS)
 
 
 Estado 202
 
-  173 VAR_MODS: DOT ID $@45 VAR_MODS .
+  115 TERNARY: QUESTION $@37 EXPR COLON $@38 . EXPR
 
-    $padrão  reduzir usando a regra 173 (VAR_MODS)
-
-
-Estado 203
-
-  158 ARGS0: COMMA $@42 ARGS .
-
-    $padrão  reduzir usando a regra 158 (ARGS0)
-
-
-Estado 204
-
-  112 TERNARY: QUESTION $@36 EXPR COLON $@37 . EXPR
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -3007,133 +2929,19 @@ Estado 204
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
-Estado 205
+Estado 203
 
-   21 FUNC_DEC: LPAREN $@5 PARAMS RPAREN $@6 . FUNC_END
+  161 ARGS0: COMMA $@43 . ARGS
 
-    SEMI    deslocar, e ir ao estado 210
-    LBRACE  deslocar, e ir ao estado 211
-
-    FUNC_END  ir ao estado 212
-    BLOCK     ir ao estado 213
-
-
-Estado 206
-
-   45 PARAM1: TYPE ID $@13 . PARAM0
-
-    COMMA  deslocar, e ir ao estado 214
-
-    $padrão  reduzir usando a regra 48 (PARAM0)
-
-    PARAM0  ir ao estado 215
-
-
-Estado 207
-
-   27 VAR_DEC1: COMMA ID $@7 VAR_DEC .
-
-    $padrão  reduzir usando a regra 27 (VAR_DEC1)
-
-
-Estado 208
-
-  176 VAR_MODS: LBRACKET $@46 EXPR RBRACKET $@47 . VAR_MODS
-
-    LBRACKET  deslocar, e ir ao estado 135
-    DOT       deslocar, e ir ao estado 136
-
-    $padrão  reduzir usando a regra 177 (VAR_MODS)
-
-    VAR_MODS  ir ao estado 216
-
-
-Estado 209
-
-  112 TERNARY: QUESTION $@36 EXPR COLON $@37 EXPR .
-
-    $padrão  reduzir usando a regra 112 (TERNARY)
-
-
-Estado 210
-
-   22 FUNC_END: SEMI .
-
-    $padrão  reduzir usando a regra 22 (FUNC_END)
-
-
-Estado 211
-
-   57 BLOCK: LBRACE . $@17 STMTS RBRACE
-
-    $padrão  reduzir usando a regra 56 ($@17)
-
-    $@17  ir ao estado 217
-
-
-Estado 212
-
-   21 FUNC_DEC: LPAREN $@5 PARAMS RPAREN $@6 FUNC_END .
-
-    $padrão  reduzir usando a regra 21 (FUNC_DEC)
-
-
-Estado 213
-
-   23 FUNC_END: BLOCK .
-
-    $padrão  reduzir usando a regra 23 (FUNC_END)
-
-
-Estado 214
-
-   47 PARAM0: COMMA . $@14 PARAM1
-
-    $padrão  reduzir usando a regra 46 ($@14)
-
-    $@14  ir ao estado 218
-
-
-Estado 215
-
-   45 PARAM1: TYPE ID $@13 PARAM0 .
-
-    $padrão  reduzir usando a regra 45 (PARAM1)
-
-
-Estado 216
-
-  176 VAR_MODS: LBRACKET $@46 EXPR RBRACKET $@47 VAR_MODS .
-
-    $padrão  reduzir usando a regra 176 (VAR_MODS)
-
-
-Estado 217
-
-   57 BLOCK: LBRACE $@17 . STMTS RBRACE
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 219
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
-    VAR        deslocar, e ir ao estado 220
-    PARAR      deslocar, e ir ao estado 221
-    CONTINUAR  deslocar, e ir ao estado 222
-    IRPARA     deslocar, e ir ao estado 223
-    LABEL      deslocar, e ir ao estado 224
-    RETORNAR   deslocar, e ir ao estado 225
-    SE         deslocar, e ir ao estado 226
-    ENQUANTO   deslocar, e ir ao estado 227
-    FAZER      deslocar, e ir ao estado 228
-    PARA       deslocar, e ir ao estado 229
-    ESCOLHA    deslocar, e ir ao estado 230
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
     REALD      deslocar, e ir ao estado 45
@@ -3145,18 +2953,194 @@ Estado 217
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    $padrão  reduzir usando a regra 59 (STMTS)
+    $padrão  reduzir usando a regra 164 (ARGS)
 
-    BLOCK         ir ao estado 231
-    STMTS         ir ao estado 232
-    STMT          ir ao estado 233
-    RETURN        ir ao estado 234
-    IF            ir ao estado 235
-    WHILE         ir ao estado 236
-    DO_WHILE      ir ao estado 237
-    FOR           ir ao estado 238
-    SWITCH_CASE   ir ao estado 239
-    EXPR          ir ao estado 240
+    EXPR          ir ao estado 176
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    ARGS1         ir ao estado 177
+    ARGS          ir ao estado 210
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 204
+
+   22 FUNC_DEC: LPAREN $@6 PARAMS RPAREN $@7 . FUNC_END
+
+    SEMI    deslocar, e ir ao estado 211
+    LBRACE  deslocar, e ir ao estado 212
+
+    FUNC_END  ir ao estado 213
+    BLOCK     ir ao estado 214
+
+
+Estado 205
+
+   48 PARAM1: TYPE ID $@14 . PARAM0
+
+    COMMA  deslocar, e ir ao estado 215
+
+    $padrão  reduzir usando a regra 51 (PARAM0)
+
+    PARAM0  ir ao estado 216
+
+
+Estado 206
+
+  171 ARRAY_LIT: LBRACE $@44 ARGS1 . RBRACE
+
+    RBRACE  deslocar, e ir ao estado 217
+
+
+Estado 207
+
+   28 VAR_DEC1: COMMA ID $@8 VAR_DEC .
+
+    $padrão  reduzir usando a regra 28 (VAR_DEC1)
+
+
+Estado 208
+
+  178 VAR_MODS: LBRACKET $@47 EXPR RBRACKET $@48 . VAR_MODS
+
+    LBRACKET  deslocar, e ir ao estado 133
+    DOT       deslocar, e ir ao estado 134
+
+    $padrão  reduzir usando a regra 179 (VAR_MODS)
+
+    VAR_MODS  ir ao estado 218
+
+
+Estado 209
+
+  115 TERNARY: QUESTION $@37 EXPR COLON $@38 EXPR .
+
+    $padrão  reduzir usando a regra 115 (TERNARY)
+
+
+Estado 210
+
+  161 ARGS0: COMMA $@43 ARGS .
+
+    $padrão  reduzir usando a regra 161 (ARGS0)
+
+
+Estado 211
+
+   23 FUNC_END: SEMI .
+
+    $padrão  reduzir usando a regra 23 (FUNC_END)
+
+
+Estado 212
+
+   60 BLOCK: LBRACE . $@18 STMTS RBRACE
+
+    $padrão  reduzir usando a regra 59 ($@18)
+
+    $@18  ir ao estado 219
+
+
+Estado 213
+
+   22 FUNC_DEC: LPAREN $@6 PARAMS RPAREN $@7 FUNC_END .
+
+    $padrão  reduzir usando a regra 22 (FUNC_DEC)
+
+
+Estado 214
+
+   24 FUNC_END: BLOCK .
+
+    $padrão  reduzir usando a regra 24 (FUNC_END)
+
+
+Estado 215
+
+   50 PARAM0: COMMA . $@15 PARAM1
+
+    $padrão  reduzir usando a regra 49 ($@15)
+
+    $@15  ir ao estado 220
+
+
+Estado 216
+
+   48 PARAM1: TYPE ID $@14 PARAM0 .
+
+    $padrão  reduzir usando a regra 48 (PARAM1)
+
+
+Estado 217
+
+  171 ARRAY_LIT: LBRACE $@44 ARGS1 RBRACE .
+
+    $padrão  reduzir usando a regra 171 (ARRAY_LIT)
+
+
+Estado 218
+
+  178 VAR_MODS: LBRACKET $@47 EXPR RBRACKET $@48 VAR_MODS .
+
+    $padrão  reduzir usando a regra 178 (VAR_MODS)
+
+
+Estado 219
+
+   60 BLOCK: LBRACE $@18 . STMTS RBRACE
+
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 212
+    STAR       deslocar, e ir ao estado 42
+    VAR        deslocar, e ir ao estado 221
+    PARAR      deslocar, e ir ao estado 222
+    CONTINUAR  deslocar, e ir ao estado 223
+    IRPARA     deslocar, e ir ao estado 224
+    LABEL      deslocar, e ir ao estado 225
+    RETORNAR   deslocar, e ir ao estado 226
+    SE         deslocar, e ir ao estado 227
+    ENQUANTO   deslocar, e ir ao estado 228
+    FAZER      deslocar, e ir ao estado 229
+    PARA       deslocar, e ir ao estado 230
+    ESCOLHA    deslocar, e ir ao estado 231
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
+
+    $padrão  reduzir usando a regra 62 (STMTS)
+
+    BLOCK         ir ao estado 232
+    STMTS         ir ao estado 233
+    STMT          ir ao estado 234
+    RETURN        ir ao estado 235
+    IF            ir ao estado 236
+    WHILE         ir ao estado 237
+    DO_WHILE      ir ao estado 238
+    FOR           ir ao estado 239
+    SWITCH_CASE   ir ao estado 240
+    EXPR          ir ao estado 241
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -3170,185 +3154,143 @@ Estado 217
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
-
-
-Estado 218
-
-   47 PARAM0: COMMA $@14 . PARAM1
-
-    ID              deslocar, e ir ao estado 7
-    TIPO_PRIMITIVO  deslocar, e ir ao estado 10
-    STAR            deslocar, e ir ao estado 11
-
-    PARAM1  ir ao estado 241
-    TYPE    ir ao estado 187
-
-
-Estado 219
-
-   57 BLOCK: LBRACE . $@17 STMTS RBRACE
-  169 ARRAY_LIT: LBRACE . $@43 ARGS1 RBRACE
-
-    STRING     reduzir usando a regra 56 ($@17)
-    STRING     [reduzir usando a regra 168 ($@43)]
-    ID         reduzir usando a regra 56 ($@17)
-    ID         [reduzir usando a regra 168 ($@43)]
-    LPAREN     reduzir usando a regra 56 ($@17)
-    LPAREN     [reduzir usando a regra 168 ($@43)]
-    LBRACE     reduzir usando a regra 56 ($@17)
-    LBRACE     [reduzir usando a regra 168 ($@43)]
-    STAR       reduzir usando a regra 56 ($@17)
-    STAR       [reduzir usando a regra 168 ($@43)]
-    INTEIRO    reduzir usando a regra 56 ($@17)
-    INTEIRO    [reduzir usando a regra 168 ($@43)]
-    REAL       reduzir usando a regra 56 ($@17)
-    REAL       [reduzir usando a regra 168 ($@43)]
-    REALD      reduzir usando a regra 56 ($@17)
-    REALD      [reduzir usando a regra 168 ($@43)]
-    CARACTERE  reduzir usando a regra 56 ($@17)
-    CARACTERE  [reduzir usando a regra 168 ($@43)]
-    AMPERSEND  reduzir usando a regra 56 ($@17)
-    AMPERSEND  [reduzir usando a regra 168 ($@43)]
-    PLUS2      reduzir usando a regra 56 ($@17)
-    PLUS2      [reduzir usando a regra 168 ($@43)]
-    MINUS2     reduzir usando a regra 56 ($@17)
-    MINUS2     [reduzir usando a regra 168 ($@43)]
-    NEG        reduzir usando a regra 56 ($@17)
-    NEG        [reduzir usando a regra 168 ($@43)]
-    MINUS      reduzir usando a regra 56 ($@17)
-    MINUS      [reduzir usando a regra 168 ($@43)]
-    PLUS       reduzir usando a regra 56 ($@17)
-    PLUS       [reduzir usando a regra 168 ($@43)]
-    $padrão   reduzir usando a regra 56 ($@17)
-
-    $@17  ir ao estado 217
-    $@43  ir ao estado 79
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 220
 
-   60 STMT: VAR . ID_DEC
+   50 PARAM0: COMMA $@15 . PARAM1
 
-    ID              deslocar, e ir ao estado 7
-    TIPO_PRIMITIVO  deslocar, e ir ao estado 10
-    STAR            deslocar, e ir ao estado 11
+    ID              deslocar, e ir ao estado 8
+    TIPO_PRIMITIVO  deslocar, e ir ao estado 11
+    STAR            deslocar, e ir ao estado 12
 
-    ID_DEC  ir ao estado 242
-    TYPE    ir ao estado 18
+    PARAM1  ir ao estado 242
+    TYPE    ir ao estado 181
 
 
 Estado 221
 
-   69 STMT: PARAR . SEMI
+   63 STMT: VAR . ID_DEC
 
-    SEMI  deslocar, e ir ao estado 243
+    ID              deslocar, e ir ao estado 8
+    TIPO_PRIMITIVO  deslocar, e ir ao estado 11
+    STAR            deslocar, e ir ao estado 12
+
+    ID_DEC  ir ao estado 243
+    TYPE    ir ao estado 19
 
 
 Estado 222
 
-   70 STMT: CONTINUAR . SEMI
+   72 STMT: PARAR . SEMI
 
     SEMI  deslocar, e ir ao estado 244
 
 
 Estado 223
 
-   71 STMT: IRPARA . ID SEMI
+   73 STMT: CONTINUAR . SEMI
 
-    ID  deslocar, e ir ao estado 245
+    SEMI  deslocar, e ir ao estado 245
 
 
 Estado 224
 
-   72 STMT: LABEL .
+   74 STMT: IRPARA . ID SEMI
 
-    $padrão  reduzir usando a regra 72 (STMT)
+    ID  deslocar, e ir ao estado 246
 
 
 Estado 225
 
-   74 RETURN: RETORNAR . $@18 RETURN_EXPR SEMI
+   75 STMT: LABEL .
 
-    $padrão  reduzir usando a regra 73 ($@18)
-
-    $@18  ir ao estado 246
+    $padrão  reduzir usando a regra 75 (STMT)
 
 
 Estado 226
 
-   79 IF: SE . LPAREN $@19 EXPR RPAREN $@20 STMT ELSE
+   77 RETURN: RETORNAR . $@19 RETURN_EXPR SEMI
 
-    LPAREN  deslocar, e ir ao estado 247
+    $padrão  reduzir usando a regra 76 ($@19)
+
+    $@19  ir ao estado 247
 
 
 Estado 227
 
-   85 WHILE: ENQUANTO . LPAREN $@22 EXPR RPAREN $@23 STMT
+   82 IF: SE . LPAREN $@20 EXPR RPAREN $@21 STMT ELSE
 
     LPAREN  deslocar, e ir ao estado 248
 
 
 Estado 228
 
-   88 DO_WHILE: FAZER . $@24 STMT ENQUANTO LPAREN $@25 EXPR RPAREN SEMI
+   88 WHILE: ENQUANTO . LPAREN $@23 EXPR RPAREN $@24 STMT
 
-    $padrão  reduzir usando a regra 86 ($@24)
-
-    $@24  ir ao estado 249
+    LPAREN  deslocar, e ir ao estado 249
 
 
 Estado 229
 
-   90 FOR: PARA . ID DE LPAREN EXPR RPAREN $@26 FOR_EXPR
+   91 DO_WHILE: FAZER . $@25 STMT ENQUANTO LPAREN $@26 EXPR RPAREN SEMI
 
-    ID  deslocar, e ir ao estado 250
+    $padrão  reduzir usando a regra 89 ($@25)
+
+    $@25  ir ao estado 250
 
 
 Estado 230
 
-  101 SWITCH_CASE: ESCOLHA . LPAREN $@30 EXPR RPAREN $@31 LBRACE $@32 CASE1 RBRACE
+   93 FOR: PARA . ID DE LPAREN EXPR RPAREN $@27 FOR_EXPR
 
-    LPAREN  deslocar, e ir ao estado 251
+    ID  deslocar, e ir ao estado 251
 
 
 Estado 231
 
-   66 STMT: BLOCK .
+  104 SWITCH_CASE: ESCOLHA . LPAREN $@31 EXPR RPAREN $@32 LBRACE $@33 CASE1 RBRACE
 
-    $padrão  reduzir usando a regra 66 (STMT)
+    LPAREN  deslocar, e ir ao estado 252
 
 
 Estado 232
 
-   57 BLOCK: LBRACE $@17 STMTS . RBRACE
+   69 STMT: BLOCK .
 
-    RBRACE  deslocar, e ir ao estado 252
+    $padrão  reduzir usando a regra 69 (STMT)
 
 
 Estado 233
 
-   58 STMTS: STMT . STMTS
+   60 BLOCK: LBRACE $@18 STMTS . RBRACE
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 219
+    RBRACE  deslocar, e ir ao estado 253
+
+
+Estado 234
+
+   61 STMTS: STMT . STMTS
+
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 212
     STAR       deslocar, e ir ao estado 42
-    VAR        deslocar, e ir ao estado 220
-    PARAR      deslocar, e ir ao estado 221
-    CONTINUAR  deslocar, e ir ao estado 222
-    IRPARA     deslocar, e ir ao estado 223
-    LABEL      deslocar, e ir ao estado 224
-    RETORNAR   deslocar, e ir ao estado 225
-    SE         deslocar, e ir ao estado 226
-    ENQUANTO   deslocar, e ir ao estado 227
-    FAZER      deslocar, e ir ao estado 228
-    PARA       deslocar, e ir ao estado 229
-    ESCOLHA    deslocar, e ir ao estado 230
+    VAR        deslocar, e ir ao estado 221
+    PARAR      deslocar, e ir ao estado 222
+    CONTINUAR  deslocar, e ir ao estado 223
+    IRPARA     deslocar, e ir ao estado 224
+    LABEL      deslocar, e ir ao estado 225
+    RETORNAR   deslocar, e ir ao estado 226
+    SE         deslocar, e ir ao estado 227
+    ENQUANTO   deslocar, e ir ao estado 228
+    FAZER      deslocar, e ir ao estado 229
+    PARA       deslocar, e ir ao estado 230
+    ESCOLHA    deslocar, e ir ao estado 231
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
     REALD      deslocar, e ir ao estado 45
@@ -3360,18 +3302,18 @@ Estado 233
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    $padrão  reduzir usando a regra 59 (STMTS)
+    $padrão  reduzir usando a regra 62 (STMTS)
 
-    BLOCK         ir ao estado 231
-    STMTS         ir ao estado 253
-    STMT          ir ao estado 233
-    RETURN        ir ao estado 234
-    IF            ir ao estado 235
-    WHILE         ir ao estado 236
-    DO_WHILE      ir ao estado 237
-    FOR           ir ao estado 238
-    SWITCH_CASE   ir ao estado 239
-    EXPR          ir ao estado 240
+    BLOCK         ir ao estado 232
+    STMTS         ir ao estado 254
+    STMT          ir ao estado 234
+    RETURN        ir ao estado 235
+    IF            ir ao estado 236
+    WHILE         ir ao estado 237
+    DO_WHILE      ir ao estado 238
+    FOR           ir ao estado 239
+    SWITCH_CASE   ir ao estado 240
+    EXPR          ir ao estado 241
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -3385,282 +3327,102 @@ Estado 233
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
-
-
-Estado 234
-
-   68 STMT: RETURN .
-
-    $padrão  reduzir usando a regra 68 (STMT)
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 235
 
-   61 STMT: IF .
+   71 STMT: RETURN .
 
-    $padrão  reduzir usando a regra 61 (STMT)
+    $padrão  reduzir usando a regra 71 (STMT)
 
 
 Estado 236
 
-   64 STMT: WHILE .
+   64 STMT: IF .
 
     $padrão  reduzir usando a regra 64 (STMT)
 
 
 Estado 237
 
-   65 STMT: DO_WHILE .
-
-    $padrão  reduzir usando a regra 65 (STMT)
-
-
-Estado 238
-
-   63 STMT: FOR .
-
-    $padrão  reduzir usando a regra 63 (STMT)
-
-
-Estado 239
-
-   62 STMT: SWITCH_CASE .
-
-    $padrão  reduzir usando a regra 62 (STMT)
-
-
-Estado 240
-
-   67 STMT: EXPR . SEMI
-
-    SEMI  deslocar, e ir ao estado 254
-
-
-Estado 241
-
-   47 PARAM0: COMMA $@14 PARAM1 .
-
-    $padrão  reduzir usando a regra 47 (PARAM0)
-
-
-Estado 242
-
-   60 STMT: VAR ID_DEC .
-
-    $padrão  reduzir usando a regra 60 (STMT)
-
-
-Estado 243
-
-   69 STMT: PARAR SEMI .
-
-    $padrão  reduzir usando a regra 69 (STMT)
-
-
-Estado 244
-
-   70 STMT: CONTINUAR SEMI .
-
-    $padrão  reduzir usando a regra 70 (STMT)
-
-
-Estado 245
-
-   71 STMT: IRPARA ID . SEMI
-
-    SEMI  deslocar, e ir ao estado 255
-
-
-Estado 246
-
-   74 RETURN: RETORNAR $@18 . RETURN_EXPR SEMI
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
-    STAR       deslocar, e ir ao estado 42
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
-
-    $padrão  reduzir usando a regra 76 (RETURN_EXPR)
-
-    RETURN_EXPR   ir ao estado 256
-    EXPR          ir ao estado 257
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
-
-
-Estado 247
-
-   79 IF: SE LPAREN . $@19 EXPR RPAREN $@20 STMT ELSE
-
-    $padrão  reduzir usando a regra 77 ($@19)
-
-    $@19  ir ao estado 258
-
-
-Estado 248
-
-   85 WHILE: ENQUANTO LPAREN . $@22 EXPR RPAREN $@23 STMT
-
-    $padrão  reduzir usando a regra 83 ($@22)
-
-    $@22  ir ao estado 259
-
-
-Estado 249
-
-   88 DO_WHILE: FAZER $@24 . STMT ENQUANTO LPAREN $@25 EXPR RPAREN SEMI
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 219
-    STAR       deslocar, e ir ao estado 42
-    VAR        deslocar, e ir ao estado 220
-    PARAR      deslocar, e ir ao estado 221
-    CONTINUAR  deslocar, e ir ao estado 222
-    IRPARA     deslocar, e ir ao estado 223
-    LABEL      deslocar, e ir ao estado 224
-    RETORNAR   deslocar, e ir ao estado 225
-    SE         deslocar, e ir ao estado 226
-    ENQUANTO   deslocar, e ir ao estado 227
-    FAZER      deslocar, e ir ao estado 228
-    PARA       deslocar, e ir ao estado 229
-    ESCOLHA    deslocar, e ir ao estado 230
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
-
-    BLOCK         ir ao estado 231
-    STMT          ir ao estado 260
-    RETURN        ir ao estado 234
-    IF            ir ao estado 235
-    WHILE         ir ao estado 236
-    DO_WHILE      ir ao estado 237
-    FOR           ir ao estado 238
-    SWITCH_CASE   ir ao estado 239
-    EXPR          ir ao estado 240
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
-
-
-Estado 250
-
-   90 FOR: PARA ID . DE LPAREN EXPR RPAREN $@26 FOR_EXPR
-
-    DE  deslocar, e ir ao estado 261
-
-
-Estado 251
-
-  101 SWITCH_CASE: ESCOLHA LPAREN . $@30 EXPR RPAREN $@31 LBRACE $@32 CASE1 RBRACE
-
-    $padrão  reduzir usando a regra 98 ($@30)
-
-    $@30  ir ao estado 262
-
-
-Estado 252
-
-   57 BLOCK: LBRACE $@17 STMTS RBRACE .
-
-    $padrão  reduzir usando a regra 57 (BLOCK)
-
-
-Estado 253
-
-   58 STMTS: STMT STMTS .
-
-    $padrão  reduzir usando a regra 58 (STMTS)
-
-
-Estado 254
-
-   67 STMT: EXPR SEMI .
+   67 STMT: WHILE .
 
     $padrão  reduzir usando a regra 67 (STMT)
 
 
-Estado 255
+Estado 238
 
-   71 STMT: IRPARA ID SEMI .
+   68 STMT: DO_WHILE .
 
-    $padrão  reduzir usando a regra 71 (STMT)
-
-
-Estado 256
-
-   74 RETURN: RETORNAR $@18 RETURN_EXPR . SEMI
-
-    SEMI  deslocar, e ir ao estado 263
+    $padrão  reduzir usando a regra 68 (STMT)
 
 
-Estado 257
+Estado 239
 
-   75 RETURN_EXPR: EXPR .
+   66 STMT: FOR .
 
-    $padrão  reduzir usando a regra 75 (RETURN_EXPR)
+    $padrão  reduzir usando a regra 66 (STMT)
 
 
-Estado 258
+Estado 240
 
-   79 IF: SE LPAREN $@19 . EXPR RPAREN $@20 STMT ELSE
+   65 STMT: SWITCH_CASE .
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    $padrão  reduzir usando a regra 65 (STMT)
+
+
+Estado 241
+
+   70 STMT: EXPR . SEMI
+
+    SEMI  deslocar, e ir ao estado 255
+
+
+Estado 242
+
+   50 PARAM0: COMMA $@15 PARAM1 .
+
+    $padrão  reduzir usando a regra 50 (PARAM0)
+
+
+Estado 243
+
+   63 STMT: VAR ID_DEC .
+
+    $padrão  reduzir usando a regra 63 (STMT)
+
+
+Estado 244
+
+   72 STMT: PARAR SEMI .
+
+    $padrão  reduzir usando a regra 72 (STMT)
+
+
+Estado 245
+
+   73 STMT: CONTINUAR SEMI .
+
+    $padrão  reduzir usando a regra 73 (STMT)
+
+
+Estado 246
+
+   74 STMT: IRPARA ID . SEMI
+
+    SEMI  deslocar, e ir ao estado 256
+
+
+Estado 247
+
+   77 RETURN: RETORNAR $@19 . RETURN_EXPR SEMI
+
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -3673,7 +3435,10 @@ Estado 258
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    EXPR          ir ao estado 264
+    $padrão  reduzir usando a regra 79 (RETURN_EXPR)
+
+    RETURN_EXPR   ir ao estado 257
+    EXPR          ir ao estado 258
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -3687,20 +3452,152 @@ Estado 258
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 248
+
+   82 IF: SE LPAREN . $@20 EXPR RPAREN $@21 STMT ELSE
+
+    $padrão  reduzir usando a regra 80 ($@20)
+
+    $@20  ir ao estado 259
+
+
+Estado 249
+
+   88 WHILE: ENQUANTO LPAREN . $@23 EXPR RPAREN $@24 STMT
+
+    $padrão  reduzir usando a regra 86 ($@23)
+
+    $@23  ir ao estado 260
+
+
+Estado 250
+
+   91 DO_WHILE: FAZER $@25 . STMT ENQUANTO LPAREN $@26 EXPR RPAREN SEMI
+
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 212
+    STAR       deslocar, e ir ao estado 42
+    VAR        deslocar, e ir ao estado 221
+    PARAR      deslocar, e ir ao estado 222
+    CONTINUAR  deslocar, e ir ao estado 223
+    IRPARA     deslocar, e ir ao estado 224
+    LABEL      deslocar, e ir ao estado 225
+    RETORNAR   deslocar, e ir ao estado 226
+    SE         deslocar, e ir ao estado 227
+    ENQUANTO   deslocar, e ir ao estado 228
+    FAZER      deslocar, e ir ao estado 229
+    PARA       deslocar, e ir ao estado 230
+    ESCOLHA    deslocar, e ir ao estado 231
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
+
+    BLOCK         ir ao estado 232
+    STMT          ir ao estado 261
+    RETURN        ir ao estado 235
+    IF            ir ao estado 236
+    WHILE         ir ao estado 237
+    DO_WHILE      ir ao estado 238
+    FOR           ir ao estado 239
+    SWITCH_CASE   ir ao estado 240
+    EXPR          ir ao estado 241
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 251
+
+   93 FOR: PARA ID . DE LPAREN EXPR RPAREN $@27 FOR_EXPR
+
+    DE  deslocar, e ir ao estado 262
+
+
+Estado 252
+
+  104 SWITCH_CASE: ESCOLHA LPAREN . $@31 EXPR RPAREN $@32 LBRACE $@33 CASE1 RBRACE
+
+    $padrão  reduzir usando a regra 101 ($@31)
+
+    $@31  ir ao estado 263
+
+
+Estado 253
+
+   60 BLOCK: LBRACE $@18 STMTS RBRACE .
+
+    $padrão  reduzir usando a regra 60 (BLOCK)
+
+
+Estado 254
+
+   61 STMTS: STMT STMTS .
+
+    $padrão  reduzir usando a regra 61 (STMTS)
+
+
+Estado 255
+
+   70 STMT: EXPR SEMI .
+
+    $padrão  reduzir usando a regra 70 (STMT)
+
+
+Estado 256
+
+   74 STMT: IRPARA ID SEMI .
+
+    $padrão  reduzir usando a regra 74 (STMT)
+
+
+Estado 257
+
+   77 RETURN: RETORNAR $@19 RETURN_EXPR . SEMI
+
+    SEMI  deslocar, e ir ao estado 264
+
+
+Estado 258
+
+   78 RETURN_EXPR: EXPR .
+
+    $padrão  reduzir usando a regra 78 (RETURN_EXPR)
 
 
 Estado 259
 
-   85 WHILE: ENQUANTO LPAREN $@22 . EXPR RPAREN $@23 STMT
+   82 IF: SE LPAREN $@20 . EXPR RPAREN $@21 STMT ELSE
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -3727,34 +3624,18 @@ Estado 259
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 260
 
-   88 DO_WHILE: FAZER $@24 STMT . ENQUANTO LPAREN $@25 EXPR RPAREN SEMI
+   88 WHILE: ENQUANTO LPAREN $@23 . EXPR RPAREN $@24 STMT
 
-    ENQUANTO  deslocar, e ir ao estado 266
-
-
-Estado 261
-
-   90 FOR: PARA ID DE . LPAREN EXPR RPAREN $@26 FOR_EXPR
-
-    LPAREN  deslocar, e ir ao estado 267
-
-
-Estado 262
-
-  101 SWITCH_CASE: ESCOLHA LPAREN $@30 . EXPR RPAREN $@31 LBRACE $@32 CASE1 RBRACE
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -3767,7 +3648,7 @@ Estado 262
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    EXPR          ir ao estado 268
+    EXPR          ir ao estado 266
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -3781,209 +3662,199 @@ Estado 262
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 261
+
+   91 DO_WHILE: FAZER $@25 STMT . ENQUANTO LPAREN $@26 EXPR RPAREN SEMI
+
+    ENQUANTO  deslocar, e ir ao estado 267
+
+
+Estado 262
+
+   93 FOR: PARA ID DE . LPAREN EXPR RPAREN $@27 FOR_EXPR
+
+    LPAREN  deslocar, e ir ao estado 268
 
 
 Estado 263
 
-   74 RETURN: RETORNAR $@18 RETURN_EXPR SEMI .
+  104 SWITCH_CASE: ESCOLHA LPAREN $@31 . EXPR RPAREN $@32 LBRACE $@33 CASE1 RBRACE
 
-    $padrão  reduzir usando a regra 74 (RETURN)
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    STAR       deslocar, e ir ao estado 42
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
+
+    EXPR          ir ao estado 269
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 264
 
-   79 IF: SE LPAREN $@19 EXPR . RPAREN $@20 STMT ELSE
+   77 RETURN: RETORNAR $@19 RETURN_EXPR SEMI .
 
-    RPAREN  deslocar, e ir ao estado 269
+    $padrão  reduzir usando a regra 77 (RETURN)
 
 
 Estado 265
 
-   85 WHILE: ENQUANTO LPAREN $@22 EXPR . RPAREN $@23 STMT
+   82 IF: SE LPAREN $@20 EXPR . RPAREN $@21 STMT ELSE
 
     RPAREN  deslocar, e ir ao estado 270
 
 
 Estado 266
 
-   88 DO_WHILE: FAZER $@24 STMT ENQUANTO . LPAREN $@25 EXPR RPAREN SEMI
+   88 WHILE: ENQUANTO LPAREN $@23 EXPR . RPAREN $@24 STMT
 
-    LPAREN  deslocar, e ir ao estado 271
+    RPAREN  deslocar, e ir ao estado 271
 
 
 Estado 267
 
-   90 FOR: PARA ID DE LPAREN . EXPR RPAREN $@26 FOR_EXPR
+   91 DO_WHILE: FAZER $@25 STMT ENQUANTO . LPAREN $@26 EXPR RPAREN SEMI
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
-    STAR       deslocar, e ir ao estado 42
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
-
-    EXPR          ir ao estado 272
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    LPAREN  deslocar, e ir ao estado 272
 
 
 Estado 268
 
-  101 SWITCH_CASE: ESCOLHA LPAREN $@30 EXPR . RPAREN $@31 LBRACE $@32 CASE1 RBRACE
+   93 FOR: PARA ID DE LPAREN . EXPR RPAREN $@27 FOR_EXPR
 
-    RPAREN  deslocar, e ir ao estado 273
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    STAR       deslocar, e ir ao estado 42
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
+
+    EXPR          ir ao estado 273
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 269
 
-   79 IF: SE LPAREN $@19 EXPR RPAREN . $@20 STMT ELSE
+  104 SWITCH_CASE: ESCOLHA LPAREN $@31 EXPR . RPAREN $@32 LBRACE $@33 CASE1 RBRACE
 
-    $padrão  reduzir usando a regra 78 ($@20)
-
-    $@20  ir ao estado 274
+    RPAREN  deslocar, e ir ao estado 274
 
 
 Estado 270
 
-   85 WHILE: ENQUANTO LPAREN $@22 EXPR RPAREN . $@23 STMT
+   82 IF: SE LPAREN $@20 EXPR RPAREN . $@21 STMT ELSE
 
-    $padrão  reduzir usando a regra 84 ($@23)
+    $padrão  reduzir usando a regra 81 ($@21)
 
-    $@23  ir ao estado 275
+    $@21  ir ao estado 275
 
 
 Estado 271
 
-   88 DO_WHILE: FAZER $@24 STMT ENQUANTO LPAREN . $@25 EXPR RPAREN SEMI
+   88 WHILE: ENQUANTO LPAREN $@23 EXPR RPAREN . $@24 STMT
 
-    $padrão  reduzir usando a regra 87 ($@25)
+    $padrão  reduzir usando a regra 87 ($@24)
 
-    $@25  ir ao estado 276
+    $@24  ir ao estado 276
 
 
 Estado 272
 
-   90 FOR: PARA ID DE LPAREN EXPR . RPAREN $@26 FOR_EXPR
+   91 DO_WHILE: FAZER $@25 STMT ENQUANTO LPAREN . $@26 EXPR RPAREN SEMI
 
-    RPAREN  deslocar, e ir ao estado 277
+    $padrão  reduzir usando a regra 90 ($@26)
+
+    $@26  ir ao estado 277
 
 
 Estado 273
 
-  101 SWITCH_CASE: ESCOLHA LPAREN $@30 EXPR RPAREN . $@31 LBRACE $@32 CASE1 RBRACE
+   93 FOR: PARA ID DE LPAREN EXPR . RPAREN $@27 FOR_EXPR
 
-    $padrão  reduzir usando a regra 99 ($@31)
-
-    $@31  ir ao estado 278
+    RPAREN  deslocar, e ir ao estado 278
 
 
 Estado 274
 
-   79 IF: SE LPAREN $@19 EXPR RPAREN $@20 . STMT ELSE
+  104 SWITCH_CASE: ESCOLHA LPAREN $@31 EXPR RPAREN . $@32 LBRACE $@33 CASE1 RBRACE
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 219
-    STAR       deslocar, e ir ao estado 42
-    VAR        deslocar, e ir ao estado 220
-    PARAR      deslocar, e ir ao estado 221
-    CONTINUAR  deslocar, e ir ao estado 222
-    IRPARA     deslocar, e ir ao estado 223
-    LABEL      deslocar, e ir ao estado 224
-    RETORNAR   deslocar, e ir ao estado 225
-    SE         deslocar, e ir ao estado 226
-    ENQUANTO   deslocar, e ir ao estado 227
-    FAZER      deslocar, e ir ao estado 228
-    PARA       deslocar, e ir ao estado 229
-    ESCOLHA    deslocar, e ir ao estado 230
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
+    $padrão  reduzir usando a regra 102 ($@32)
 
-    BLOCK         ir ao estado 231
-    STMT          ir ao estado 279
-    RETURN        ir ao estado 234
-    IF            ir ao estado 235
-    WHILE         ir ao estado 236
-    DO_WHILE      ir ao estado 237
-    FOR           ir ao estado 238
-    SWITCH_CASE   ir ao estado 239
-    EXPR          ir ao estado 240
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    $@32  ir ao estado 279
 
 
 Estado 275
 
-   85 WHILE: ENQUANTO LPAREN $@22 EXPR RPAREN $@23 . STMT
+   82 IF: SE LPAREN $@20 EXPR RPAREN $@21 . STMT ELSE
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 219
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 212
     STAR       deslocar, e ir ao estado 42
-    VAR        deslocar, e ir ao estado 220
-    PARAR      deslocar, e ir ao estado 221
-    CONTINUAR  deslocar, e ir ao estado 222
-    IRPARA     deslocar, e ir ao estado 223
-    LABEL      deslocar, e ir ao estado 224
-    RETORNAR   deslocar, e ir ao estado 225
-    SE         deslocar, e ir ao estado 226
-    ENQUANTO   deslocar, e ir ao estado 227
-    FAZER      deslocar, e ir ao estado 228
-    PARA       deslocar, e ir ao estado 229
-    ESCOLHA    deslocar, e ir ao estado 230
+    VAR        deslocar, e ir ao estado 221
+    PARAR      deslocar, e ir ao estado 222
+    CONTINUAR  deslocar, e ir ao estado 223
+    IRPARA     deslocar, e ir ao estado 224
+    LABEL      deslocar, e ir ao estado 225
+    RETORNAR   deslocar, e ir ao estado 226
+    SE         deslocar, e ir ao estado 227
+    ENQUANTO   deslocar, e ir ao estado 228
+    FAZER      deslocar, e ir ao estado 229
+    PARA       deslocar, e ir ao estado 230
+    ESCOLHA    deslocar, e ir ao estado 231
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
     REALD      deslocar, e ir ao estado 45
@@ -3995,15 +3866,15 @@ Estado 275
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    BLOCK         ir ao estado 231
+    BLOCK         ir ao estado 232
     STMT          ir ao estado 280
-    RETURN        ir ao estado 234
-    IF            ir ao estado 235
-    WHILE         ir ao estado 236
-    DO_WHILE      ir ao estado 237
-    FOR           ir ao estado 238
-    SWITCH_CASE   ir ao estado 239
-    EXPR          ir ao estado 240
+    RETURN        ir ao estado 235
+    IF            ir ao estado 236
+    WHILE         ir ao estado 237
+    DO_WHILE      ir ao estado 238
+    FOR           ir ao estado 239
+    SWITCH_CASE   ir ao estado 240
+    EXPR          ir ao estado 241
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -4017,21 +3888,31 @@ Estado 275
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 276
 
-   88 DO_WHILE: FAZER $@24 STMT ENQUANTO LPAREN $@25 . EXPR RPAREN SEMI
+   88 WHILE: ENQUANTO LPAREN $@23 EXPR RPAREN $@24 . STMT
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 212
     STAR       deslocar, e ir ao estado 42
+    VAR        deslocar, e ir ao estado 221
+    PARAR      deslocar, e ir ao estado 222
+    CONTINUAR  deslocar, e ir ao estado 223
+    IRPARA     deslocar, e ir ao estado 224
+    LABEL      deslocar, e ir ao estado 225
+    RETORNAR   deslocar, e ir ao estado 226
+    SE         deslocar, e ir ao estado 227
+    ENQUANTO   deslocar, e ir ao estado 228
+    FAZER      deslocar, e ir ao estado 229
+    PARA       deslocar, e ir ao estado 230
+    ESCOLHA    deslocar, e ir ao estado 231
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
     REALD      deslocar, e ir ao estado 45
@@ -4043,7 +3924,15 @@ Estado 276
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    EXPR          ir ao estado 281
+    BLOCK         ir ao estado 232
+    STMT          ir ao estado 281
+    RETURN        ir ao estado 235
+    IF            ir ao estado 236
+    WHILE         ir ao estado 237
+    DO_WHILE      ir ao estado 238
+    FOR           ir ao estado 239
+    SWITCH_CASE   ir ao estado 240
+    EXPR          ir ao estado 241
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -4057,318 +3946,253 @@ Estado 276
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 277
 
-   90 FOR: PARA ID DE LPAREN EXPR RPAREN . $@26 FOR_EXPR
+   91 DO_WHILE: FAZER $@25 STMT ENQUANTO LPAREN $@26 . EXPR RPAREN SEMI
 
-    $padrão  reduzir usando a regra 89 ($@26)
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    STAR       deslocar, e ir ao estado 42
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
 
-    $@26  ir ao estado 282
+    EXPR          ir ao estado 282
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 278
 
-  101 SWITCH_CASE: ESCOLHA LPAREN $@30 EXPR RPAREN $@31 . LBRACE $@32 CASE1 RBRACE
+   93 FOR: PARA ID DE LPAREN EXPR RPAREN . $@27 FOR_EXPR
 
-    LBRACE  deslocar, e ir ao estado 283
+    $padrão  reduzir usando a regra 92 ($@27)
+
+    $@27  ir ao estado 283
 
 
 Estado 279
 
-   79 IF: SE LPAREN $@19 EXPR RPAREN $@20 STMT . ELSE
+  104 SWITCH_CASE: ESCOLHA LPAREN $@31 EXPR RPAREN $@32 . LBRACE $@33 CASE1 RBRACE
 
-    SENAO  deslocar, e ir ao estado 284
-
-    SENAO     [reduzir usando a regra 82 (ELSE)]
-    $padrão  reduzir usando a regra 82 (ELSE)
-
-    ELSE  ir ao estado 285
+    LBRACE  deslocar, e ir ao estado 284
 
 
 Estado 280
 
-   85 WHILE: ENQUANTO LPAREN $@22 EXPR RPAREN $@23 STMT .
+   82 IF: SE LPAREN $@20 EXPR RPAREN $@21 STMT . ELSE
 
-    $padrão  reduzir usando a regra 85 (WHILE)
+    SENAO  deslocar, e ir ao estado 285
+
+    SENAO     [reduzir usando a regra 85 (ELSE)]
+    $padrão  reduzir usando a regra 85 (ELSE)
+
+    ELSE  ir ao estado 286
 
 
 Estado 281
 
-   88 DO_WHILE: FAZER $@24 STMT ENQUANTO LPAREN $@25 EXPR . RPAREN SEMI
+   88 WHILE: ENQUANTO LPAREN $@23 EXPR RPAREN $@24 STMT .
 
-    RPAREN  deslocar, e ir ao estado 286
+    $padrão  reduzir usando a regra 88 (WHILE)
 
 
 Estado 282
 
-   90 FOR: PARA ID DE LPAREN EXPR RPAREN $@26 . FOR_EXPR
+   91 DO_WHILE: FAZER $@25 STMT ENQUANTO LPAREN $@26 EXPR . RPAREN SEMI
 
-    ASC   deslocar, e ir ao estado 287
-    DESC  deslocar, e ir ao estado 288
-
-    FOR_EXPR  ir ao estado 289
-    FOR_ASC   ir ao estado 290
-    FOR_DESC  ir ao estado 291
+    RPAREN  deslocar, e ir ao estado 287
 
 
 Estado 283
 
-  101 SWITCH_CASE: ESCOLHA LPAREN $@30 EXPR RPAREN $@31 LBRACE . $@32 CASE1 RBRACE
+   93 FOR: PARA ID DE LPAREN EXPR RPAREN $@27 . FOR_EXPR
 
-    $padrão  reduzir usando a regra 100 ($@32)
+    ASC   deslocar, e ir ao estado 288
+    DESC  deslocar, e ir ao estado 289
 
-    $@32  ir ao estado 292
+    FOR_EXPR  ir ao estado 290
+    FOR_ASC   ir ao estado 291
+    FOR_DESC  ir ao estado 292
 
 
 Estado 284
 
-   81 ELSE: SENAO . $@21 STMT
+  104 SWITCH_CASE: ESCOLHA LPAREN $@31 EXPR RPAREN $@32 LBRACE . $@33 CASE1 RBRACE
 
-    $padrão  reduzir usando a regra 80 ($@21)
+    $padrão  reduzir usando a regra 103 ($@33)
 
-    $@21  ir ao estado 293
+    $@33  ir ao estado 293
 
 
 Estado 285
 
-   79 IF: SE LPAREN $@19 EXPR RPAREN $@20 STMT ELSE .
+   84 ELSE: SENAO . $@22 STMT
 
-    $padrão  reduzir usando a regra 79 (IF)
+    $padrão  reduzir usando a regra 83 ($@22)
+
+    $@22  ir ao estado 294
 
 
 Estado 286
 
-   88 DO_WHILE: FAZER $@24 STMT ENQUANTO LPAREN $@25 EXPR RPAREN . SEMI
+   82 IF: SE LPAREN $@20 EXPR RPAREN $@21 STMT ELSE .
 
-    SEMI  deslocar, e ir ao estado 294
+    $padrão  reduzir usando a regra 82 (IF)
 
 
 Estado 287
 
-   94 FOR_ASC: ASC . LPAREN EXPR RPAREN $@27 STMT
+   91 DO_WHILE: FAZER $@25 STMT ENQUANTO LPAREN $@26 EXPR RPAREN . SEMI
 
-    LPAREN  deslocar, e ir ao estado 295
+    SEMI  deslocar, e ir ao estado 295
 
 
 Estado 288
 
-   97 FOR_DESC: DESC . LPAREN $@28 EXPR RPAREN $@29 STMT
+   97 FOR_ASC: ASC . LPAREN EXPR RPAREN $@28 STMT
 
     LPAREN  deslocar, e ir ao estado 296
 
 
 Estado 289
 
-   90 FOR: PARA ID DE LPAREN EXPR RPAREN $@26 FOR_EXPR .
+  100 FOR_DESC: DESC . LPAREN $@29 EXPR RPAREN $@30 STMT
 
-    $padrão  reduzir usando a regra 90 (FOR)
+    LPAREN  deslocar, e ir ao estado 297
 
 
 Estado 290
 
-   91 FOR_EXPR: FOR_ASC .
+   93 FOR: PARA ID DE LPAREN EXPR RPAREN $@27 FOR_EXPR .
 
-    $padrão  reduzir usando a regra 91 (FOR_EXPR)
+    $padrão  reduzir usando a regra 93 (FOR)
 
 
 Estado 291
 
-   92 FOR_EXPR: FOR_DESC .
+   94 FOR_EXPR: FOR_ASC .
 
-    $padrão  reduzir usando a regra 92 (FOR_EXPR)
+    $padrão  reduzir usando a regra 94 (FOR_EXPR)
 
 
 Estado 292
 
-  101 SWITCH_CASE: ESCOLHA LPAREN $@30 EXPR RPAREN $@31 LBRACE $@32 . CASE1 RBRACE
+   95 FOR_EXPR: FOR_DESC .
 
-    CASO  deslocar, e ir ao estado 297
-    CC    deslocar, e ir ao estado 298
-
-    CASE1  ir ao estado 299
-    CASE   ir ao estado 300
+    $padrão  reduzir usando a regra 95 (FOR_EXPR)
 
 
 Estado 293
 
-   81 ELSE: SENAO $@21 . STMT
+  104 SWITCH_CASE: ESCOLHA LPAREN $@31 EXPR RPAREN $@32 LBRACE $@33 . CASE1 RBRACE
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 219
-    STAR       deslocar, e ir ao estado 42
-    VAR        deslocar, e ir ao estado 220
-    PARAR      deslocar, e ir ao estado 221
-    CONTINUAR  deslocar, e ir ao estado 222
-    IRPARA     deslocar, e ir ao estado 223
-    LABEL      deslocar, e ir ao estado 224
-    RETORNAR   deslocar, e ir ao estado 225
-    SE         deslocar, e ir ao estado 226
-    ENQUANTO   deslocar, e ir ao estado 227
-    FAZER      deslocar, e ir ao estado 228
-    PARA       deslocar, e ir ao estado 229
-    ESCOLHA    deslocar, e ir ao estado 230
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
+    CASO  deslocar, e ir ao estado 298
+    CC    deslocar, e ir ao estado 299
 
-    BLOCK         ir ao estado 231
-    STMT          ir ao estado 301
-    RETURN        ir ao estado 234
-    IF            ir ao estado 235
-    WHILE         ir ao estado 236
-    DO_WHILE      ir ao estado 237
-    FOR           ir ao estado 238
-    SWITCH_CASE   ir ao estado 239
-    EXPR          ir ao estado 240
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    CASE1  ir ao estado 300
+    CASE   ir ao estado 301
 
 
 Estado 294
 
-   88 DO_WHILE: FAZER $@24 STMT ENQUANTO LPAREN $@25 EXPR RPAREN SEMI .
+   84 ELSE: SENAO $@22 . STMT
 
-    $padrão  reduzir usando a regra 88 (DO_WHILE)
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 212
+    STAR       deslocar, e ir ao estado 42
+    VAR        deslocar, e ir ao estado 221
+    PARAR      deslocar, e ir ao estado 222
+    CONTINUAR  deslocar, e ir ao estado 223
+    IRPARA     deslocar, e ir ao estado 224
+    LABEL      deslocar, e ir ao estado 225
+    RETORNAR   deslocar, e ir ao estado 226
+    SE         deslocar, e ir ao estado 227
+    ENQUANTO   deslocar, e ir ao estado 228
+    FAZER      deslocar, e ir ao estado 229
+    PARA       deslocar, e ir ao estado 230
+    ESCOLHA    deslocar, e ir ao estado 231
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
+
+    BLOCK         ir ao estado 232
+    STMT          ir ao estado 302
+    RETURN        ir ao estado 235
+    IF            ir ao estado 236
+    WHILE         ir ao estado 237
+    DO_WHILE      ir ao estado 238
+    FOR           ir ao estado 239
+    SWITCH_CASE   ir ao estado 240
+    EXPR          ir ao estado 241
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 295
 
-   94 FOR_ASC: ASC LPAREN . EXPR RPAREN $@27 STMT
+   91 DO_WHILE: FAZER $@25 STMT ENQUANTO LPAREN $@26 EXPR RPAREN SEMI .
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
-    STAR       deslocar, e ir ao estado 42
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
-
-    EXPR          ir ao estado 302
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    $padrão  reduzir usando a regra 91 (DO_WHILE)
 
 
 Estado 296
 
-   97 FOR_DESC: DESC LPAREN . $@28 EXPR RPAREN $@29 STMT
+   97 FOR_ASC: ASC LPAREN . EXPR RPAREN $@28 STMT
 
-    $padrão  reduzir usando a regra 95 ($@28)
-
-    $@28  ir ao estado 303
-
-
-Estado 297
-
-  107 CASE: CASO . $@33 EXPR COLON $@34 STMTS
-
-    $padrão  reduzir usando a regra 105 ($@33)
-
-    $@33  ir ao estado 304
-
-
-Estado 298
-
-  109 CASE: CC . COLON $@35 STMTS
-
-    COLON  deslocar, e ir ao estado 305
-
-
-Estado 299
-
-  101 SWITCH_CASE: ESCOLHA LPAREN $@30 EXPR RPAREN $@31 LBRACE $@32 CASE1 . RBRACE
-
-    RBRACE  deslocar, e ir ao estado 306
-
-
-Estado 300
-
-  102 CASE1: CASE . CASE0
-
-    CASO  deslocar, e ir ao estado 297
-    CC    deslocar, e ir ao estado 298
-
-    $padrão  reduzir usando a regra 104 (CASE0)
-
-    CASE1  ir ao estado 307
-    CASE0  ir ao estado 308
-    CASE   ir ao estado 300
-
-
-Estado 301
-
-   81 ELSE: SENAO $@21 STMT .
-
-    $padrão  reduzir usando a regra 81 (ELSE)
-
-
-Estado 302
-
-   94 FOR_ASC: ASC LPAREN EXPR . RPAREN $@27 STMT
-
-    RPAREN  deslocar, e ir ao estado 309
-
-
-Estado 303
-
-   97 FOR_DESC: DESC LPAREN $@28 . EXPR RPAREN $@29 STMT
-
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -4381,7 +4205,7 @@ Estado 303
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    EXPR          ir ao estado 310
+    EXPR          ir ao estado 303
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -4395,20 +4219,78 @@ Estado 303
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
+
+
+Estado 297
+
+  100 FOR_DESC: DESC LPAREN . $@29 EXPR RPAREN $@30 STMT
+
+    $padrão  reduzir usando a regra 98 ($@29)
+
+    $@29  ir ao estado 304
+
+
+Estado 298
+
+  110 CASE: CASO . $@34 EXPR COLON $@35 STMTS
+
+    $padrão  reduzir usando a regra 108 ($@34)
+
+    $@34  ir ao estado 305
+
+
+Estado 299
+
+  112 CASE: CC . COLON $@36 STMTS
+
+    COLON  deslocar, e ir ao estado 306
+
+
+Estado 300
+
+  104 SWITCH_CASE: ESCOLHA LPAREN $@31 EXPR RPAREN $@32 LBRACE $@33 CASE1 . RBRACE
+
+    RBRACE  deslocar, e ir ao estado 307
+
+
+Estado 301
+
+  105 CASE1: CASE . CASE0
+
+    CASO  deslocar, e ir ao estado 298
+    CC    deslocar, e ir ao estado 299
+
+    $padrão  reduzir usando a regra 107 (CASE0)
+
+    CASE1  ir ao estado 308
+    CASE0  ir ao estado 309
+    CASE   ir ao estado 301
+
+
+Estado 302
+
+   84 ELSE: SENAO $@22 STMT .
+
+    $padrão  reduzir usando a regra 84 (ELSE)
+
+
+Estado 303
+
+   97 FOR_ASC: ASC LPAREN EXPR . RPAREN $@28 STMT
+
+    RPAREN  deslocar, e ir ao estado 310
 
 
 Estado 304
 
-  107 CASE: CASO $@33 . EXPR COLON $@34 STMTS
+  100 FOR_DESC: DESC LPAREN $@29 . EXPR RPAREN $@30 STMT
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 41
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
     STAR       deslocar, e ir ao estado 42
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
@@ -4435,147 +4317,122 @@ Estado 304
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 305
 
-  109 CASE: CC COLON . $@35 STMTS
+  110 CASE: CASO $@34 . EXPR COLON $@35 STMTS
 
-    $padrão  reduzir usando a regra 108 ($@35)
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    STAR       deslocar, e ir ao estado 42
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
 
-    $@35  ir ao estado 312
+    EXPR          ir ao estado 312
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 306
 
-  101 SWITCH_CASE: ESCOLHA LPAREN $@30 EXPR RPAREN $@31 LBRACE $@32 CASE1 RBRACE .
+  112 CASE: CC COLON . $@36 STMTS
 
-    $padrão  reduzir usando a regra 101 (SWITCH_CASE)
+    $padrão  reduzir usando a regra 111 ($@36)
+
+    $@36  ir ao estado 313
 
 
 Estado 307
 
-  103 CASE0: CASE1 .
+  104 SWITCH_CASE: ESCOLHA LPAREN $@31 EXPR RPAREN $@32 LBRACE $@33 CASE1 RBRACE .
 
-    $padrão  reduzir usando a regra 103 (CASE0)
+    $padrão  reduzir usando a regra 104 (SWITCH_CASE)
 
 
 Estado 308
 
-  102 CASE1: CASE CASE0 .
+  106 CASE0: CASE1 .
 
-    $padrão  reduzir usando a regra 102 (CASE1)
+    $padrão  reduzir usando a regra 106 (CASE0)
 
 
 Estado 309
 
-   94 FOR_ASC: ASC LPAREN EXPR RPAREN . $@27 STMT
+  105 CASE1: CASE CASE0 .
 
-    $padrão  reduzir usando a regra 93 ($@27)
-
-    $@27  ir ao estado 313
+    $padrão  reduzir usando a regra 105 (CASE1)
 
 
 Estado 310
 
-   97 FOR_DESC: DESC LPAREN $@28 EXPR . RPAREN $@29 STMT
+   97 FOR_ASC: ASC LPAREN EXPR RPAREN . $@28 STMT
 
-    RPAREN  deslocar, e ir ao estado 314
+    $padrão  reduzir usando a regra 96 ($@28)
+
+    $@28  ir ao estado 314
 
 
 Estado 311
 
-  107 CASE: CASO $@33 EXPR . COLON $@34 STMTS
+  100 FOR_DESC: DESC LPAREN $@29 EXPR . RPAREN $@30 STMT
 
-    COLON  deslocar, e ir ao estado 315
+    RPAREN  deslocar, e ir ao estado 315
 
 
 Estado 312
 
-  109 CASE: CC COLON $@35 . STMTS
+  110 CASE: CASO $@34 EXPR . COLON $@35 STMTS
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 219
-    STAR       deslocar, e ir ao estado 42
-    VAR        deslocar, e ir ao estado 220
-    PARAR      deslocar, e ir ao estado 221
-    CONTINUAR  deslocar, e ir ao estado 222
-    IRPARA     deslocar, e ir ao estado 223
-    LABEL      deslocar, e ir ao estado 224
-    RETORNAR   deslocar, e ir ao estado 225
-    SE         deslocar, e ir ao estado 226
-    ENQUANTO   deslocar, e ir ao estado 227
-    FAZER      deslocar, e ir ao estado 228
-    PARA       deslocar, e ir ao estado 229
-    ESCOLHA    deslocar, e ir ao estado 230
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
-
-    $padrão  reduzir usando a regra 59 (STMTS)
-
-    BLOCK         ir ao estado 231
-    STMTS         ir ao estado 316
-    STMT          ir ao estado 233
-    RETURN        ir ao estado 234
-    IF            ir ao estado 235
-    WHILE         ir ao estado 236
-    DO_WHILE      ir ao estado 237
-    FOR           ir ao estado 238
-    SWITCH_CASE   ir ao estado 239
-    EXPR          ir ao estado 240
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    COLON  deslocar, e ir ao estado 316
 
 
 Estado 313
 
-   94 FOR_ASC: ASC LPAREN EXPR RPAREN $@27 . STMT
+  112 CASE: CC COLON $@36 . STMTS
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 219
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 212
     STAR       deslocar, e ir ao estado 42
-    VAR        deslocar, e ir ao estado 220
-    PARAR      deslocar, e ir ao estado 221
-    CONTINUAR  deslocar, e ir ao estado 222
-    IRPARA     deslocar, e ir ao estado 223
-    LABEL      deslocar, e ir ao estado 224
-    RETORNAR   deslocar, e ir ao estado 225
-    SE         deslocar, e ir ao estado 226
-    ENQUANTO   deslocar, e ir ao estado 227
-    FAZER      deslocar, e ir ao estado 228
-    PARA       deslocar, e ir ao estado 229
-    ESCOLHA    deslocar, e ir ao estado 230
+    VAR        deslocar, e ir ao estado 221
+    PARAR      deslocar, e ir ao estado 222
+    CONTINUAR  deslocar, e ir ao estado 223
+    IRPARA     deslocar, e ir ao estado 224
+    LABEL      deslocar, e ir ao estado 225
+    RETORNAR   deslocar, e ir ao estado 226
+    SE         deslocar, e ir ao estado 227
+    ENQUANTO   deslocar, e ir ao estado 228
+    FAZER      deslocar, e ir ao estado 229
+    PARA       deslocar, e ir ao estado 230
+    ESCOLHA    deslocar, e ir ao estado 231
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
     REALD      deslocar, e ir ao estado 45
@@ -4587,15 +4444,18 @@ Estado 313
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    BLOCK         ir ao estado 231
-    STMT          ir ao estado 317
-    RETURN        ir ao estado 234
-    IF            ir ao estado 235
-    WHILE         ir ao estado 236
-    DO_WHILE      ir ao estado 237
-    FOR           ir ao estado 238
-    SWITCH_CASE   ir ao estado 239
-    EXPR          ir ao estado 240
+    $padrão  reduzir usando a regra 62 (STMTS)
+
+    BLOCK         ir ao estado 232
+    STMTS         ir ao estado 317
+    STMT          ir ao estado 234
+    RETURN        ir ao estado 235
+    IF            ir ao estado 236
+    WHILE         ir ao estado 237
+    DO_WHILE      ir ao estado 238
+    FOR           ir ao estado 239
+    SWITCH_CASE   ir ao estado 240
+    EXPR          ir ao estado 241
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -4609,123 +4469,121 @@ Estado 313
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 314
 
-   97 FOR_DESC: DESC LPAREN $@28 EXPR RPAREN . $@29 STMT
+   97 FOR_ASC: ASC LPAREN EXPR RPAREN $@28 . STMT
 
-    $padrão  reduzir usando a regra 96 ($@29)
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 212
+    STAR       deslocar, e ir ao estado 42
+    VAR        deslocar, e ir ao estado 221
+    PARAR      deslocar, e ir ao estado 222
+    CONTINUAR  deslocar, e ir ao estado 223
+    IRPARA     deslocar, e ir ao estado 224
+    LABEL      deslocar, e ir ao estado 225
+    RETORNAR   deslocar, e ir ao estado 226
+    SE         deslocar, e ir ao estado 227
+    ENQUANTO   deslocar, e ir ao estado 228
+    FAZER      deslocar, e ir ao estado 229
+    PARA       deslocar, e ir ao estado 230
+    ESCOLHA    deslocar, e ir ao estado 231
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
 
-    $@29  ir ao estado 318
+    BLOCK         ir ao estado 232
+    STMT          ir ao estado 318
+    RETURN        ir ao estado 235
+    IF            ir ao estado 236
+    WHILE         ir ao estado 237
+    DO_WHILE      ir ao estado 238
+    FOR           ir ao estado 239
+    SWITCH_CASE   ir ao estado 240
+    EXPR          ir ao estado 241
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 315
 
-  107 CASE: CASO $@33 EXPR COLON . $@34 STMTS
+  100 FOR_DESC: DESC LPAREN $@29 EXPR RPAREN . $@30 STMT
 
-    $padrão  reduzir usando a regra 106 ($@34)
+    $padrão  reduzir usando a regra 99 ($@30)
 
-    $@34  ir ao estado 319
+    $@30  ir ao estado 319
 
 
 Estado 316
 
-  109 CASE: CC COLON $@35 STMTS .
+  110 CASE: CASO $@34 EXPR COLON . $@35 STMTS
 
-    $padrão  reduzir usando a regra 109 (CASE)
+    $padrão  reduzir usando a regra 109 ($@35)
+
+    $@35  ir ao estado 320
 
 
 Estado 317
 
-   94 FOR_ASC: ASC LPAREN EXPR RPAREN $@27 STMT .
+  112 CASE: CC COLON $@36 STMTS .
 
-    $padrão  reduzir usando a regra 94 (FOR_ASC)
+    $padrão  reduzir usando a regra 112 (CASE)
 
 
 Estado 318
 
-   97 FOR_DESC: DESC LPAREN $@28 EXPR RPAREN $@29 . STMT
+   97 FOR_ASC: ASC LPAREN EXPR RPAREN $@28 STMT .
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 219
-    STAR       deslocar, e ir ao estado 42
-    VAR        deslocar, e ir ao estado 220
-    PARAR      deslocar, e ir ao estado 221
-    CONTINUAR  deslocar, e ir ao estado 222
-    IRPARA     deslocar, e ir ao estado 223
-    LABEL      deslocar, e ir ao estado 224
-    RETORNAR   deslocar, e ir ao estado 225
-    SE         deslocar, e ir ao estado 226
-    ENQUANTO   deslocar, e ir ao estado 227
-    FAZER      deslocar, e ir ao estado 228
-    PARA       deslocar, e ir ao estado 229
-    ESCOLHA    deslocar, e ir ao estado 230
-    INTEIRO    deslocar, e ir ao estado 43
-    REAL       deslocar, e ir ao estado 44
-    REALD      deslocar, e ir ao estado 45
-    CARACTERE  deslocar, e ir ao estado 46
-    AMPERSEND  deslocar, e ir ao estado 47
-    PLUS2      deslocar, e ir ao estado 48
-    MINUS2     deslocar, e ir ao estado 49
-    NEG        deslocar, e ir ao estado 50
-    MINUS      deslocar, e ir ao estado 51
-    PLUS       deslocar, e ir ao estado 52
-
-    BLOCK         ir ao estado 231
-    STMT          ir ao estado 320
-    RETURN        ir ao estado 234
-    IF            ir ao estado 235
-    WHILE         ir ao estado 236
-    DO_WHILE      ir ao estado 237
-    FOR           ir ao estado 238
-    SWITCH_CASE   ir ao estado 239
-    EXPR          ir ao estado 240
-    ATTR_RULE     ir ao estado 54
-    LOGOR_CHAIN   ir ao estado 55
-    LOGAND_CHAIN  ir ao estado 56
-    BITOR_CHAIN   ir ao estado 57
-    BITAND_CHAIN  ir ao estado 58
-    REL           ir ao estado 59
-    SHIFT_CHAIN   ir ao estado 60
-    ADD_CHAIN     ir ao estado 61
-    MUL_CHAIN     ir ao estado 62
-    UN_CHAIN      ir ao estado 63
-    EXPR_LEAF     ir ao estado 64
-    VAR_CALL      ir ao estado 65
-    EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    $padrão  reduzir usando a regra 97 (FOR_ASC)
 
 
 Estado 319
 
-  107 CASE: CASO $@33 EXPR COLON $@34 . STMTS
+  100 FOR_DESC: DESC LPAREN $@29 EXPR RPAREN $@30 . STMT
 
-    STRING     deslocar, e ir ao estado 38
-    ID         deslocar, e ir ao estado 39
-    LPAREN     deslocar, e ir ao estado 40
-    LBRACE     deslocar, e ir ao estado 219
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 212
     STAR       deslocar, e ir ao estado 42
-    VAR        deslocar, e ir ao estado 220
-    PARAR      deslocar, e ir ao estado 221
-    CONTINUAR  deslocar, e ir ao estado 222
-    IRPARA     deslocar, e ir ao estado 223
-    LABEL      deslocar, e ir ao estado 224
-    RETORNAR   deslocar, e ir ao estado 225
-    SE         deslocar, e ir ao estado 226
-    ENQUANTO   deslocar, e ir ao estado 227
-    FAZER      deslocar, e ir ao estado 228
-    PARA       deslocar, e ir ao estado 229
-    ESCOLHA    deslocar, e ir ao estado 230
+    VAR        deslocar, e ir ao estado 221
+    PARAR      deslocar, e ir ao estado 222
+    CONTINUAR  deslocar, e ir ao estado 223
+    IRPARA     deslocar, e ir ao estado 224
+    LABEL      deslocar, e ir ao estado 225
+    RETORNAR   deslocar, e ir ao estado 226
+    SE         deslocar, e ir ao estado 227
+    ENQUANTO   deslocar, e ir ao estado 228
+    FAZER      deslocar, e ir ao estado 229
+    PARA       deslocar, e ir ao estado 230
+    ESCOLHA    deslocar, e ir ao estado 231
     INTEIRO    deslocar, e ir ao estado 43
     REAL       deslocar, e ir ao estado 44
     REALD      deslocar, e ir ao estado 45
@@ -4737,18 +4595,15 @@ Estado 319
     MINUS      deslocar, e ir ao estado 51
     PLUS       deslocar, e ir ao estado 52
 
-    $padrão  reduzir usando a regra 59 (STMTS)
-
-    BLOCK         ir ao estado 231
-    STMTS         ir ao estado 321
-    STMT          ir ao estado 233
-    RETURN        ir ao estado 234
-    IF            ir ao estado 235
-    WHILE         ir ao estado 236
-    DO_WHILE      ir ao estado 237
-    FOR           ir ao estado 238
-    SWITCH_CASE   ir ao estado 239
-    EXPR          ir ao estado 240
+    BLOCK         ir ao estado 232
+    STMT          ir ao estado 321
+    RETURN        ir ao estado 235
+    IF            ir ao estado 236
+    WHILE         ir ao estado 237
+    DO_WHILE      ir ao estado 238
+    FOR           ir ao estado 239
+    SWITCH_CASE   ir ao estado 240
+    EXPR          ir ao estado 241
     ATTR_RULE     ir ao estado 54
     LOGOR_CHAIN   ir ao estado 55
     LOGAND_CHAIN  ir ao estado 56
@@ -4762,21 +4617,81 @@ Estado 319
     EXPR_LEAF     ir ao estado 64
     VAR_CALL      ir ao estado 65
     EXPR_LIT      ir ao estado 66
-    ARRAY_LIT     ir ao estado 67
-    VAR_LEAF      ir ao estado 68
-    PRE_OP        ir ao estado 69
-    UN_OP         ir ao estado 70
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 320
 
-   97 FOR_DESC: DESC LPAREN $@28 EXPR RPAREN $@29 STMT .
+  110 CASE: CASO $@34 EXPR COLON $@35 . STMTS
 
-    $padrão  reduzir usando a regra 97 (FOR_DESC)
+    STRING     deslocar, e ir ao estado 39
+    ID         deslocar, e ir ao estado 40
+    LPAREN     deslocar, e ir ao estado 41
+    LBRACE     deslocar, e ir ao estado 212
+    STAR       deslocar, e ir ao estado 42
+    VAR        deslocar, e ir ao estado 221
+    PARAR      deslocar, e ir ao estado 222
+    CONTINUAR  deslocar, e ir ao estado 223
+    IRPARA     deslocar, e ir ao estado 224
+    LABEL      deslocar, e ir ao estado 225
+    RETORNAR   deslocar, e ir ao estado 226
+    SE         deslocar, e ir ao estado 227
+    ENQUANTO   deslocar, e ir ao estado 228
+    FAZER      deslocar, e ir ao estado 229
+    PARA       deslocar, e ir ao estado 230
+    ESCOLHA    deslocar, e ir ao estado 231
+    INTEIRO    deslocar, e ir ao estado 43
+    REAL       deslocar, e ir ao estado 44
+    REALD      deslocar, e ir ao estado 45
+    CARACTERE  deslocar, e ir ao estado 46
+    AMPERSEND  deslocar, e ir ao estado 47
+    PLUS2      deslocar, e ir ao estado 48
+    MINUS2     deslocar, e ir ao estado 49
+    NEG        deslocar, e ir ao estado 50
+    MINUS      deslocar, e ir ao estado 51
+    PLUS       deslocar, e ir ao estado 52
+
+    $padrão  reduzir usando a regra 62 (STMTS)
+
+    BLOCK         ir ao estado 232
+    STMTS         ir ao estado 322
+    STMT          ir ao estado 234
+    RETURN        ir ao estado 235
+    IF            ir ao estado 236
+    WHILE         ir ao estado 237
+    DO_WHILE      ir ao estado 238
+    FOR           ir ao estado 239
+    SWITCH_CASE   ir ao estado 240
+    EXPR          ir ao estado 241
+    ATTR_RULE     ir ao estado 54
+    LOGOR_CHAIN   ir ao estado 55
+    LOGAND_CHAIN  ir ao estado 56
+    BITOR_CHAIN   ir ao estado 57
+    BITAND_CHAIN  ir ao estado 58
+    REL           ir ao estado 59
+    SHIFT_CHAIN   ir ao estado 60
+    ADD_CHAIN     ir ao estado 61
+    MUL_CHAIN     ir ao estado 62
+    UN_CHAIN      ir ao estado 63
+    EXPR_LEAF     ir ao estado 64
+    VAR_CALL      ir ao estado 65
+    EXPR_LIT      ir ao estado 66
+    VAR_LEAF      ir ao estado 67
+    PRE_OP        ir ao estado 68
+    UN_OP         ir ao estado 69
 
 
 Estado 321
 
-  107 CASE: CASO $@33 EXPR COLON $@34 STMTS .
+  100 FOR_DESC: DESC LPAREN $@29 EXPR RPAREN $@30 STMT .
 
-    $padrão  reduzir usando a regra 107 (CASE)
+    $padrão  reduzir usando a regra 100 (FOR_DESC)
+
+
+Estado 322
+
+  110 CASE: CASO $@34 EXPR COLON $@35 STMTS .
+
+    $padrão  reduzir usando a regra 110 (CASE)
