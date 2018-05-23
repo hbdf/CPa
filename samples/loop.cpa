@@ -1,14 +1,34 @@
 int main() {
 	var int x;
-	var int y;
-	var int[20];
-	var int x = 1;
-
-	se (bla) {
-
-	} senao {
-
+	para x de (1) asc (10){
+		var int y = 0;
+		y++;
 	}
 
-	var int y = 0;
+//	x = 1;
+//	label1:
+//	if(!(x < 10)){
+//		goto label2;
+//	}
+//	.
+//	.
+//	.
+//	.
+//	.
+//	goto label1;
+//	label2:
+//	.....
+
+//	var int x;
+//	var int y;
+//	var int[20];
+//	var int x = 1;
+
+//	se (bla) {
+
+//	} senao {
+
+//	}
+
+//	var int y = 0;
 }
