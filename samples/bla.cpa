@@ -1,0 +1,6 @@
+estrutura pessoa { 
+	*caractere nome; 
+	int teste; 
+}
+
+enum bool { true, false }

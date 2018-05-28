@@ -75,13 +75,13 @@ INIT_VALUE: EXPR { $$.str = $1.str; } ;
 INIT_VALUE: ARRAY_LIT { $$.str = $1.str; } ;
 
 // Print struct dec
-STRUCT_DEC: ESTRUTURA ID LBRACE VAR_DECS RBRACE { $$.str = "struct " + $2.str + " {\n" + $4.str + "}\n"; };
+STRUCT_DEC: ESTRUTURA ID LBRACE VAR_DECS RBRACE { $$.str = "struct " + $2.str + " {\n" + $4.str + "}; typedef struct " + $2.str + " " + $2.str + ";\n"; };
 
 VAR_DECS: ID_DEC VAR_DECS { $$.str = $1.str + "\n" + $2.str; } ;
 VAR_DECS: { $$.str = ""; } ;
 
 // Print enum
-ENUM_DEC: ENUM ID LBRACE IDS1 RBRACE { $$.str = "enum " + $2.str + "{\n" + $4.str + "\n}\n"; } ;
+ENUM_DEC: ENUM ID LBRACE IDS1 RBRACE { $$.str = "enum " + $2.str + "{\n" + $4.str + "\n}; typedef enum " + $2.str + " " + $2.str + ";\n"; } ;
 
 // ID list
 IDS1: ID IDS0 { $$.str = $1.str + $2.str; } ;
@@ -184,7 +184,7 @@ DO_WHILE: {
 
 // For loop
 FOR: PARA ID DE LPAREN EXPR RPAREN { inherit.push_back($2.str); } FOR_EXPR { 
-  $$.str = "{\n" + $2.str + " = " + $5.str + ";\n";
+  $$.str = "{\nint " + $2.str + " = " + $5.str + ";\n";
   $$.str += $8.str + "\n}\n"; 
   inherit.pop_back();
 } ;
@@ -199,7 +199,7 @@ FOR_ASC: {
   $$.str += $6.str;
   $$.str += inherit.back() + "++;\n";
   $$.str += "goto " + scopeStack.back() + ";\n";
-  $$.str += "end" + scopeStack.back() + ":\n";
+  $$.str += "end" + scopeStack.back() + ":;\n";
   scopeStack.pop_back();
 };
 FOR_DESC: {
@@ -210,7 +210,7 @@ FOR_DESC: {
   $$.str += $6.str;
   $$.str += inherit.back() + "--;\n";
   $$.str += "goto " + scopeStack.back() + ";\n";
-  $$.str += "end" + scopeStack.back() + ":\n";
+  $$.str += "end" + scopeStack.back() + ":;\n";
   scopeStack.pop_back();
 };
 
@@ -314,7 +314,7 @@ ATTR_OP: ATTRADD { $$.str = " += "; $$.attr_op = 0; } ;
 ATTR_OP: ATTRSUB { $$.str = " -= "; $$.attr_op = 0; } ;
 ATTR_OP: ATTRMUL { $$.str = " *= "; $$.attr_op = 0; } ;
 ATTR_OP: ATTRDIV { $$.str = " /= "; $$.attr_op = 0; } ;
-ATTR_OP: ATTRMOD { $$.str = " %%= "; $$.attr_op = 0; } ;
+ATTR_OP: ATTRMOD { $$.str = " %= "; $$.attr_op = 0; } ;
 ATTR_OP: ATTRBITOR { $$.str = " |= "; $$.attr_op = 0; } ;
 ATTR_OP: ATTRBITAND { $$.str = " &= "; $$.attr_op = 0; } ;
 ATTR_OP: ATTRSHIFTL { $$.str = " <<= "; $$.attr_op = 0; } ;
@@ -335,7 +335,7 @@ POS_OP: MINUS2 {$$.str = "-- ";} ;
 // Bin-op
 MUL_OP: STAR { $$.str = " * "; } ;
 MUL_OP: DIV { $$.str = " / "; } ;
-MUL_OP: MOD { $$.str = " %% "; } ;
+MUL_OP: MOD { $$.str = " % "; } ;
 UN_OP: NEG { $$.str = " ! "; } ;
 UN_OP: MINUS {$$.str = " - "; } ;
 UN_OP: PLUS {$$.str = " + "; } ;

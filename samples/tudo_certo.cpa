@@ -1,70 +1,76 @@
-importar "basico.cpa";
+importar "bla.cpa";
 
-estrutura pessoa { *caractere nome; int teste; }
-enum enumeracao {E_1, E_2, E_3}
-const int vari_global 30;
-int var_global2;
+const int constante 30;
+int var_global1;
 int var_global2 = 10, var_global3;
 
-//int func();
+// Comentario
+/* comentario de bloco */
 
-//cbrhyegfbhjr
-
-/* faltou comentario 
-de bloco */
+int ler_numero() {
+	var int x;
+	leia("%d", &x);
+	retornar x;
+}
 
 int principal() {
-	var int t = 10;
+	var int a = 10;
 	var int b;
-	var real b = 5f;
-	var reald r1 = 10f;
+	var real c = 5.0f;
+	var reald d = 10;
 
-	se (x == 10) {
-		var int a = 1;
-		enquanto(c < 20)
-			x += 2;
+	var bool funciona = true;
+
+	se (a == 10) {
+		var int e = 0;
+		enquanto(e < 20)
+			e += 2;
 		fazer {
 
-		} enquanto(k > 10);
-	} senao se (teste == "Funciona?"){
+		} enquanto(true == false);
+		escreva("%d\n", e);
+	} senao se (funciona == true){
 		para cont de (10) asc (20) {
-			escreva("teste");
+			escreva("teste %d\n", cont);
 		}
 		para cont de (10) asc (20) {
-			escreva("teste");
+			escreva("teste\n");
 			para cont de (20) desc (0)
-				escreva("teste");
+				escreva("teste\n");
 		}
-	} senao ("Ternario eh bom" == "ginga" ? "Massa" : "peixe"); {
+	} senao se (ler_numero() > 0 ? funciona == false : ler_numero()) {
 		retornar 42;
+	} senao {
+		escreva("bla\n");
 	}
 
-	escolha(x) {
+	escolha(a) {
 		caso 1:
 			parar;
-		caso 3:
-			leia(x);
+		caso 10:
+			leia("%d", &a);
 		caso 4:
-		caso 5:
 		cc :
 			escreva("eh nois");
 	}
 
 	var *caractere texto = "Texto" == "texto" ? "Sim" : "Nao";
-	var int i = a == '1' ? 1 : a == '2' ? 2 : 3;
-	var int j = a != '1' ? a == '2' ? 2 : 3 : 1;
+	var caractere t = texto[1];
+	var int i = c == '1' ? 1 : c == '2' ? 2 : 3;
+	var int j = c != '1' ? c == '2' ? 2 : 3 : 1;
 
-	var int a = 30 * a == 1 || (35 == 3 && 10 < 15 && (15 >= 20 || 10 == 10));
+	var int bla = constante * a == 1 || (35 == 3 && 10 < 15 && (15 >= 20 || 10 == 10));
 }
 
 int fun() {
-	var int x = 10;
+	var int x = 10, k = 10;
+	var *int b = &x;
 	var int [4] arr = { 1, 2, 3, 4};
-	enquanto(fhjkr) {
-		continuar;
-	}
 	var *int bla = &x + *b + k++;
-	var *int bla = &x + ++*b + --k--;
+	var *int ble = &x + ++*b + --k;
+
+	var int y, a, c, d, e, f;
+	var int boolean = 1;
 	y %= 3;
 	a += 1;
 	b -= 1;
@@ -72,20 +78,29 @@ int fun() {
 	d /= 0;
 	f *= 3;
 	e &= 19;
-	e &&= bool || boolean;
-	e |= bool || boolean;
-	e ||= bool || boolean;
+	e &&= boolean || boolean;
+	e |= boolean || boolean;
+	e ||= boolean || boolean;
 	1 << 30 << (x++) >> 10;
-	var int c = !(a > 40 && 1 * 3 <= 10 / 0);
+	
+	c = !(a > 40 && 1 * 3 <= 10 / 0);
+	
 	x <<= 10;
 	x >>= 10;
 	x + 1;
-	pessoa.nome += 2 + arr[10].k[10][a++ + k - l && &f];
+
+	var pessoa [10] arrp;
+	var pessoa p;
+	p.teste += 2 + arrp[2].teste;
+
+	a++ + k + p.nome && &f;
 }
 
-pessoa func_2(real x, int z, bool __R33, *caractere s) {
+pessoa func_2(real faca, int afiar, bool __R33, *caractere s) {
 	amolador:
 		faca = afiar + 2;
+		irpara bla;
 	irpara amolador;
+	bla:
 	retornar;
 }
