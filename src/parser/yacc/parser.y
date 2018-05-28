@@ -53,20 +53,19 @@ DEC: ENUM_DEC { $$.str = $1.str; } ;
 // Print constants
 CONST_DEC: CONSTANTE TYPE ID EXPR SEMI { $$.str = "const " + $2.str + " " + $3.str + " = " + $4.str + ";"; } ;
 
-// Print array ID
-ID_DEC: TYPE ARRAY_TYPE ID ID_SUFIX { $$.str = $1.str + " " + $3.str + " " + $2.str + $4.str; } ;
-
+// ID
+ID_DEC: TYPE ARRAY_TYPE ID ID_SUFIX { $$.str = $1.str + " " + $3.str + $2.str + $4.str; } ;
 ID_SUFIX: FUNC_DEC { $$.str = $1.str; } ;
 ID_SUFIX: VAR_DEC { $$.str = $1.str; } ;
+
+// Func
 FUNC_DEC: LPAREN PARAMS RPAREN FUNC_END { $$.str = "(" + $2.str + ")" + $4.str; } ;
 FUNC_END: SEMI { $$.str = ";"; };
 FUNC_END: BLOCK { $$.str = $1.str; };
+
+// Var
 VAR_DEC: ID_INIT VAR_DEC1 { $$.str = $1.str + $2.str; };
-
-// Print var semi
 VAR_DEC1: SEMI { $$.str = ";"; } ;
-
-// Print var ID
 VAR_DEC1: COMMA ID VAR_DEC { $$.str = ", " + $2.str + $3.str; } ;
 
 ID_INIT: ATTR INIT_VALUE { $$.str = " = " + $2.str; } ;
@@ -143,10 +142,20 @@ RETURN_EXPR: EXPR { $$.str = " " + $1.str; } ;
 RETURN_EXPR: { $$.str = ""; } ;
 
 // If condition
-IF: SE LPAREN EXPR RPAREN STMT ELSE { $$.str = "if (" + $3.str + ")" + $5.str + " " + $6.str; } ;
+IF: {
+  scopeStack.push_back(getLabel());
+} SE LPAREN EXPR RPAREN STMT ELSE { 
+  $$.str = "if (!(" + $4.str + ")) goto else" + scopeStack.back() + ";\n";
+  $$.str += $6.str + "\n";
+  $$.str += "goto endif" + scopeStack.back() + ";\n";
+  $$.str += "else" + scopeStack.back() + ":;\n";
+  $$.str += $7.str + "\n";
+  $$.str += "endif" + scopeStack.back() + ":;\n";
+  scopeStack.pop_back();
+} ;
 
 // Else
-ELSE: SENAO STMT { $$.str = " else " + $2.str; } ;
+ELSE: SENAO STMT { $$.str = $2.str; } ;
 ELSE: { $$.str = ""; } ;
 
 // While
@@ -204,27 +213,19 @@ FOR_DESC: {
   scopeStack.pop_back();
 };
 
-// Switch-case TODO
-SWITCH_CASE: {$$.str = ""; }ESCOLHA LPAREN {
-  //printf("switch (");
-} EXPR RPAREN {
-  //printf("%s)", $4.c_str(), $5.str.c_str());
-} LBRACE { 
-  //printf("%s\n", $7.str.c_str()); 
-} CASE1 RBRACE { 
-  //printf("%s\n", $10.str.c_str()); 
+// Switch-case
+SWITCH_CASE: ESCOLHA LPAREN EXPR RPAREN LBRACE CASE1 RBRACE {
+  $$.str = "switch (" + $3.str + ") {\n" + $6.str + "}";
 } ;
-CASE1: CASE CASE0 ;
-CASE0: CASE1 ;
-CASE0: ;
-CASE: CASO {
-  //printf("%s ", $1.str.c_str());
-} EXPR COLON {
-  //printf("%s\n", $4.str.c_str()); 
-} STMTS ;
-CASE: CC COLON { 
-  //printf("%s %s\n", $1.str.c_str(), $2.str.c_str()); 
-} STMTS ;
+CASE1: CASE CASE0 { $$.str = $1.str + "\n" + $2.str; } ;
+CASE0: CASE1 { $$.str = $1.str; } ;
+CASE0: { $$.str = ""; } ;
+CASE: CASO EXPR COLON STMTS {
+  $$.str = "case " + $2.str + ":\n" + $4.str;
+} ;
+CASE: CC COLON STMTS { 
+  $$.str = "default:\n" + $3.str;
+} ;
 
 // Expression
 EXPR: ATTR_RULE TERNARY { $$.str = $1.str + $2.str; };
@@ -272,11 +273,11 @@ MUL_TAIL: MUL_OP MUL_CHAIN { $$.str = $1.str + $2.str; } ;
 MUL_TAIL: { $$.str = ""; } ;
 UN_CHAIN: UN_OP UN_CHAIN { $$.str = $1.str + $2.str; } ;
 UN_CHAIN: EXPR_LEAF { $$.str = $1.str; } ;
+
+// Leaf
 EXPR_LEAF: PRE_OP EXPR_LEAF { $$.str = $1.str + $2.str; } ;
 EXPR_LEAF: VAR_CALL { $$.str = $1.str; } ;
 EXPR_LEAF: EXPR_LIT { $$.str = $1.str; } ;
-
-// Parens
 EXPR_LEAF: LPAREN EXPR RPAREN { $$.str = "(" + $2.str + ")"; } ;
 VAR_CALL: VAR_LEAF CALL { $$.str = $1.str + $2.str; } ;
 CALL: LPAREN ARGS RPAREN { $$.str = "(" + $2.str + ")"; } ;
@@ -302,8 +303,8 @@ ARRAY_LIT: LBRACE ARGS1 RBRACE { $$.str = "{" + $2.str + "}"; } ;
 VAR_LEAF: ID VAR_MODS { $$.str = $1.str + $2.str; } ;
 
 // Var field
-VAR_MODS: DOT ID VAR_MODS { $$.str = "." + $1.str + $2.str; };
-VAR_MODS: LBRACKET EXPR RBRACKET VAR_MODS { $$.str += "[" + $2.str + "]" + $4.str; };
+VAR_MODS: DOT ID VAR_MODS { $$.str = "." + $2.str + $3.str; };
+VAR_MODS: LBRACKET EXPR RBRACKET VAR_MODS { $$.str = "[" + $2.str + "]" + $4.str; };
 VAR_MODS: { $$.str = ""; };
 
 // Attr OP
