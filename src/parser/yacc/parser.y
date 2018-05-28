@@ -35,10 +35,11 @@ int labelCount = 0;
 
 START: { 
   printf("#include <stdio.h>\n");
-  printf("#ifndef leia\n");
+  printf("#ifndef principal\n");
+  printf("#define principal main\n");
   printf("#define leia scanf\n");
   printf("#define escreva printf\n");
-  printf("endif\n"); 
+  printf("#endif\n"); 
 } INC DEC1 { printf("%s", $3.str.c_str()); };
 INC: IMPORTAR STRING { preprocImportar(); } SEMI INC ;
 INC: { $$.str = ""; } ;

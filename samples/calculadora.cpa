@@ -2,9 +2,12 @@ int principal(){
 	var int x, y;
 	var caractere op;
 	
-	leia("%i", &x);
+	escreva("Escolha a operação (+, -, *, /):\n");
 	leia("%c", &op);
-	leia("%i", &y);
+
+	escreva("Escolha os dois operandos:\n");
+	leia("%d", &x);
+	leia("%d", &y);
 
 	escolha (op){
 		caso '+':
