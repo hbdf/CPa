@@ -132,10 +132,10 @@ STMT: PARAR SEMI { $$.str = "break;"; } ;
 STMT: CONTINUAR SEMI { $$.str = "continue;"; } ;
 
 // Goto call
-STMT: IRPARA ID SEMI { $$.str = "goto " + $2.str + ";"; } ;
+STMT: IRPARA ID SEMI { $$.str = "goto label" + $2.str + ";"; } ;
 
 // Label define
-STMT: LABEL { $$.str = $1.str; } ;
+STMT: LABEL { $$.str = "label" + $1.str; } ;
 
 // Return
 RETURN: RETORNAR RETURN_EXPR SEMI { $$.str = "return" + $2.str + ";"; } ;
@@ -194,22 +194,22 @@ FOR_EXPR: FOR_DESC { $$.str = $1.str; } ;
 FOR_ASC: {
   scopeStack.push_back(getLabel());
 } ASC LPAREN EXPR RPAREN STMT {
-  $$.str = scopeStack.back() + ":\n";
+  $$.str = "start" + scopeStack.back() + ":\n";
   $$.str += "if (!(" + inherit.back() + " < " + $4.str + ")) goto end" + scopeStack.back() + ";\n";
   $$.str += $6.str;
   $$.str += inherit.back() + "++;\n";
-  $$.str += "goto " + scopeStack.back() + ";\n";
+  $$.str += "goto start" + scopeStack.back() + ";\n";
   $$.str += "end" + scopeStack.back() + ":;\n";
   scopeStack.pop_back();
 };
 FOR_DESC: {
   scopeStack.push_back(getLabel());
 } DESC LPAREN EXPR RPAREN STMT {
-  $$.str = scopeStack.back() + ":\n";
+  $$.str = "start" + scopeStack.back() + ":\n";
   $$.str += "if (!(" + inherit.back() + " > " + $4.str + ")) goto end" + scopeStack.back() + ";\n";
   $$.str += $6.str;
   $$.str += inherit.back() + "--;\n";
-  $$.str += "goto " + scopeStack.back() + ";\n";
+  $$.str += "goto start" + scopeStack.back() + ";\n";
   $$.str += "end" + scopeStack.back() + ":;\n";
   scopeStack.pop_back();
 };
@@ -393,7 +393,6 @@ void preprocImportar () {
   char command [100] = "./cpa < ../../../samples/";
   strcat(command, yytext);
   system(command);
-
 }
 
 string getLabel() {

@@ -62,30 +62,30 @@ if (!(funciona == true)) goto elselabel3;
 {
 {
 int cont = 10;
-label4:
+startlabel4:
 if (!(cont < 20)) goto endlabel4;
 {
 escreva("teste %d\n", cont);
 
 }
 cont++;
-goto label4;
+goto startlabel4;
 endlabel4:;
 
 }
 
 {
 int cont = 10;
-label5:
+startlabel5:
 if (!(cont < 20)) goto endlabel5;
 {
 escreva("teste\n");
 {
 int cont = 20;
-label6:
+startlabel6:
 if (!(cont > 0)) goto endlabel6;
 escreva("teste\n");cont--;
-goto label6;
+goto startlabel6;
 endlabel6:;
 
 }
@@ -93,7 +93,7 @@ endlabel6:;
 
 }
 cont++;
-goto label5;
+goto startlabel5;
 endlabel5:;
 
 }
@@ -174,11 +174,11 @@ a++  + k + p.nome &&  &f;
 }
 
 pessoa func_2(float faca, int afiar, bool __R33, char* s){
-amolador:
+labelamolador:
 faca = afiar + 2;
-goto bla;
-goto amolador;
-bla:
+goto labelbla;
+goto labelamolador;
+labelbla:
 return;
 
 }
