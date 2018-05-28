@@ -35,306 +35,322 @@ int labelCount = 0;
 
 START: { 
   printf("#include <stdio.h>\n");
+  printf("#ifndef leia\n");
   printf("#define leia scanf\n");
-  printf("#define escreva printf\n"); 
-} INC DEC1 ;
+  printf("#define escreva printf\n");
+  printf("endif\n"); 
+} INC DEC1 { printf("%s", $3.str.c_str()); };
 INC: IMPORTAR STRING { preprocImportar(); } SEMI INC ;
-INC:  ;
-DEC1: DEC DEC0 ;
-DEC0: DEC1 ;
-DEC0: ;
-DEC: CONST_DEC ;
-DEC: ID_DEC ;
-DEC: STRUCT_DEC ;
-DEC: ENUM_DEC ;
+INC: { $$.str = ""; } ;
+DEC1: DEC DEC0 { $$.str = $1.str + "\n" + $2.str; };
+DEC0: DEC1 { $$.str = $1.str; } ;
+DEC0: { $$.str = ""; } ;
+DEC: CONST_DEC { $$.str = $1.str; } ;
+DEC: ID_DEC { $$.str = $1.str; } ;
+DEC: STRUCT_DEC { $$.str = $1.str; } ;
+DEC: ENUM_DEC { $$.str = $1.str; } ;
 
 // Print constants
-CONST_DEC: CONSTANTE { printf("const "); } TYPE ID { printf("%s = ", $4.str.c_str()); } EXPR SEMI {printf(";\n"); };
+CONST_DEC: CONSTANTE TYPE ID EXPR SEMI { $$.str = "const " + $2.str + " " + $3.str + " = " + $4.str + ";"; } ;
 
 // Print array ID
-ID_DEC: TYPE ARRAY_TYPE ID { printf("%s ", $3.str.c_str()); } ID_SUFIX ;
+ID_DEC: TYPE ARRAY_TYPE ID ID_SUFIX { $$.str = $1.str + " " + $3.str + " " + $2.str + $4.str; } ;
 
-ID_SUFIX: FUNC_DEC ;
-ID_SUFIX: VAR_DEC ;
-FUNC_DEC: LPAREN { printf("("); } PARAMS RPAREN { printf(")"); } FUNC_END ;
-FUNC_END: SEMI ;
-FUNC_END: BLOCK ;
-VAR_DEC: ID_INIT VAR_DEC1 ;
+ID_SUFIX: FUNC_DEC { $$.str = $1.str; } ;
+ID_SUFIX: VAR_DEC { $$.str = $1.str; } ;
+FUNC_DEC: LPAREN PARAMS RPAREN FUNC_END { $$.str = "(" + $2.str + ")" + $4.str; } ;
+FUNC_END: SEMI { $$.str = ";"; };
+FUNC_END: BLOCK { $$.str = $1.str; };
+VAR_DEC: ID_INIT VAR_DEC1 { $$.str = $1.str + $2.str; };
 
 // Print var semi
-VAR_DEC1: SEMI { printf(";\n"); } ;
+VAR_DEC1: SEMI { $$.str = ";"; } ;
 
 // Print var ID
-VAR_DEC1: COMMA ID { printf(", %s ", $2.str.c_str()); } VAR_DEC ;
+VAR_DEC1: COMMA ID VAR_DEC { $$.str = ", " + $2.str + $3.str; } ;
 
-ID_INIT: ATTR { printf("= "); } INIT_VALUE ;
-ID_INIT: ;
-INIT_VALUE: EXPR ;
-INIT_VALUE: ARRAY_LIT ;
+ID_INIT: ATTR INIT_VALUE { $$.str = " = " + $2.str; } ;
+ID_INIT: { $$.str = ""; } ;
+INIT_VALUE: EXPR { $$.str = $1.str; } ;
+INIT_VALUE: ARRAY_LIT { $$.str = $1.str; } ;
 
 // Print struct dec
-STRUCT_DEC: ESTRUTURA ID LBRACE {printf("struct %s {\n", $2.str.c_str()); } VAR_DECS RBRACE { printf("}\n"); };
+STRUCT_DEC: ESTRUTURA ID LBRACE VAR_DECS RBRACE { $$.str = "struct " + $2.str + " {\n" + $4.str + "}\n"; };
 
-VAR_DECS: ID_DEC VAR_DECS ;
-VAR_DECS:  ;
+VAR_DECS: ID_DEC VAR_DECS { $$.str = $1.str + "\n" + $2.str; } ;
+VAR_DECS: { $$.str = ""; } ;
 
 // Print enum
-ENUM_DEC: ENUM ID LBRACE { printf("enum %s {\n", $2.str.c_str()); } IDS1 RBRACE { printf("\n}\n"); };
+ENUM_DEC: ENUM ID LBRACE IDS1 RBRACE { $$.str = "enum " + $2.str + "{\n" + $4.str + "\n}\n"; } ;
 
-// Print ID list
-IDS1: ID { printf("%s ", $1.str.c_str()); } IDS0 ;
-IDS0: COMMA { printf(", "); } IDS1 ;
+// ID list
+IDS1: ID IDS0 { $$.str = $1.str + $2.str; } ;
+IDS0: COMMA IDS1 { $$.str = ", " + $2.str; } ;
+IDS0: { $$.str = ""; } ;
 
-IDS0:  ;
-PARAMS: PARAM1 ;
-PARAMS:  ;
-PARAM1: TYPE ID { printf("%s ", $2.str.c_str()); } PARAM0 ;
-PARAM0: COMMA { printf(","); } PARAM1 ;
-PARAM0:  ;
+// Parameters
+PARAMS: PARAM1 { $$.str = $1.str; };
+PARAMS: { $$.str = ""; } ;
+PARAM1: TYPE ID PARAM0 { $$.str = $1.str + " " + $2.str + $3.str; } ;
+PARAM0: COMMA PARAM1 { $$.str = ", " + $2.str; } ;
+PARAM0: { $$.str = ""; } ;
 
 // Print type ID
-TYPE: ID { printf("%s ", $1.str.c_str()); } ;
+TYPE: ID { $$.str = $1.str; } ;
 // Print primitive type
-TYPE: TIPO_PRIMITIVO { printf("%s ", $1.str.c_str()); } ;
+TYPE: TIPO_PRIMITIVO { $$.str = $1.str; } ;
 // Pointer type
-TYPE: STAR TYPE { printf("* "); };
+TYPE: STAR TYPE { $$.str = $2.str + "*"; } ;
 // Array type
-ARRAY_TYPE: LBRACKET { printf("["); } EXPR RBRACKET { printf("]"); } ARRAY_TYPE ;
-ARRAY_TYPE: ;
+ARRAY_TYPE: LBRACKET EXPR RBRACKET ARRAY_TYPE { $$.str = "[" + $2.str + "]" + $4.str; } ;
+ARRAY_TYPE: { $$.str = ""; } ;
 
 // Block
-BLOCK: LBRACE { printf("{\n"); } STMTS RBRACE { printf("}\n"); } ;
+BLOCK: LBRACE STMTS RBRACE { $$.str = "{\n" + $2.str + "\n}\n"; } ;
+STMTS: STMT STMTS { $$.str = $1.str + "\n" + $2.str; } ;
+STMTS: { $$.str = ""; } ;
 
-STMTS: STMT STMTS ;
-STMTS: ;
-STMT: VAR ID_DEC ;
-STMT: IF ;
-STMT: SWITCH_CASE ;
-STMT: FOR ;
-STMT: WHILE ;
-STMT: DO_WHILE ;
-STMT: BLOCK ;
+// Statement
+STMT: VAR ID_DEC { $$.str = $2.str; } ;
+STMT: IF { $$.str = $1.str; } ;
+STMT: SWITCH_CASE { $$.str = $1.str; } ;
+STMT: FOR { $$.str = $1.str; } ;
+STMT: WHILE { $$.str = $1.str; } ;
+STMT: DO_WHILE { $$.str = $1.str; } ;
+STMT: BLOCK { $$.str = $1.str; } ;
 
 // Expr call
-STMT: EXPR SEMI { printf(";\n"); } ;
+STMT: EXPR SEMI { $$.str = $1.str + ";"; } ;
 
 // Return call
-STMT: RETURN ;
+STMT: RETURN { $$.str = $1.str; } ;
 
 // Break call
-STMT: PARAR SEMI { printf("break;\n"); } ;
+STMT: PARAR SEMI { $$.str = "break;"; } ;
 
 // Continue call
-STMT: CONTINUAR SEMI {printf("continue;\n"); } ;
+STMT: CONTINUAR SEMI { $$.str = "continue;"; } ;
 
 // Goto call
-STMT: IRPARA ID SEMI {printf("goto %s ;\n", $2.str.c_str()); } ;
+STMT: IRPARA ID SEMI { $$.str = "goto " + $2.str + ";"; } ;
 
 // Label define
-STMT: LABEL { printf("%s\n", $1.str.c_str()); } ;
+STMT: LABEL { $$.str = $1.str; } ;
 
 // Return
-RETURN: RETORNAR { printf("return "); } RETURN_EXPR SEMI {printf(";\n"); } ;
-RETURN_EXPR: EXPR ;
-RETURN_EXPR: ;
+RETURN: RETORNAR RETURN_EXPR SEMI { $$.str = "return" + $2.str + ";"; } ;
+RETURN_EXPR: EXPR { $$.str = " " + $1.str; } ;
+RETURN_EXPR: { $$.str = ""; } ;
 
 // If condition
-IF: SE LPAREN { printf("if ("); } EXPR RPAREN { printf(") "); } STMT ELSE ;
+IF: SE LPAREN EXPR RPAREN STMT ELSE { $$.str = "if (" + $3.str + ")" + $5.str + " " + $6.str; } ;
 
 // Else
-ELSE: SENAO { printf("else "); } STMT ;
-ELSE: ;
+ELSE: SENAO STMT { $$.str = " else " + $2.str; } ;
+ELSE: { $$.str = ""; } ;
 
 // While
-WHILE: ENQUANTO LPAREN { 
+WHILE: {
   scopeStack.push_back(getLabel());
-  printf("%s:\n", ("start" + scopeStack.back()).c_str());
-  printf("if(!(");
-} EXPR RPAREN { 
-  printf(")) goto %s;\n", ("end" + scopeStack.back()).c_str());
-} STMT {
-  printf("goto %s;\n", ("start" + scopeStack.back()).c_str());
-  printf("%s:;\n", ("end" + scopeStack.back()).c_str());
+} ENQUANTO LPAREN EXPR RPAREN STMT { 
+  $$.str = "start" + scopeStack.back() + ":\n";
+  $$.str += "if (!(" + $4.str + ")) goto end" + scopeStack.back() + ";\n";
+  $$.str += $6.str + "\n";
+  $$.str += "goto start" + scopeStack.back() + ";\n";
+  $$.str += "end" + scopeStack.back() + ":;\n";
+  scopeStack.pop_back();
+} ;
+
+// Do while
+DO_WHILE: {
+  scopeStack.push_back(getLabel());
+} FAZER STMT ENQUANTO LPAREN EXPR RPAREN SEMI { 
+  $$.str = "start" + scopeStack.back() + ":\n";
+  $$.str += $3.str + "\n";
+  $$.str += "if (" + $6.str + ") goto start" + scopeStack.back() + ";\n";
+  $$.str += "goto start" + scopeStack.back() + ";\n";
+  scopeStack.pop_back();
+} ;
+
+// For loop
+FOR: PARA ID DE LPAREN EXPR RPAREN { inherit.push_back($2.str); } FOR_EXPR { 
+  $$.str = "{\n" + $2.str + " = " + $5.str + ";\n";
+  $$.str += $8.str + "\n}\n"; 
+  inherit.pop_back();
+} ;
+FOR_EXPR: FOR_ASC { $$.str = $1.str; };
+FOR_EXPR: FOR_DESC { $$.str = $1.str; } ;
+
+FOR_ASC: {
+  scopeStack.push_back(getLabel());
+} ASC LPAREN EXPR RPAREN STMT {
+  $$.str = scopeStack.back() + ":\n";
+  $$.str += "if (!(" + inherit.back() + " < " + $4.str + ")) goto end" + scopeStack.back() + ";\n";
+  $$.str += $6.str;
+  $$.str += inherit.back() + "++;\n";
+  $$.str += "goto " + scopeStack.back() + ";\n";
+  $$.str += "end" + scopeStack.back() + ":\n";
+  scopeStack.pop_back();
+};
+FOR_DESC: {
+  scopeStack.push_back(getLabel());
+} DESC LPAREN EXPR RPAREN STMT {
+  $$.str = scopeStack.back() + ":\n";
+  $$.str += "if (!(" + inherit.back() + " > " + $4.str + ")) goto end" + scopeStack.back() + ";\n";
+  $$.str += $6.str;
+  $$.str += inherit.back() + "--;\n";
+  $$.str += "goto " + scopeStack.back() + ";\n";
+  $$.str += "end" + scopeStack.back() + ":\n";
   scopeStack.pop_back();
 };
 
-// Do while
-DO_WHILE: FAZER { printf("do "); } STMT ENQUANTO LPAREN { printf("while ("); } EXPR RPAREN SEMI { printf(");\n"); } ;
-
-// For loop
-FOR: PARA ID DE LPAREN {printf("%s = ", $2.str.c_str());} EXPR RPAREN {
-    printf(";\n");
-    inherit.push_back($2.str);
-} FOR_EXPR ;
-FOR_EXPR: FOR_ASC ;
-FOR_EXPR: FOR_DESC ;
-
-FOR_ASC: ASC LPAREN {
-    string labelFor = getLabel();
-    scopeStack.push_back(labelFor);
-    printf("%s:\n", labelFor.c_str());
-    printf("if(!(%s < ", inherit.back().c_str());
+// Switch-case TODO
+SWITCH_CASE: {$$.str = ""; }ESCOLHA LPAREN {
+  //printf("switch (");
 } EXPR RPAREN {
-    printf(")){goto %s;}\n", ("End" + scopeStack.back()).c_str());
-} STMT {
-    printf("%s++;\n", inherit.back().c_str());
-    printf("goto %s;\n", scopeStack.back().c_str());
-    printf("%s:;\n", ("End" + scopeStack.back()).c_str());
-    scopeStack.pop_back();
-    inherit.pop_back();
-};
-
-FOR_DESC: DESC LPAREN {
-    string labelFor = getLabel();
-    scopeStack.push_back(labelFor);
-    printf("%s:\n", labelFor.c_str());
-    printf("if(!(%s > ", inherit.back().c_str());
-} EXPR RPAREN {
-    printf(")){goto %s;}\n", ("End" + scopeStack.back()).c_str());
-} STMT {
-    printf("%s--;\n", inherit.back().c_str());
-    printf("goto %s;\n", scopeStack.back().c_str());
-    printf("%s:;\n", ("End" + scopeStack.back()).c_str());
-    scopeStack.pop_back();
-    inherit.pop_back();
-};
-
-// Switch-case
-SWITCH_CASE: ESCOLHA LPAREN {
-  printf("%s %s ", $1.str.c_str(), $2.str.c_str());
-} EXPR RPAREN {
-  printf("%s ", $5.str.c_str());
+  //printf("%s)", $4.c_str(), $5.str.c_str());
 } LBRACE { 
-  printf("%s\n", $7.str.c_str()); 
-} CASE1 RBRACE { printf("%s\n", $10.str.c_str()); } ;
+  //printf("%s\n", $7.str.c_str()); 
+} CASE1 RBRACE { 
+  //printf("%s\n", $10.str.c_str()); 
+} ;
 CASE1: CASE CASE0 ;
 CASE0: CASE1 ;
 CASE0: ;
-CASE: CASO {printf("%s ", $1.str.c_str());} EXPR COLON {printf("%s\n", $4.str.c_str()); } STMTS ;
-CASE: CC COLON { printf("%s %s\n", $1.str.c_str(), $2.str.c_str()); } STMTS ;
+CASE: CASO {
+  //printf("%s ", $1.str.c_str());
+} EXPR COLON {
+  //printf("%s\n", $4.str.c_str()); 
+} STMTS ;
+CASE: CC COLON { 
+  //printf("%s %s\n", $1.str.c_str(), $2.str.c_str()); 
+} STMTS ;
+
+// Expression
+EXPR: ATTR_RULE TERNARY { $$.str = $1.str + $2.str; };
 
 // Ternary op
-TERNARY: QUESTION { printf(" ? "); } EXPR COLON { printf(" : "); } EXPR ;
-TERNARY: ;
-
-EXPR: ATTR_RULE TERNARY ;
+TERNARY: QUESTION EXPR COLON EXPR { $$.str = " ? " + $2.str + " : " + $4.str; } ;
+TERNARY: { $$.str = ""; } ;
 
 // Attr op
-ATTR_RULE: LOGOR_CHAIN {inherit.push_back($1.str);} ATTR_TAIL {inherit.pop_back();};
-ATTR_TAIL: ATTR_OP {
+ATTR_RULE: LOGOR_CHAIN {inherit.push_back($1.str);} ATTR_TAIL {inherit.pop_back(); $$.str = $1.str + $3.str;};
+ATTR_TAIL: ATTR_OP LOGOR_CHAIN {
   if ($1.attr_op == 1) {
-    printf(" = %s || ", inherit.back().c_str());
+    $$.str = " = " + inherit.back() + " || " + $2.str;
   } else if ($1.attr_op == 2) {
-    printf(" = %s && ", inherit.back().c_str());
+    $$.str = " = " + inherit.back() + " && " + $2.str;
+  } else {
+    $$.str = $1.str + $2.str;
   }
-} LOGOR_CHAIN ;
-ATTR_TAIL:  ;
+} ;
+ATTR_TAIL: { $$.str = ""; } ;
 
-LOGOR_CHAIN: LOGAND_CHAIN LOGOR_TAIL ;
-LOGOR_TAIL: LOGOR_OP LOGOR_CHAIN ;
-LOGOR_TAIL:  ;
-LOGAND_CHAIN: BITOR_CHAIN LOGAND_TAIL ;
-LOGAND_TAIL: LOGAND_OP LOGAND_CHAIN ;
-LOGAND_TAIL:  ;
-BITOR_CHAIN: BITAND_CHAIN BITOR_TAIL ;
-BITOR_TAIL: BITOR_OP BITOR_CHAIN ;
-BITOR_TAIL:  ;
-BITAND_CHAIN: REL BITAND_TAIL ;
-BITAND_TAIL: BITAND_OP BITAND_CHAIN ;
-BITAND_TAIL:  ;
-REL: SHIFT_CHAIN REL_TAIL ;
-REL_TAIL: REL_OP SHIFT_CHAIN ;
-REL_TAIL:  ;
-SHIFT_CHAIN: ADD_CHAIN SHIFT_TAIL ;
-SHIFT_TAIL: SHIFT_OP SHIFT_CHAIN ;
-SHIFT_TAIL:  ;
-ADD_CHAIN: MUL_CHAIN ADD_TAIL ;
-ADD_TAIL: ADD_OP ADD_CHAIN ;
-ADD_TAIL:  ;
-MUL_CHAIN: UN_CHAIN MUL_TAIL ;
-MUL_TAIL: MUL_OP MUL_CHAIN ;
-MUL_TAIL:  ;
-UN_CHAIN: UN_OP UN_CHAIN ;
-UN_CHAIN: EXPR_LEAF ;
-EXPR_LEAF: PRE_OP EXPR_LEAF ;
-EXPR_LEAF: VAR_CALL ;
-EXPR_LEAF: EXPR_LIT ;
+LOGOR_CHAIN: LOGAND_CHAIN LOGOR_TAIL { $$.str = $1.str + $2.str; } ;
+LOGOR_TAIL: LOGOR_OP LOGOR_CHAIN { $$.str = $1.str + $2.str; } ;
+LOGOR_TAIL: { $$.str = ""; } ;
+LOGAND_CHAIN: BITOR_CHAIN LOGAND_TAIL { $$.str = $1.str + $2.str; } ;
+LOGAND_TAIL: LOGAND_OP LOGAND_CHAIN { $$.str = $1.str + $2.str; } ;
+LOGAND_TAIL: { $$.str = ""; } ;
+BITOR_CHAIN: BITAND_CHAIN BITOR_TAIL { $$.str = $1.str + $2.str; } ;
+BITOR_TAIL: BITOR_OP BITOR_CHAIN { $$.str = $1.str + $2.str; } ;
+BITOR_TAIL: { $$.str = ""; } ;
+BITAND_CHAIN: REL BITAND_TAIL { $$.str = $1.str + $2.str; } ;
+BITAND_TAIL: BITAND_OP BITAND_CHAIN { $$.str = $1.str + $2.str; } ;
+BITAND_TAIL: { $$.str = ""; } ;
+REL: SHIFT_CHAIN REL_TAIL { $$.str = $1.str + $2.str; } ;
+REL_TAIL: REL_OP SHIFT_CHAIN { $$.str = $1.str + $2.str; } ;
+REL_TAIL: { $$.str = ""; } ;
+SHIFT_CHAIN: ADD_CHAIN SHIFT_TAIL { $$.str = $1.str + $2.str; } ;
+SHIFT_TAIL: SHIFT_OP SHIFT_CHAIN { $$.str = $1.str + $2.str; } ;
+SHIFT_TAIL: { $$.str = ""; } ;
+ADD_CHAIN: MUL_CHAIN ADD_TAIL { $$.str = $1.str + $2.str; } ;
+ADD_TAIL: ADD_OP ADD_CHAIN { $$.str = $1.str + $2.str; } ;
+ADD_TAIL: { $$.str = ""; } ;
+MUL_CHAIN: UN_CHAIN MUL_TAIL { $$.str = $1.str + $2.str; } ;
+MUL_TAIL: MUL_OP MUL_CHAIN { $$.str = $1.str + $2.str; } ;
+MUL_TAIL: { $$.str = ""; } ;
+UN_CHAIN: UN_OP UN_CHAIN { $$.str = $1.str + $2.str; } ;
+UN_CHAIN: EXPR_LEAF { $$.str = $1.str; } ;
+EXPR_LEAF: PRE_OP EXPR_LEAF { $$.str = $1.str + $2.str; } ;
+EXPR_LEAF: VAR_CALL { $$.str = $1.str; } ;
+EXPR_LEAF: EXPR_LIT { $$.str = $1.str; } ;
 
-// Print parens
-EXPR_LEAF: LPAREN { printf("("); } EXPR RPAREN { printf(")"); } ;
-VAR_CALL: VAR_LEAF CALL ;
-CALL: LPAREN { printf("("); } ARGS RPAREN { printf(")"); } ;
-CALL: POS_OP ;
-CALL: ;
+// Parens
+EXPR_LEAF: LPAREN EXPR RPAREN { $$.str = "(" + $2.str + ")"; } ;
+VAR_CALL: VAR_LEAF CALL { $$.str = $1.str + $2.str; } ;
+CALL: LPAREN ARGS RPAREN { $$.str = "(" + $2.str + ")"; } ;
+CALL: POS_OP { $$.str = $1.str; };
+CALL: { $$.str = ""; } ;
 
-// Print args
-ARGS1: EXPR ARGS0 ;
-ARGS0: COMMA { printf(","); } ARGS ;
-ARGS0: ;
-ARGS: ARGS1 ;
-ARGS: ;
+// Args
+ARGS1: EXPR ARGS0 { $$.str = $1.str + $2.str; } ;
+ARGS0: COMMA ARGS { $$.str = ", " + $2.str; } ;
+ARGS0: { $$.str = ""; } ;
+ARGS: ARGS1 { $$.str = $1.str; };
+ARGS: { $$.str = ""; } ;
 
 // Literals
-EXPR_LIT: INTEIRO {printf("%s ", $1.str.c_str());} ;
-EXPR_LIT: REAL {printf("%s ", $1.str.c_str());} ;
-EXPR_LIT: REALD {printf("%s ", $1.str.c_str());} ;
-EXPR_LIT: STRING {printf("%s ", $1.str.c_str());} ;
-EXPR_LIT: CARACTERE {printf("%s ", $1.str.c_str());} ;
+EXPR_LIT: INTEIRO { $$.str = $1.str; } ;
+EXPR_LIT: REAL { $$.str = $1.str; } ;
+EXPR_LIT: REALD { $$.str = $1.str; } ;
+EXPR_LIT: STRING { $$.str = $1.str; } ;
+EXPR_LIT: CARACTERE { $$.str = $1.str; } ;
 
 // Array
-ARRAY_LIT: LBRACE { printf("{"); } ARGS1 RBRACE { printf("}"); } ;
-VAR_LEAF: ID { printf("%s", $1.str.c_str()); } VAR_MODS ;
+ARRAY_LIT: LBRACE ARGS1 RBRACE { $$.str = "{" + $2.str + "}"; } ;
+VAR_LEAF: ID VAR_MODS { $$.str = $1.str + $2.str; } ;
 
-// Print var field
-VAR_MODS: DOT ID { printf(".%s", $2.str.c_str()); } VAR_MODS ;
-VAR_MODS: LBRACKET { printf("["); } EXPR RBRACKET { printf("]"); } VAR_MODS ;
-VAR_MODS: ;
+// Var field
+VAR_MODS: DOT ID VAR_MODS { $$.str = "." + $1.str + $2.str; };
+VAR_MODS: LBRACKET EXPR RBRACKET VAR_MODS { $$.str += "[" + $2.str + "]" + $4.str; };
+VAR_MODS: { $$.str = ""; };
 
-// Print attr OP
-ATTR_OP: ATTR {printf(" = ");} ;
-ATTR_OP: ATTRADD {printf(" += "); } ;
-ATTR_OP: ATTRSUB {printf(" -= "); } ;
-ATTR_OP: ATTRMUL {printf(" *= "); } ;
-ATTR_OP: ATTRDIV {printf(" /= "); } ;
-ATTR_OP: ATTRMOD {printf(" %%= "); } ;
-ATTR_OP: ATTRBITOR {printf(" |= ");} ;
-ATTR_OP: ATTRBITAND {printf(" &= ");} ;
-ATTR_OP: ATTRSHIFTL {printf(" <<= "); } ;
-ATTR_OP: ATTRSHIFTR {printf(" >>= "); } ;
+// Attr OP
+ATTR_OP: ATTR { $$.str = " = "; $$.attr_op = 0; } ;
+ATTR_OP: ATTRADD { $$.str = " += "; $$.attr_op = 0; } ;
+ATTR_OP: ATTRSUB { $$.str = " -= "; $$.attr_op = 0; } ;
+ATTR_OP: ATTRMUL { $$.str = " *= "; $$.attr_op = 0; } ;
+ATTR_OP: ATTRDIV { $$.str = " /= "; $$.attr_op = 0; } ;
+ATTR_OP: ATTRMOD { $$.str = " %%= "; $$.attr_op = 0; } ;
+ATTR_OP: ATTRBITOR { $$.str = " |= "; $$.attr_op = 0; } ;
+ATTR_OP: ATTRBITAND { $$.str = " &= "; $$.attr_op = 0; } ;
+ATTR_OP: ATTRSHIFTL { $$.str = " <<= "; $$.attr_op = 0; } ;
+ATTR_OP: ATTRSHIFTR { $$.str = " >>= "; $$.attr_op = 0; } ;
 
 // Custom attr op
 ATTR_OP: ATTROR { $$.attr_op = 1; } ;
 ATTR_OP: ATTRAND { $$.attr_op = 2; } ;
 
 // Un-op
-PRE_OP: STAR {printf("*");} ;
-PRE_OP: AMPERSEND {printf(" &");} ;
-PRE_OP: PLUS2 {printf(" ++");} ;
-PRE_OP: MINUS2 {printf(" --");} ;
-POS_OP: PLUS2 {printf("++ ");} ;
-POS_OP: MINUS2 {printf("-- ");} ;
+PRE_OP: STAR {$$.str = "*";} ;
+PRE_OP: AMPERSEND {$$.str = " &";} ;
+PRE_OP: PLUS2 {$$.str = " ++";} ;
+PRE_OP: MINUS2 {$$.str = " --";} ;
+POS_OP: PLUS2 {$$.str = "++ ";} ;
+POS_OP: MINUS2 {$$.str = "-- ";} ;
 
 // Bin-op
-MUL_OP: STAR {printf(" * ");} ;
-MUL_OP: DIV {printf(" / ");} ;
-MUL_OP: MOD {printf(" %% ");} ;
-UN_OP: NEG {printf(" ! ");} ;
-UN_OP: MINUS {printf(" - ");} ;
-UN_OP: PLUS {printf(" + ");} ;
-ADD_OP: PLUS {printf(" + ");} ;
-ADD_OP: MINUS {printf(" - ");} ;
-SHIFT_OP: SHIFTL {printf(" << ");} ;
-SHIFT_OP: SHIFTR {printf(" >> ");} ;
-REL_OP: EQQ {printf(" == ");} ;
-REL_OP: NEQ {printf(" != ");} ;
-REL_OP: GT {printf(" > ");} ;
-REL_OP: LT {printf(" < ");} ;
-REL_OP: GEQ {printf(" >= ");} ;
-REL_OP: LEQ {printf(" <= ");} ;
-BITAND_OP: AMPERSEND {printf(" & ");} ;
-BITOR_OP: PIPE {printf(" | ");} ;
-LOGAND_OP: AND {printf(" && ");} ;
-LOGOR_OP: OR {printf(" || ");} ;
+MUL_OP: STAR { $$.str = " * "; } ;
+MUL_OP: DIV { $$.str = " / "; } ;
+MUL_OP: MOD { $$.str = " %% "; } ;
+UN_OP: NEG { $$.str = " ! "; } ;
+UN_OP: MINUS {$$.str = " - "; } ;
+UN_OP: PLUS {$$.str = " + "; } ;
+ADD_OP: PLUS {$$.str = " + "; } ;
+ADD_OP: MINUS {$$.str = " - "; } ;
+SHIFT_OP: SHIFTL {$$.str = " << "; } ;
+SHIFT_OP: SHIFTR {$$.str = " >> "; } ;
+REL_OP: EQQ {$$.str = " == "; } ;
+REL_OP: NEQ {$$.str = " != "; } ;
+REL_OP: GT {$$.str = " > "; } ;
+REL_OP: LT {$$.str = " < "; } ;
+REL_OP: GEQ { $$.str = " >= "; } ;
+REL_OP: LEQ { $$.str = " <= " ; } ;
+BITAND_OP: AMPERSEND { $$.str = " & "; } ;
+BITOR_OP: PIPE {$$.str = " | "; } ;
+LOGAND_OP: AND {$$.str = " && "; } ;
+LOGOR_OP: OR { $$.str = " || "; } ;
 
 %%
 
