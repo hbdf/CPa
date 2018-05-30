@@ -239,9 +239,9 @@ TERNARY: { $$.str = ""; } ;
 ATTR_RULE: LOGOR_CHAIN {inherit.push_back($1.str);} ATTR_TAIL {inherit.pop_back(); $$.str = $1.str + $3.str;};
 ATTR_TAIL: ATTR_OP LOGOR_CHAIN {
   if ($1.attr_op == 1) {
-    $$.str = " = " + inherit.back() + " || " + $2.str;
+    $$.str = " = (" + inherit.back() + ") || (" + $2.str + ")";
   } else if ($1.attr_op == 2) {
-    $$.str = " = " + inherit.back() + " && " + $2.str;
+    $$.str = " = (" + inherit.back() + ") && (" + $2.str + ")";
   } else {
     $$.str = $1.str + $2.str;
   }
